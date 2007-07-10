@@ -1,0 +1,18 @@
+# ini-like configuration file for termit
+[termit]
+#default_encoding=KOI8-R
+#default_tab_name=Terminal
+default_font=Sans 12
+scrollback_lines=4096
+word_chars="-A-Za-z0-9,./?%&#:_~"
+
+# list of available encodings
+#encodings=UTF-8;KOI8-R;CP866;CP1251
+
+# list of bookmarks
+# format: bookmark_name:path
+[bookmarks]
+home=$HOME
+src=$HOME/src
+#work=$HOME/work
+

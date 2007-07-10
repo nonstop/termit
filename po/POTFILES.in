@@ -1,0 +1,5 @@
+# List of source files which contain translatable strings.
+src/termit.c
+src/callbacks.c
+src/utils.c
+src/configs.c

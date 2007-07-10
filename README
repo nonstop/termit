@@ -1,0 +1,15 @@
+            Termit
+
+    Simple terminal emulator based on vte library.
+
+    Features:
+        * tabs
+        * bookmarks
+        * changing tab name
+        * changing font for tabs
+        * encodings (all available from GTK2)
+
+    Configuration can be changed via $HOME/.termit file (example is provided).
+    
+
+

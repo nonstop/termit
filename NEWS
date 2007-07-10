@@ -1,0 +1,7 @@
+TermIt 1.0:
+    * tabbed terminal
+    * switching encodings (all available from GTK)
+    * bookmarks
+    * changinf tab name
+    * changing font
+
