@@ -94,10 +94,9 @@ void termit_load_config()
     GKeyFile * keyfile = g_key_file_new();
     GError * error = NULL;
     
-    const char *configFile = ".termit";
-    char *home = getenv("HOME");
+    const gchar *configFile = ".termit";
+    const gchar *home = g_getenv("HOME");
     gchar *fullPath = g_strdup_printf("%s/%s", home, configFile);
-    free(home);
     g_key_file_load_from_file(keyfile, fullPath, G_KEY_FILE_NONE, &error);
     g_free(fullPath);
 
