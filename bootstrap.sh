@@ -1,7 +1,7 @@
 #!/bin/sh
 
 gettextize --copy --force --intl
-aclocal
+aclocal -I m4
 libtoolize --force --copy
 autoheader
 autoconf
