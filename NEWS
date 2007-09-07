@@ -1,3 +1,9 @@
+1.0.2:
+    starting dir for every termit tab is $PWD instead of $HOME
+
+1.0.1:
+    potential double free fixed
+
 TermIt 1.0:
     * tabbed terminal
     * switching encodings (all available from GTK)

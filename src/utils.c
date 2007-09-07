@@ -22,7 +22,6 @@ void termit_append_tab()
     vte_terminal_set_scrollback_lines(VTE_TERMINAL(tab.vte), configs.scrollback_lines);
     TRACE_STR(configs.default_word_chars);
     vte_terminal_set_word_chars(VTE_TERMINAL(tab.vte), configs.default_word_chars);
-//	vte_terminal_match_add(VTE_TERMINAL(tab.vte), HTTP_REGEXP);
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(tab.vte), TRUE);
     
     tab.scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(tab.vte)));
@@ -31,7 +30,9 @@ void termit_append_tab()
     gtk_box_pack_start(GTK_BOX(tab.hbox), tab.scrollbar, FALSE, FALSE, 0);
 
 
-    tab.pid = vte_terminal_fork_command(VTE_TERMINAL(tab.vte), g_getenv("SHELL"), NULL, NULL, g_getenv("HOME"), TRUE, TRUE,TRUE);
+    tab.pid = vte_terminal_fork_command(VTE_TERMINAL(tab.vte), 
+            g_getenv("SHELL"), NULL, NULL, 
+            g_getenv("PWD"), TRUE, TRUE,TRUE);
     int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), tab.hbox, tab.tab_name);
     if (index ==-1)
     {
@@ -40,7 +41,6 @@ void termit_append_tab()
     }
     g_signal_connect(G_OBJECT(tab.vte), "child-exited", G_CALLBACK(termit_child_exited), NULL);
     g_signal_connect(G_OBJECT(tab.vte), "eof", G_CALLBACK(termit_eof), NULL);
-//	g_signal_connect(G_OBJECT(tab.vte), "window-title-changed", G_CALLBACK(termit_title_changed), NULL);
 	g_signal_connect_swapped(G_OBJECT(tab.vte), "button-press-event", G_CALLBACK(termit_popup), termit.menu);
     
     TRACE_NUM(index);
