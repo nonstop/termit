@@ -37,7 +37,7 @@ CFLAGS="$CFLAGS -O3"
 AC_MSG_RESULT(no)
 fi
 
-AC_OUTPUT(Makefile src/Makefile doc/Makefile intl/Makefile po/Makefile.in)
+AC_OUTPUT(Makefile src/Makefile doc/Makefile)
 
 echo 
 echo Configuration for $PACKAGE $VERSION :
