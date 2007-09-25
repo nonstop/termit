@@ -33,12 +33,14 @@ void termit_append_tab()
     tab.pid = vte_terminal_fork_command(VTE_TERMINAL(tab.vte), 
             g_getenv("SHELL"), NULL, NULL, 
             g_getenv("PWD"), TRUE, TRUE,TRUE);
+    TRACE_NUM(tab.pid);
     int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), tab.hbox, tab.tab_name);
     if (index ==-1)
     {
         ERROR("Cannot create a new tab");
         return;
     }
+    
     g_signal_connect(G_OBJECT(tab.vte), "child-exited", G_CALLBACK(termit_child_exited), NULL);
     g_signal_connect(G_OBJECT(tab.vte), "eof", G_CALLBACK(termit_eof), NULL);
 	g_signal_connect_swapped(G_OBJECT(tab.vte), "button-press-event", G_CALLBACK(termit_popup), termit.menu);

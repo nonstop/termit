@@ -320,4 +320,12 @@ void termit_cb_bookmarks_changed(GtkComboBox *widget, gpointer user_data)
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), tab.vte);
 }
 
+gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
+{
+    TRACE_NUM(event->button);
+    if (event->type == GDK_2BUTTON_PRESS)
+        termit_append_tab();
+
+    return FALSE;
+}
 

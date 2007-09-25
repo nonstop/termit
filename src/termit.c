@@ -56,6 +56,7 @@ static void create_main_window()
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
 
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_switch_page), NULL);
+    g_signal_connect(G_OBJECT(termit.main_window), "button-press-event", G_CALLBACK(termit_double_click), NULL);
 }
 
 static void termit_create_popup_menu()

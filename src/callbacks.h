@@ -24,6 +24,7 @@ void termit_cb_bookmarks_changed(GtkComboBox *widget, gpointer user_data);
 void termit_append_tab();
 void termit_set_font();
 void termit_set_statusbar_encoding(gint page);
+gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data);
 
                                             
                                             

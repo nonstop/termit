@@ -11,5 +11,10 @@
 
     Configuration can be changed via $HOME/.termit file (example is provided).
     
-
+    Useful keys:
+        * Ctrl-t - open tab
+        * Ctrl-w - close tab
+        * double-click on tab bar - open tab
+        * Ctrl-Ins - copy to buffer
+        * Shift-Ins - paste from buffer
 

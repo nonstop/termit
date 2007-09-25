@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-13 08:06+0400\n"
+"POT-Creation-Date: 2007-09-25 09:19+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,40 +16,40 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/termit.c:18
+#: src/termit.c:16
 msgid "goto: "
 msgstr ""
 
-#: src/termit.c:66
+#: src/termit.c:65
 msgid "New tab"
 msgstr ""
 
-#: src/termit.c:67
+#: src/termit.c:66
 msgid "Close tab"
 msgstr ""
 
-#: src/termit.c:69
+#: src/termit.c:68
 msgid "Set tab name..."
 msgstr ""
 
-#: src/termit.c:99
+#: src/termit.c:98
 msgid "Encodings"
 msgstr ""
 
-#: src/callbacks.c:191 src/callbacks.c:201
-msgid "Tab name"
-msgstr ""
-
-#: src/callbacks.c:225
-msgid "Select font"
-msgstr ""
-
-#: src/utils.c:119
+#: src/callbacks.c:21
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: src/utils.c:142
+#: src/callbacks.c:235 src/callbacks.c:245
+msgid "Tab name"
+msgstr ""
+
+#: src/callbacks.c:269
+msgid "Select font"
+msgstr ""
+
+#: src/utils.c:92
 msgid "Encoding"
 msgstr ""
