@@ -94,19 +94,35 @@ void termit_load_config()
     GKeyFile * keyfile = g_key_file_new();
     GError * error = NULL;
     
-    const gchar *configFile = ".termit";
-    const gchar *home = g_getenv("HOME");
-    gchar *fullPath = g_strdup_printf("%s/%s", home, configFile);
-    g_key_file_load_from_file(keyfile, fullPath, G_KEY_FILE_NONE, &error);
+    const gchar *configFile = "termit.cfg";
+    const gchar *configDir = "termit";
+    const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
+    gchar* fullPath = NULL;
+    if (configHome)
+        fullPath = g_strdup_printf("%s/%s/%s", configHome, configDir, configFile);
+    else
+    {
+        fullPath = g_strdup_printf("%s/.config/%s/%s", g_getenv("HOME"), configDir, configFile);
+    }
+    gboolean configsFound = g_key_file_load_from_file(keyfile, fullPath, G_KEY_FILE_NONE, &error);
     g_free(fullPath);
 
-    if (g_key_file_has_group(keyfile, "termit") == TRUE)
-        load_termit_options(keyfile);
-    else
-        set_termit_options();
+    if (configsFound)
+    {
+        TRACE_MSG("config file found");
+        if (g_key_file_has_group(keyfile, "termit") == TRUE)
+            load_termit_options(keyfile);
+        else
+            set_termit_options();
 
-    if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
-        load_bookmark_options(keyfile);
+        if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
+            load_bookmark_options(keyfile);
+    }
+    else
+    {
+        TRACE_MSG("config file not found");
+        set_termit_options();
+    }
 
     TRACE_STR(configs.default_tab_name);
     TRACE_STR(configs.default_font);

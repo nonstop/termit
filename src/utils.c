@@ -37,7 +37,7 @@ void termit_append_tab()
     int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), tab.hbox, tab.tab_name);
     if (index ==-1)
     {
-        ERROR("Cannot create a new tab");
+        ERROR(_("Cannot create a new tab"));
         return;
     }
     

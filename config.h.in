@@ -1,0 +1,18 @@
+/* Gettext locale dir */
+#define LOCALEDIR "${TERMIT_LOCALE_DIR}"
+
+/* Name of package */
+#define PACKAGE "${TERMIT_PACKAGE}"
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "${TERMIT_PACKAGE_BUGREPORT}"
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME "${TERMIT_PACKAGE_NAME}"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "${TERMIT_PACKAGE_STRING}"
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "${TERMIT_PACKAGE_VERSION}"
+

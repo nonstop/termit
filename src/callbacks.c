@@ -110,9 +110,6 @@ gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
 
 gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-	unsigned int topage = 0;
-	gint npages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-
 //  Alt-left, Alt-right switch pages
     if (event->state & GDK_MOD1_MASK)
     {

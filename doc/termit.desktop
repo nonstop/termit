@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Termit
+Name[ru]=Termit
+Type=Application
+Exec=termit
+Categories=Utility;TerminalEmulator;GTK
+Comment=Lightweight terminal emulator
+Comment[ru]=Эмулятор терминала
+Encoding=UTF-8
+GenericName=Terminal emulator
+GenericName[ru]=Эмулятор терминала
+Terminal=false
+

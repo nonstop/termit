@@ -12,11 +12,13 @@
 
 #ifdef DEBUG
 #define TRACE g_fprintf(stderr, "%s:%d\n", __FILE__, __LINE__)
+#define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_STR(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_NUM(x) g_fprintf(stderr, "%s:%d %s = %d\n", __FILE__, __LINE__, #x, x)
 #define ERROR(x) g_fprintf(stderr, "%s:%d error: %s\n", __FILE__, __LINE__, x)
 #else
 #define TRACE 
+#define TRACE_MSG(x)
 #define TRACE_STR(x) 
 #define TRACE_NUM(x) 
 #define ERROR(x) 

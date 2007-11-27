@@ -1,55 +1,42 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-25 09:19+0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-
-#: src/termit.c:16
-msgid "goto: "
+#: /home/nonstop/coding/termit/src/utils.c:40
+msgid "Cannot create a new tab"
 msgstr ""
 
-#: src/termit.c:65
-msgid "New tab"
-msgstr ""
-
-#: src/termit.c:66
+#: /home/nonstop/coding/termit/src/termit.c:68
 msgid "Close tab"
 msgstr ""
 
-#: src/termit.c:68
-msgid "Set tab name..."
+#: /home/nonstop/coding/termit/src/utils.c:92
+msgid "Encoding"
 msgstr ""
 
-#: src/termit.c:98
+#: /home/nonstop/coding/termit/src/termit.c:100
 msgid "Encodings"
 msgstr ""
 
-#: src/callbacks.c:21
+#: /home/nonstop/coding/termit/src/termit.c:67
+msgid "New tab"
+msgstr ""
+
+#: /home/nonstop/coding/termit/src/callbacks.c:266
+msgid "Select font"
+msgstr ""
+
+#: /home/nonstop/coding/termit/src/termit.c:70
+msgid "Set tab name..."
+msgstr ""
+
+#: /home/nonstop/coding/termit/src/callbacks.c:21
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: src/callbacks.c:235 src/callbacks.c:245
+#: /home/nonstop/coding/termit/src/callbacks.c:232
+#: /home/nonstop/coding/termit/src/callbacks.c:242
 msgid "Tab name"
 msgstr ""
 
-#: src/callbacks.c:269
-msgid "Select font"
-msgstr ""
-
-#: src/utils.c:92
-msgid "Encoding"
+#: /home/nonstop/coding/termit/src/termit.c:18
+msgid "goto: "
 msgstr ""

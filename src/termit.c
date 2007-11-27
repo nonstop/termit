@@ -2,6 +2,8 @@
 #include <vte/vte.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "utils.h"
 #include "callbacks.h"
 #include "configs.h"
@@ -130,6 +132,16 @@ static void termit_init()
 
 int main(int argc, char **argv)
 {
+    if (argc > 1)
+    {
+        if (!strcmp(argv[1], "--version"))
+        {
+            printf(PACKAGE_VERSION);
+            printf("\n");
+            return 0;
+        }
+    }
+
     bind_textdomain_codeset(PACKAGE, "UTF-8");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);

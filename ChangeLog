@@ -1,0 +1,11 @@
+version 1.0.3
+	double-click on empty space in tabbar opens new tab
+	in debug mode prints pid of child shell process
+version 1.0.2
+	only fixing bootstrap.sh
+version 1.0.1
+	removed unneccessary free - potential "double-free" error
+version 1.0
+	initial release
+
+
