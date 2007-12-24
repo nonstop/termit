@@ -1,10 +1,14 @@
 
 #include <sys/wait.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <glib/gstdio.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "utils.h"
 #include "callbacks.h"
 #include "configs.h"
+#include "sessions.h"
 
 extern struct TermitData termit;
 extern struct Configs configs;
@@ -25,17 +29,6 @@ static gboolean confirm_exit()
         return FALSE;
     else
         return TRUE;
-}
-
-static void termit_del_tab()
-{
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, page);
-    
-    g_free(tab.encoding);
-    g_array_remove_index(termit.tabs, page);
-            
-    gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
 }
 
 static void termit_quit()
@@ -294,27 +287,25 @@ void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page
     termit_set_statusbar_encoding(page_num);
 }
 
-void termit_cb_bookmarks_changed(GtkComboBox *widget, gpointer user_data)
+gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gpointer user_data)
 {
-    GtkTreeIter iter;
-    if (!gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter))
-        return;
-
-    GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(widget));
-    gchar *value = NULL;
-    gtk_tree_model_get(model, &iter, 1, &value, -1);
-
+    if (event->button == 2)
+        termit_append_tab();
+        
     struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-        gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
-    gchar* cmd = g_strdup_printf("cd %s\n", value);
+            gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
+    gchar* cmd = g_strdup_printf("cd %s\n", ((struct Bookmark*)user_data)->path);
     GString* cmdStr = g_string_new(cmd);
     vte_terminal_feed_child(VTE_TERMINAL(tab.vte), cmdStr->str, cmdStr->len);
-    
+
     g_string_free(cmdStr, TRUE);
     g_free(cmd);
-    g_free(value);
-    
+
+    if (event->button == 2)
+        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), tab.hbox,
+            ((struct Bookmark*)user_data)->name);
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), tab.vte);
+    return TRUE;
 }
 
 gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
@@ -324,5 +315,104 @@ gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func
         termit_append_tab();
 
     return FALSE;
+}
+
+gchar* termit_get_xdg_data_path()
+{
+    gchar* fullPath = NULL;
+    const gchar *dataHome = g_getenv("XDG_DATA_HOME");
+    if (dataHome)
+        fullPath = g_strdup_printf("%s/termit", dataHome);
+    else
+    {
+        fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
+    }
+    TRACE_STR(fullPath);
+    return fullPath;
+}
+
+void termit_on_save_session()
+{
+    gchar* fullPath = termit_get_xdg_data_path();
+    
+    GtkWidget* dlg = gtk_file_chooser_dialog_new(
+        _("Save session"), 
+        GTK_WINDOW(termit.main_window), 
+        GTK_FILE_CHOOSER_ACTION_SAVE, 
+        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+        GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+        NULL);
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dlg), TRUE);
+
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dlg), fullPath);
+    gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dlg), "New session");
+
+    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT)
+    {
+        gtk_widget_destroy(dlg);
+        g_free(fullPath);
+        return;
+    }
+
+    gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
+    TRACE_STR(filename);
+    FILE* fd = g_fopen(filename, "w");
+    if ((int)fd == -1)
+    {
+        gtk_widget_destroy(dlg);
+        g_free(filename);
+        g_free(fullPath);
+        return;
+    }
+    
+    GKeyFile *kf = g_key_file_new();
+    guint pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    g_key_file_set_integer(kf, "session", "tab_count", pages);
+    
+    guint i = 0;
+    for (; i < pages; ++i)
+    {
+        gchar* groupName = g_strdup_printf("tab%d", i);
+        struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, i);
+        g_key_file_set_string(kf, groupName, "tab_name", gtk_label_get_text(GTK_LABEL(tab.tab_name)));
+        g_key_file_set_string(kf, groupName, "encoding", tab.encoding);
+        gchar* working_dir = termit_get_pid_dir(tab.pid);
+        g_key_file_set_string(kf, groupName, "working_dir", working_dir);
+        g_free(working_dir);
+        g_free(groupName);
+    }
+    gchar* data = g_key_file_to_data(kf, NULL, NULL);
+    g_fprintf(fd, data);
+    fclose(fd);
+    g_key_file_free(kf);
+
+    g_free(filename);
+    gtk_widget_destroy(dlg);
+    g_free(fullPath);
+}
+
+void termit_on_load_session()
+{
+    gchar* fullPath = termit_get_xdg_data_path();
+
+    GtkWidget* dlg = gtk_file_chooser_dialog_new(
+        _("Open session"), 
+        GTK_WINDOW(termit.main_window), 
+        GTK_FILE_CHOOSER_ACTION_OPEN, 
+        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+        NULL);
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dlg), TRUE);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dlg), fullPath);
+
+    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT)
+        goto free_dlg;
+
+    gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
+    termit_load_session(filename);
+    g_free(filename);
+free_dlg:
+    gtk_widget_destroy(dlg);
+    g_free(fullPath);
 }
 

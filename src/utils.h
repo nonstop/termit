@@ -31,6 +31,7 @@ struct TermitData
     GtkWidget *statusbar;
     GtkWidget *cb_bookmarks;
     GtkWidget *menu;
+    GtkWidget *menu_bar;
     GArray *tabs;
     gint tab_max_number;
     PangoFontDescription *font;
@@ -45,7 +46,6 @@ struct TermitTab
     gchar *encoding;
     pid_t pid;
 };
-
 
 #endif /* UTILS_H */
 

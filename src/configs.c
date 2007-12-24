@@ -1,3 +1,4 @@
+#include <stdlib.h>
 
 #include "utils.h"
 #include "configs.h"
@@ -46,7 +47,6 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.scrollback_lines = atoi(value);
     if (!configs.scrollback_lines)
         configs.scrollback_lines = scrollback_lines;
-
     if (g_key_file_has_key(keyfile, "termit", "encodings", &error) == TRUE)
     {
         gsize enc_length = 0;
@@ -95,14 +95,13 @@ void termit_load_config()
     GError * error = NULL;
     
     const gchar *configFile = "termit.cfg";
-    const gchar *configDir = "termit";
     const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
     gchar* fullPath = NULL;
     if (configHome)
-        fullPath = g_strdup_printf("%s/%s/%s", configHome, configDir, configFile);
+        fullPath = g_strdup_printf("%s/termit/%s", configHome, configFile);
     else
     {
-        fullPath = g_strdup_printf("%s/.config/%s/%s", g_getenv("HOME"), configDir, configFile);
+        fullPath = g_strdup_printf("%s/.config/termit/%s", g_getenv("HOME"), configFile);
     }
     gboolean configsFound = g_key_file_load_from_file(keyfile, fullPath, G_KEY_FILE_NONE, &error);
     g_free(fullPath);
@@ -117,6 +116,7 @@ void termit_load_config()
 
         if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
             load_bookmark_options(keyfile);
+        g_key_file_free(keyfile);
     }
     else
     {

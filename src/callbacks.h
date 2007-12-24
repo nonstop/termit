@@ -20,12 +20,17 @@ void termit_set_tab_name();
 void termit_select_font();
 void termit_menu_exit();
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data);
-void termit_cb_bookmarks_changed(GtkComboBox *widget, gpointer user_data);
+gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gpointer user_data);
 void termit_append_tab();
+void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir);
+gchar* termit_get_pid_dir(pid_t pid);
+void termit_del_tab();
+
 void termit_set_font();
 void termit_set_statusbar_encoding(gint page);
 gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data);
-
+void termit_on_save_session();
+void termit_on_load_session();
                                             
                                             
 #endif /* CALLBACKS_H */
