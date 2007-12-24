@@ -12,7 +12,7 @@ msgstr ""
 
 #. Encoding menu
 #: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:194
+#: /home/nonstop/coding/termit/src/termit.c:198
 msgid "Encoding"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 
 #. Edit menu
 #: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:164
+#: /home/nonstop/coding/termit/src/termit.c:168
 msgid "Set tab name..."
 msgstr ""
 

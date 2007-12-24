@@ -136,7 +136,11 @@ static void create_main_window(const gchar* sessionFile)
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
     if (sessionFile)
+    {
         termit_load_session(sessionFile);
+        if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
+            termit_append_tab();
+    }
     else
     {
         termit_append_tab();

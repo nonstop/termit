@@ -29,7 +29,7 @@ msgstr "Правка"
 
 #. Encoding menu
 #: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:194
+#: /home/nonstop/coding/termit/src/termit.c:198
 msgid "Encoding"
 msgstr "Кодировка"
 
@@ -55,7 +55,7 @@ msgstr "Сессии"
 
 #. Edit menu
 #: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:164
+#: /home/nonstop/coding/termit/src/termit.c:168
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
@@ -76,4 +76,3 @@ msgstr "Заголовок вкладки"
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
-

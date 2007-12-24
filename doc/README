@@ -8,9 +8,14 @@
         * changing tab name
         * changing font for tabs
         * encodings (all available from GTK2)
+        * sessions
 
-    Configuration can be changed via $HOME/.termit file (example is provided).
+    Configuration can be changed via $HOME/.config/termit/termit.cfg file (example is provided).
     
+    Command-line arguments:
+        * --version (-v) - prints version info
+        * --session=[sess.file] - load session at startup
+
     Useful keys:
         * Ctrl-t - open tab
         * Ctrl-w - close tab
