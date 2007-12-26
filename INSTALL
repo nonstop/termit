@@ -21,6 +21,10 @@ And finally install:
 
     make install
 
+Package makers can specify DESTDIR:
+    
+    make install DESTDIR="destdir"
+
 To remove termit:
 
     make uninstall

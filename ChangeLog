@@ -1,3 +1,6 @@
+version 1.1.1
+	inportant for 64bit platforms: fixes a cast of a pointer to "int"
+	use pkg-config for detecting vte library
 version 1.1
 	build system changed to CMake (http://www.cmake.org/)
 	--version (-v) support
