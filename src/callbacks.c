@@ -2,6 +2,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include <glib/gstdio.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -357,7 +358,7 @@ void termit_on_save_session()
     gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
     TRACE_STR(filename);
     FILE* fd = g_fopen(filename, "w");
-    if ((int)fd == -1)
+    if ((intptr_t)fd == -1)
     {
         gtk_widget_destroy(dlg);
         g_free(filename);
