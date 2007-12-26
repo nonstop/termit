@@ -20,15 +20,15 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:399
+#: /home/nonstop/coding/termit/src/callbacks.c:400
 msgid "Open session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:339
+#: /home/nonstop/coding/termit/src/callbacks.c:340
 msgid "Save session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:259
+#: /home/nonstop/coding/termit/src/callbacks.c:260
 msgid "Select font"
 msgstr ""
 
@@ -42,14 +42,14 @@ msgstr ""
 msgid "Set tab name..."
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:25
+#: /home/nonstop/coding/termit/src/callbacks.c:26
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:225
-#: /home/nonstop/coding/termit/src/callbacks.c:235
+#: /home/nonstop/coding/termit/src/callbacks.c:226
+#: /home/nonstop/coding/termit/src/callbacks.c:236
 msgid "Tab name"
 msgstr ""
 
