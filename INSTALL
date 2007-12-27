@@ -2,7 +2,7 @@ Installation Instructions
 *************************
 
 
-    Termit requires CMake version (older than  2.4). You can obtain CMake sources here http://cmake.org/.
+    Termit requires CMake (version  2.4 or later). You can obtain CMake sources here http://cmake.org/.
 
 
 Run CMake generator:
