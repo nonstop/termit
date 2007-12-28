@@ -1,3 +1,4 @@
 -- names for sessions
 -- names for bookmarks
 -- encoding for bookmarks
+-- encode displayed buffer (hmmm it seems vte doesn't support that)
