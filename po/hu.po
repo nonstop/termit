@@ -1,0 +1,61 @@
+#: /home/nonstop/coding/termit/src/termit.c:87
+msgid "Bookmarks"
+msgstr "Könyvjelzők"
+
+#: /home/nonstop/coding/termit/src/utils.c:42
+msgid "Cannot create a new tab"
+msgstr "Nem sikerült új fület létrehozni"
+
+#: /home/nonstop/coding/termit/src/termit.c:58
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#. Encoding menu
+#: /home/nonstop/coding/termit/src/termit.c:107
+#: /home/nonstop/coding/termit/src/termit.c:198
+msgid "Encoding"
+msgstr "Kódolás"
+
+#: /home/nonstop/coding/termit/src/termit.c:37
+msgid "File"
+msgstr "Fájl"
+
+#: /home/nonstop/coding/termit/src/callbacks.c:400
+msgid "Open session"
+msgstr "Megnyitás"
+
+#: /home/nonstop/coding/termit/src/callbacks.c:340
+msgid "Save session"
+msgstr "Mentés"
+
+#: /home/nonstop/coding/termit/src/callbacks.c:260
+msgid "Select font"
+msgstr "Betűkészlet"
+
+#: /home/nonstop/coding/termit/src/termit.c:75
+msgid "Sessions"
+msgstr "Munkamenetek"
+
+#. Edit menu
+#: /home/nonstop/coding/termit/src/termit.c:48
+#: /home/nonstop/coding/termit/src/termit.c:168
+msgid "Set tab name..."
+msgstr "Fül átnevezése..."
+
+#: /home/nonstop/coding/termit/src/callbacks.c:26
+msgid ""
+"Several tabs are opened.\n"
+"Close anyway?"
+msgstr ""
+"Több fül is nyitva van.\n"
+"Bezárja mind?"
+
+#: /home/nonstop/coding/termit/src/callbacks.c:226
+#: /home/nonstop/coding/termit/src/callbacks.c:236
+msgid "Tab name"
+msgstr "Fül neve"
+
+#: /home/nonstop/coding/termit/src/sessions.c:70
+#, c-format
+msgid "Unable to create directory '%s': %s"
+msgstr "A könyvtár létrehozása sikertelen '%s': %s"

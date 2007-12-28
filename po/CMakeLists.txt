@@ -1,4 +1,5 @@
 SET(PO_FILES
+  hu.po
   ru.po)
 
 SET(COPYRIGHT_HOLDER "Evgeny Ratnikov")
