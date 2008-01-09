@@ -11,38 +11,56 @@ static gchar *default_font = "Sans 10";
 static gint scrollback_lines = 4096;
 static gchar *default_word_chars = "-A-Za-z0-9,./?%&#:_~";
 
+/**
+ * print error message, free GError
+ * */
+static void config_error(GError** err)
+{
+    TRACE_STR((*err)->message);
+    g_error_free(*err);
+    *err = NULL;
+}
+static void set_default_value(gchar* var, gchar* value, GError** err)
+{
+    var = value;
+    config_error(err);
+}
+
 static void load_termit_options(GKeyFile *keyfile)
 {
     gchar *value = NULL;
     GError * error = NULL;
     value = g_key_file_get_value(keyfile, "termit", "default_tab_name", &error);
     if (!value)
-        configs.default_tab_name = default_tab_name;
+        set_default_value(configs.default_tab_name, default_tab_name, &error);
     else
         configs.default_tab_name = value;
 
     value = g_key_file_get_value(keyfile, "termit", "default_encoding", &error);
     if (!value)
-        configs.default_encoding = default_encoding;
+        set_default_value(configs.default_encoding, default_encoding, &error);
     else
         configs.default_encoding = value;
     
     value = g_key_file_get_value(keyfile, "termit", "word_chars", &error);
     if (!value)
-        configs.default_word_chars = default_word_chars;
+        set_default_value(configs.default_word_chars, default_word_chars, &error);
     else
         configs.default_word_chars = value;
     TRACE_STR(configs.default_word_chars);
 
     value = g_key_file_get_value(keyfile, "termit", "default_font", &error);
     if (!value)
-        configs.default_font = default_font;
+        set_default_value(configs.default_font, default_font, &error);
     else
         configs.default_font = value;
     
     value = g_key_file_get_value(keyfile, "termit", "scrollback_lines", &error);
     if (!value)
+    {
         configs.scrollback_lines = scrollback_lines;
+        config_error(&error);
+    }
     else
         configs.scrollback_lines = atoi(value);
     if (!configs.scrollback_lines)
@@ -52,10 +70,15 @@ static void load_termit_options(GKeyFile *keyfile)
         gsize enc_length = 0;
         gchar **encodings = g_key_file_get_string_list(keyfile, "termit", "encodings", &enc_length, &error);
         if (!encodings)
+        {
+            config_error(&error);
             return;
+        }
         configs.encodings = encodings;
         configs.enc_length = enc_length;
     }
+    else
+        config_error(&error);
 
     TRACE_NUM(configs.enc_length);
 }
