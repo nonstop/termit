@@ -1,4 +1,5 @@
 SET(PO_FILES
+  fr.po
   hu.po
   ru.po)
 
