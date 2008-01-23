@@ -1,3 +1,7 @@
+version 1.1.2
+	bugfix with GError when parsing config files
+	added hungarian translation (author Peter Polonkai)
+	added french translation (author Mallory Mollo)
 version 1.1.1
 	important for 64bit platforms: fixes a cast of a pointer to "int"
 	use pkg-config for detecting vte library
