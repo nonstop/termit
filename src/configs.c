@@ -7,7 +7,7 @@ extern struct Configs configs;
 
 static gchar *default_encoding = "UTF-8";
 static gchar *default_tab_name = "Terminal";
-static gchar *default_font = "Sans 10";
+static gchar *default_font = "Monospace 10";
 static gint scrollback_lines = 4096;
 static gchar *default_word_chars = "-A-Za-z0-9,./?%&#:_~";
 

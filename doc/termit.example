@@ -2,7 +2,7 @@
 [termit]
 #default_encoding=KOI8-R
 #default_tab_name=Terminal
-default_font=Sans 12
+default_font=Monospace 10
 scrollback_lines=4096
 word_chars="-A-Za-z0-9,./?%&#:_~"
 
