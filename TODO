@@ -2,3 +2,5 @@
 -- names for bookmarks
 -- encoding for bookmarks
 -- encode displayed buffer (hmmm it seems vte doesn't support that)
+-- option for session what run in each tab. e.g.
+shell=zsh, or shell=zsh -c htop
