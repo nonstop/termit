@@ -72,7 +72,7 @@ void termit_set_font()
 {
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     struct TermitTab tab;
-    gint minWidth, minHeight;
+    gint minWidth = 0, minHeight = 0;
     /* Set the font for all tabs */
     int i=0;
     for (i=0; i<page_num; i++)
