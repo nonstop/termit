@@ -4,3 +4,5 @@
 -- encode displayed buffer (hmmm it seems vte doesn't support that)
 -- option for session what run in each tab. e.g.
 shell=zsh, or shell=zsh -c htop
+-- support to reorderable tabs (since gtk-2.10)
+
