@@ -32,7 +32,6 @@ struct TermitData
     GtkWidget *cb_bookmarks;
     GtkWidget *menu;
     GtkWidget *menu_bar;
-    GArray *tabs;
     gint tab_max_number;
     PangoFontDescription *font;
 };
@@ -46,6 +45,16 @@ struct TermitTab
     gchar *encoding;
     pid_t pid;
 };
+
+struct TermitTab* termit_get_tab_by_index(gint index);
+#define TERMIT_GET_TAB_BY_INDEX(pTab, ind) \
+    struct TermitTab* pTab = termit_get_tab_by_index(ind); \
+    if (!pTab) \
+    {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return; }
+#define TERMIT_GET_TAB_BY_INDEX2(pTab, ind, retCode) \
+    struct TermitTab* pTab = termit_get_tab_by_index(ind); \
+    if (!pTab) \
+    {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return retCode; }
 
 #endif /* UTILS_H */
 

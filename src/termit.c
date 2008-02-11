@@ -218,7 +218,6 @@ static void termit_create_popup_menu()
 
 static void termit_init(const gchar* sessionFile)
 {
-    termit.tabs = g_array_new(FALSE, TRUE, sizeof(struct TermitTab));
     termit.tab_max_number = 1;
 
     termit_create_popup_menu();

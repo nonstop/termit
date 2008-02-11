@@ -1,4 +1,3 @@
-//#include <unistd.h>
 
 #include "utils.h"
 #include "callbacks.h"
@@ -9,53 +8,60 @@ extern struct Configs configs;
 
 void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir)
 {
-    TRACE;
-    struct TermitTab tab;
+    TRACE_MSG(__FUNCTION__);
+    struct TermitTab* pTab = g_malloc(sizeof(struct TermitTab));
 
-    tab.tab_name = gtk_label_new(tab_name);
-    tab.encoding = g_strdup(configs.default_encoding);
+    pTab->tab_name = gtk_label_new(tab_name);
+    pTab->encoding = g_strdup(configs.default_encoding);
 
-    tab.hbox = gtk_hbox_new(FALSE, 0);
-    tab.vte = vte_terminal_new();
+    pTab->hbox = gtk_hbox_new(FALSE, 0);
+    pTab->vte = vte_terminal_new();
 
-    vte_terminal_set_scrollback_lines(VTE_TERMINAL(tab.vte), configs.scrollback_lines);
+    vte_terminal_set_scrollback_lines(VTE_TERMINAL(pTab->vte), configs.scrollback_lines);
     if (configs.default_word_chars)
     {
         TRACE_STR(configs.default_word_chars);
-        vte_terminal_set_word_chars(VTE_TERMINAL(tab.vte), configs.default_word_chars);
+        vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
     }
-    vte_terminal_set_mouse_autohide(VTE_TERMINAL(tab.vte), TRUE);
+    vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
 
-    tab.scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(tab.vte)));
+    pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
 
-    gtk_box_pack_start(GTK_BOX(tab.hbox), tab.vte, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(tab.hbox), tab.scrollbar, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
 
 
-    tab.pid = vte_terminal_fork_command(VTE_TERMINAL(tab.vte), 
+    pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte), 
             shell, NULL, NULL, 
             working_dir, TRUE, TRUE,TRUE);
-    TRACE_NUM(tab.pid);
-    int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), tab.hbox, tab.tab_name);
+    TRACE_NUM(pTab->pid);
+    int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
     if (index ==-1)
     {
         ERROR(_("Cannot create a new tab"));
         return;
     }
 
-    g_signal_connect(G_OBJECT(tab.vte), "child-exited", G_CALLBACK(termit_child_exited), NULL);
-    g_signal_connect(G_OBJECT(tab.vte), "eof", G_CALLBACK(termit_eof), NULL);
-    g_signal_connect_swapped(G_OBJECT(tab.vte), "button-press-event", G_CALLBACK(termit_popup), termit.menu);
+    g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_child_exited), NULL);
+    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
+    g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_popup), termit.menu);
 
     TRACE_NUM(index);
-    TRACE_STR(vte_terminal_get_encoding(VTE_TERMINAL(tab.vte)));
-    g_array_append_val(termit.tabs, tab);
+    TRACE_STR(vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+
+    GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
+    if (!tabWidget)
+    {
+        ERROR("tabWidget is NULL");
+        return;
+    }
+    g_object_set_data(G_OBJECT(tabWidget), "termit.tab", pTab);
 
     gtk_widget_show_all(termit.notebook);
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
-    gtk_window_set_focus(GTK_WINDOW(termit.main_window), tab.vte);
+    gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
-    vte_terminal_set_font(VTE_TERMINAL(tab.vte), termit.font);
+    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
 }
 
 void termit_append_tab()
@@ -71,16 +77,15 @@ void termit_append_tab()
 void termit_set_font()
 {
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    struct TermitTab tab;
     gint minWidth = 0, minHeight = 0;
     /* Set the font for all tabs */
     int i=0;
     for (i=0; i<page_num; i++)
     {
-        tab = g_array_index(termit.tabs, struct TermitTab, i);	
-        vte_terminal_set_font(VTE_TERMINAL(tab.vte), termit.font);
-        minWidth = vte_terminal_get_char_width(VTE_TERMINAL(tab.vte))*80;
-        minHeight = vte_terminal_get_char_height(VTE_TERMINAL(tab.vte))*24;
+        TERMIT_GET_TAB_BY_INDEX(pTab, i)
+        vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);
+        minWidth = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte))*80;
+        minHeight = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte))*24;
     }
     gint oldWidth, oldHeight;
     gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);
@@ -99,9 +104,9 @@ void termit_set_statusbar_encoding(gint page)
 {
     if (page < 0)
         page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
 
-    gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(tab.vte)));
+    gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
 }
 
 gchar* termit_get_pid_dir(pid_t pid)
@@ -114,13 +119,26 @@ gchar* termit_get_pid_dir(pid_t pid)
 
 void termit_del_tab()
 {
+    TRACE;
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, page);
-    
-    g_free(tab.encoding);
-    g_array_remove_index(termit.tabs, page);
             
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TRACE_NUM(pTab->pid);
+    g_free(pTab->encoding);
+    g_free(pTab);
+
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
 }
 
+struct TermitTab* termit_get_tab_by_index(gint index)
+{
+    GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
+    if (!tabWidget)
+    {
+        ERROR("tabWidget is NULL");
+        return NULL;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), "termit.tab");
+    return pTab;
+}
 

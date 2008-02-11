@@ -20,9 +20,9 @@ static void config_error(GError** err)
     g_error_free(*err);
     *err = NULL;
 }
-static void set_default_value(gchar* var, gchar* value, GError** err)
+static void set_default_value(gchar** var, gchar* value, GError** err)
 {
-    var = value;
+    *var = value;
     config_error(err);
 }
 
@@ -32,28 +32,31 @@ static void load_termit_options(GKeyFile *keyfile)
     GError * error = NULL;
     value = g_key_file_get_value(keyfile, "termit", "default_tab_name", &error);
     if (!value)
-        set_default_value(configs.default_tab_name, default_tab_name, &error);
+        set_default_value(&configs.default_tab_name, default_tab_name, &error);
     else
         configs.default_tab_name = value;
+    TRACE_STR(configs.default_tab_name);
 
     value = g_key_file_get_value(keyfile, "termit", "default_encoding", &error);
     if (!value)
-        set_default_value(configs.default_encoding, default_encoding, &error);
+        set_default_value(&configs.default_encoding, default_encoding, &error);
     else
         configs.default_encoding = value;
+    TRACE_STR(configs.default_encoding);
     
     value = g_key_file_get_value(keyfile, "termit", "word_chars", &error);
     if (!value)
-        set_default_value(configs.default_word_chars, default_word_chars, &error);
+        set_default_value(&configs.default_word_chars, default_word_chars, &error);
     else
         configs.default_word_chars = value;
     TRACE_STR(configs.default_word_chars);
 
     value = g_key_file_get_value(keyfile, "termit", "default_font", &error);
     if (!value)
-        set_default_value(configs.default_font, default_font, &error);
+        set_default_value(&configs.default_font, default_font, &error);
     else
         configs.default_font = value;
+    TRACE_STR(configs.default_font);
     
     value = g_key_file_get_value(keyfile, "termit", "scrollback_lines", &error);
     if (!value)
@@ -65,8 +68,11 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.scrollback_lines = atoi(value);
     if (!configs.scrollback_lines)
         configs.scrollback_lines = scrollback_lines;
+    TRACE_NUM(configs.scrollback_lines);
+
     if (g_key_file_has_key(keyfile, "termit", "encodings", &error) == TRUE)
     {
+        TRACE;
         gsize enc_length = 0;
         gchar **encodings = g_key_file_get_string_list(keyfile, "termit", "encodings", &enc_length, &error);
         if (!encodings)
@@ -78,7 +84,10 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.enc_length = enc_length;
     }
     else
-        config_error(&error);
+    {
+        TRACE;
+        //config_error(&error); // check carefully - segfault with gtk-2.8.20, glib-2.10.3
+    }
 
     TRACE_NUM(configs.enc_length);
 }

@@ -37,7 +37,6 @@ static void termit_quit()
     while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
         termit_del_tab();
     
-    g_array_free(termit.tabs, TRUE);
     g_strfreev(configs.encodings);
     g_array_free(configs.bookmarks, TRUE);
     pango_font_description_free(termit.font);
@@ -58,13 +57,13 @@ void termit_destroy(GtkWidget *widget, gpointer data)
 void termit_child_exited()
 {
 	gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-	struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
 
 	TRACE_STR("waiting for pid");
-    TRACE_NUM(tab.pid);
+    TRACE_NUM(pTab->pid);
 	
     int status = 0;
-	waitpid(tab.pid, &status, WNOHANG);
+	waitpid(pTab->pid, &status, WNOHANG);
 	/* TODO: check wait return */	
 
 	termit_del_tab();
@@ -151,9 +150,9 @@ gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_d
 
 void termit_set_encoding(GtkWidget *widget, void *data)
 {
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-        gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
-    vte_terminal_set_encoding(VTE_TERMINAL(tab.vte), (gchar*)data);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), (gchar*)data);
     termit_set_statusbar_encoding(-1);
 }
 
@@ -182,16 +181,16 @@ void termit_next_tab()
 
 void termit_paste()
 {
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-        gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
-    vte_terminal_paste_clipboard(VTE_TERMINAL(tab.vte));
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    vte_terminal_paste_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
 void termit_copy()
 {
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-        gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
-    vte_terminal_copy_clipboard(VTE_TERMINAL(tab.vte));
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
 void termit_close_tab()
@@ -231,13 +230,13 @@ void termit_set_tab_name()
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
     
 
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-        gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page)
     GtkWidget *label = gtk_label_new(_("Tab name"));
     GtkWidget *entry = gtk_entry_new();
     gtk_entry_set_text(
         GTK_ENTRY(entry), 
-        gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), tab.hbox));
+        gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox));
     
     GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
@@ -250,7 +249,8 @@ void termit_set_tab_name()
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg)))
-        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), tab.hbox, gtk_entry_get_text(GTK_ENTRY(entry)));
+        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), 
+            pTab->hbox, gtk_entry_get_text(GTK_ENTRY(entry)));
         
     gtk_widget_destroy(dlg);
 }
@@ -293,19 +293,19 @@ gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gp
     if (event->button == 2)
         termit_append_tab();
         
-    struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, 
-            gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE)
     gchar* cmd = g_strdup_printf("cd %s\n", ((struct Bookmark*)user_data)->path);
     GString* cmdStr = g_string_new(cmd);
-    vte_terminal_feed_child(VTE_TERMINAL(tab.vte), cmdStr->str, cmdStr->len);
+    vte_terminal_feed_child(VTE_TERMINAL(pTab->vte), cmdStr->str, cmdStr->len);
 
     g_string_free(cmdStr, TRUE);
     g_free(cmd);
 
     if (event->button == 2)
-        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), tab.hbox,
+        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox,
             ((struct Bookmark*)user_data)->name);
-    gtk_window_set_focus(GTK_WINDOW(termit.main_window), tab.vte);
+    gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
     return TRUE;
 }
 
@@ -374,10 +374,10 @@ void termit_on_save_session()
     for (; i < pages; ++i)
     {
         gchar* groupName = g_strdup_printf("tab%d", i);
-        struct TermitTab tab = g_array_index(termit.tabs, struct TermitTab, i);
-        g_key_file_set_string(kf, groupName, "tab_name", gtk_label_get_text(GTK_LABEL(tab.tab_name)));
-        g_key_file_set_string(kf, groupName, "encoding", tab.encoding);
-        gchar* working_dir = termit_get_pid_dir(tab.pid);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i)
+        g_key_file_set_string(kf, groupName, "tab_name", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        g_key_file_set_string(kf, groupName, "encoding", pTab->encoding);
+        gchar* working_dir = termit_get_pid_dir(pTab->pid);
         g_key_file_set_string(kf, groupName, "working_dir", working_dir);
         g_free(working_dir);
         g_free(groupName);
