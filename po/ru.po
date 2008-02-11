@@ -15,51 +15,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit/src/termit.c:87
+#: /home/evgeny/coding/termit/src/termit.c:87
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: /home/nonstop/coding/termit/src/utils.c:42
+#: /home/evgeny/coding/termit/src/utils.c:42
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: /home/nonstop/coding/termit/src/termit.c:58
+#: /home/evgeny/coding/termit/src/termit.c:58
 msgid "Edit"
 msgstr "Правка"
 
 #. Encoding menu
-#: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:198
+#: /home/evgeny/coding/termit/src/termit.c:107
+#: /home/evgeny/coding/termit/src/termit.c:198
 msgid "Encoding"
 msgstr "Кодировка"
 
-#: /home/nonstop/coding/termit/src/termit.c:37
+#: /home/evgeny/coding/termit/src/termit.c:37
 msgid "File"
 msgstr "Файл"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:400
+#: /home/evgeny/coding/termit/src/callbacks.c:400
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:340
+#: /home/evgeny/coding/termit/src/callbacks.c:340
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:260
+#: /home/evgeny/coding/termit/src/callbacks.c:260
 msgid "Select font"
 msgstr "Выбор шрифта"
 
-#: /home/nonstop/coding/termit/src/termit.c:75
+#: /home/evgeny/coding/termit/src/termit.c:75
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:168
+#: /home/evgeny/coding/termit/src/termit.c:48
+#: /home/evgeny/coding/termit/src/termit.c:168
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:26
+#: /home/evgeny/coding/termit/src/callbacks.c:26
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -67,12 +67,12 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:226
-#: /home/nonstop/coding/termit/src/callbacks.c:236
+#: /home/evgeny/coding/termit/src/callbacks.c:226
+#: /home/evgeny/coding/termit/src/callbacks.c:236
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: /home/nonstop/coding/termit/src/sessions.c:70
+#: /home/evgeny/coding/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
