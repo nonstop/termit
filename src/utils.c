@@ -59,6 +59,9 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
 
     gtk_widget_show_all(termit.notebook);
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
+#if GTK_CHECK_VERSION(2,10,0)
+    gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
+#endif
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
