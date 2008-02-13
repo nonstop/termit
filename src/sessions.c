@@ -75,6 +75,7 @@ void termit_init_sessions()
 struct TermitSession
 {
     gchar* tab_name;
+    gchar* shell_cmd;
     gchar* working_dir;
     gchar* encoding;
 };
@@ -101,6 +102,11 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
             ts.tab_name = g_strdup_printf("%s %d", configs.default_tab_name, i);
         else
             ts.tab_name = value;
+        value = g_key_file_get_value(kf, groupName, "shell_cmd", NULL);
+        if (!value)
+            ts.shell_cmd = g_strdup(g_getenv("SHELL"));
+        else
+            ts.shell_cmd = value;
         value = g_key_file_get_value(kf, groupName, "working_dir", NULL);
         if (!value)
             ts.working_dir = g_strdup(g_getenv("PWD"));
@@ -121,6 +127,7 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
         ts = g_array_index(session_tabs, struct TermitSession, i);
         termit_append_tab();
         TRACE_STR(ts.tab_name);
+        TRACE_STR(ts.shell_cmd);
         TRACE_STR(ts.working_dir);
         TRACE_STR(ts.encoding);
     }
@@ -133,6 +140,7 @@ static void free_session_tabs()
     {
         struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
         g_free(ts.tab_name);
+        g_free(ts.shell_cmd);
         g_free(ts.working_dir);
         g_free(ts.encoding);
     }
@@ -181,7 +189,7 @@ void termit_load_session(const gchar* sessionFile)
     for (; i<session_tabs->len; ++i)
     {
         struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
-        termit_append_tab_with_details(ts.tab_name, g_getenv("SHELL"), ts.working_dir);
+        termit_append_tab_with_details(ts.tab_name, ts.shell_cmd, ts.working_dir, ts.encoding);
     }
 //  finally block
 free_session_tabs:

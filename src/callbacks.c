@@ -153,6 +153,8 @@ void termit_set_encoding(GtkWidget *widget, void *data)
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page)
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), (gchar*)data);
+    g_free(pTab->encoding);
+    pTab->encoding = g_strdup((gchar*)data);
     termit_set_statusbar_encoding(-1);
 }
 

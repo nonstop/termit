@@ -227,6 +227,16 @@ static void termit_init(const gchar* sessionFile)
     termit_set_font();
 }
 
+static void termit_print_usage()
+{
+    g_print(
+"termit - terminal emulator\n"
+"Options:\n"
+"    --help - print this help\n"
+"    --version - print version number\n"
+"    --session=session_file - start session using session_file\n");
+}
+
 int main(int argc, char **argv)
 {
     gchar* sessionFile = NULL;
@@ -234,6 +244,7 @@ int main(int argc, char **argv)
     {
         static struct option long_options[] =
         {
+            {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
             {"session", required_argument, 0, 's'},
             {0, 0, 0, 0}
@@ -241,7 +252,7 @@ int main(int argc, char **argv)
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "vs:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvs:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
@@ -249,9 +260,12 @@ int main(int argc, char **argv)
 
         switch (flag)
         {
+        case 'h':
+            termit_print_usage();
+            return 0;
         case 'v':
-            printf(PACKAGE_VERSION);
-            printf("\n");
+            g_printf(PACKAGE_VERSION);
+            g_printf("\n");
             return 0;
         case 's':
             sessionFile = g_strdup(optarg);

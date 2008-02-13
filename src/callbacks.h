@@ -22,7 +22,7 @@ void termit_menu_exit();
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data);
 gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gpointer user_data);
 void termit_append_tab();
-void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir);
+void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir, const gchar* encoding);
 gchar* termit_get_pid_dir(pid_t pid);
 void termit_del_tab();
 

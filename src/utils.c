@@ -6,13 +6,13 @@
 extern struct TermitData termit;
 extern struct Configs configs;
 
-void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir)
+void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir, const gchar* encoding)
 {
     TRACE_MSG(__FUNCTION__);
     struct TermitTab* pTab = g_malloc(sizeof(struct TermitTab));
 
     pTab->tab_name = gtk_label_new(tab_name);
-    pTab->encoding = g_strdup(configs.default_encoding);
+    pTab->encoding = g_strdup(encoding);
 
     pTab->hbox = gtk_hbox_new(FALSE, 0);
     pTab->vte = vte_terminal_new();
@@ -45,6 +45,8 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_child_exited), NULL);
     g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_popup), termit.menu);
+    
+    vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
     TRACE_NUM(index);
     TRACE_STR(vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
@@ -65,16 +67,16 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
+    termit_set_statusbar_encoding(-1);
 }
 
 void termit_append_tab()
 {
     gchar *label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
     
-    termit_append_tab_with_details(label_text, g_getenv("SHELL"), g_getenv("PWD"));
+    termit_append_tab_with_details(label_text, g_getenv("SHELL"), g_getenv("PWD"), configs.default_encoding);
 
     g_free(label_text);
-
 }
 
 void termit_set_font()
