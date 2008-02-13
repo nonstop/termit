@@ -228,7 +228,6 @@ void termit_set_tab_name()
         GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dlg), GTK_RESPONSE_ACCEPT);
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
-    
 
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page)
@@ -243,15 +242,13 @@ void termit_set_tab_name()
     gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, FALSE, 5);
     
     g_signal_connect(G_OBJECT(dlg), "key-press-event", G_CALLBACK(dlg_key_press), dlg);
-    
 
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dlg)->vbox), hbox, FALSE, FALSE, 10);
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg)))
-        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), 
-            pTab->hbox, gtk_entry_get_text(GTK_ENTRY(entry)));
-        
+        gtk_label_set_text(GTK_LABEL(pTab->tab_name), gtk_entry_get_text(GTK_ENTRY(entry)));
+    
     gtk_widget_destroy(dlg);
 }
 
