@@ -30,9 +30,13 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
 
-
+    gchar* argv[2];
+    argv[0] = g_strdup(shell);
+    argv[1] = NULL;
+    gchar* env[1];
+    env[0] = NULL;
     pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte), 
-            shell, NULL, NULL, 
+            argv[0], argv, env, 
             working_dir, TRUE, TRUE,TRUE);
     TRACE_NUM(pTab->pid);
     int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);

@@ -102,7 +102,7 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
             ts.tab_name = g_strdup_printf("%s %d", configs.default_tab_name, i);
         else
             ts.tab_name = value;
-        value = g_key_file_get_value(kf, groupName, "shell_cmd", NULL);
+        value = g_key_file_get_value(kf, groupName, "shell", NULL);
         if (!value)
             ts.shell_cmd = g_strdup(g_getenv("SHELL"));
         else
@@ -125,7 +125,6 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
         TRACE_NUM(i);
         struct TermitSession ts;
         ts = g_array_index(session_tabs, struct TermitSession, i);
-        termit_append_tab();
         TRACE_STR(ts.tab_name);
         TRACE_STR(ts.shell_cmd);
         TRACE_STR(ts.working_dir);
