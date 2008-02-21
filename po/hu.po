@@ -10,51 +10,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/evgeny/coding/termit/src/termit.c:87
+#: /home/nonstop/coding/termit/src/termit.c:87
 msgid "Bookmarks"
 msgstr "Knyvjelzk"
 
-#: /home/evgeny/coding/termit/src/utils.c:42
+#: /home/nonstop/coding/termit/src/utils.c:45
 msgid "Cannot create a new tab"
 msgstr "Nem sikerlt j flet ltrehozni"
 
-#: /home/evgeny/coding/termit/src/termit.c:58
+#: /home/nonstop/coding/termit/src/termit.c:58
 msgid "Edit"
 msgstr "Szerkeszts"
 
 #. Encoding menu
-#: /home/evgeny/coding/termit/src/termit.c:107
-#: /home/evgeny/coding/termit/src/termit.c:198
+#: /home/nonstop/coding/termit/src/termit.c:107
+#: /home/nonstop/coding/termit/src/termit.c:198
 msgid "Encoding"
 msgstr "Kdols"
 
-#: /home/evgeny/coding/termit/src/termit.c:37
+#: /home/nonstop/coding/termit/src/termit.c:37
 msgid "File"
 msgstr "Fjl"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:400
+#: /home/nonstop/coding/termit/src/callbacks.c:399
 msgid "Open session"
 msgstr "Megnyits"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:340
+#: /home/nonstop/coding/termit/src/callbacks.c:339
 msgid "Save session"
 msgstr "Ments"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:260
+#: /home/nonstop/coding/termit/src/callbacks.c:259
 msgid "Select font"
 msgstr "Betkszlet"
 
-#: /home/evgeny/coding/termit/src/termit.c:75
+#: /home/nonstop/coding/termit/src/termit.c:75
 msgid "Sessions"
 msgstr "Munkamenetek"
 
 #. Edit menu
-#: /home/evgeny/coding/termit/src/termit.c:48
-#: /home/evgeny/coding/termit/src/termit.c:168
+#: /home/nonstop/coding/termit/src/termit.c:48
+#: /home/nonstop/coding/termit/src/termit.c:168
 msgid "Set tab name..."
 msgstr "Fl tnevezse..."
 
-#: /home/evgeny/coding/termit/src/callbacks.c:26
+#: /home/nonstop/coding/termit/src/callbacks.c:26
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -62,12 +62,12 @@ msgstr ""
 "Tbb fl is nyitva van.\n"
 "Bezrja mind?"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:226
-#: /home/evgeny/coding/termit/src/callbacks.c:236
+#: /home/nonstop/coding/termit/src/callbacks.c:227
+#: /home/nonstop/coding/termit/src/callbacks.c:236
 msgid "Tab name"
 msgstr "Fl neve"
 
-#: /home/evgeny/coding/termit/src/sessions.c:70
+#: /home/nonstop/coding/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "A knyvtr ltrehozsa sikertelen '%s': %s"

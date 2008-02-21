@@ -1,59 +1,59 @@
-#: /home/evgeny/coding/termit/src/termit.c:87
+#: /home/nonstop/coding/termit/src/termit.c:87
 msgid "Bookmarks"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/utils.c:42
+#: /home/nonstop/coding/termit/src/utils.c:45
 msgid "Cannot create a new tab"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit.c:58
+#: /home/nonstop/coding/termit/src/termit.c:58
 msgid "Edit"
 msgstr ""
 
 #. Encoding menu
-#: /home/evgeny/coding/termit/src/termit.c:107
-#: /home/evgeny/coding/termit/src/termit.c:198
+#: /home/nonstop/coding/termit/src/termit.c:107
+#: /home/nonstop/coding/termit/src/termit.c:198
 msgid "Encoding"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit.c:37
+#: /home/nonstop/coding/termit/src/termit.c:37
 msgid "File"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:400
+#: /home/nonstop/coding/termit/src/callbacks.c:399
 msgid "Open session"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:340
+#: /home/nonstop/coding/termit/src/callbacks.c:339
 msgid "Save session"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:260
+#: /home/nonstop/coding/termit/src/callbacks.c:259
 msgid "Select font"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit.c:75
+#: /home/nonstop/coding/termit/src/termit.c:75
 msgid "Sessions"
 msgstr ""
 
 #. Edit menu
-#: /home/evgeny/coding/termit/src/termit.c:48
-#: /home/evgeny/coding/termit/src/termit.c:168
+#: /home/nonstop/coding/termit/src/termit.c:48
+#: /home/nonstop/coding/termit/src/termit.c:168
 msgid "Set tab name..."
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:26
+#: /home/nonstop/coding/termit/src/callbacks.c:26
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:226
-#: /home/evgeny/coding/termit/src/callbacks.c:236
+#: /home/nonstop/coding/termit/src/callbacks.c:227
+#: /home/nonstop/coding/termit/src/callbacks.c:236
 msgid "Tab name"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/sessions.c:70
+#: /home/nonstop/coding/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr ""
