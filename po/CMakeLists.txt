@@ -1,7 +1,8 @@
 SET(PO_FILES
   fr.po
   hu.po
-  ru.po)
+  ru.po
+  zh_TW.po)
 
 SET(COPYRIGHT_HOLDER "Evgeny Ratnikov")
 SET(POT_FILE termit.pot)
