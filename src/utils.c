@@ -93,8 +93,8 @@ void termit_set_font()
     {
         TERMIT_GET_TAB_BY_INDEX(pTab, i)
         vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);
-        minWidth = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte))*80;
-        minHeight = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte))*24;
+        minWidth = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)) * configs.cols + 2;
+        minHeight = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)) * configs.rows + 2;
     }
     gint oldWidth, oldHeight;
     gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);

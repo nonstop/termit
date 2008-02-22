@@ -9,7 +9,9 @@ struct Configs
     gchar *default_encoding;
     gchar *default_word_chars;
     gchar **encodings;
-    gint enc_length;
+    guint enc_length;
+    guint cols;
+    guint rows;
     GArray *bookmarks;
 };
 struct Bookmark

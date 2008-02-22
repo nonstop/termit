@@ -10,6 +10,8 @@ static gchar *default_tab_name = "Terminal";
 static gchar *default_font = "Monospace 10";
 static gint scrollback_lines = 4096;
 static gchar *default_word_chars = "-A-Za-z0-9,./?%&#:_~";
+static guint default_cols = 80;
+static guint default_rows = 24;
 
 /**
  * print error message, free GError
@@ -86,10 +88,31 @@ static void load_termit_options(GKeyFile *keyfile)
     else
     {
         TRACE;
-        //config_error(&error); // check carefully - segfault with gtk-2.8.20, glib-2.10.3
     }
 
     TRACE_NUM(configs.enc_length);
+    
+    value = g_key_file_get_value(keyfile, "termit", "geometry", &error);
+    if (!value)
+    {
+        configs.cols = default_cols;
+        configs.rows = default_rows;
+        config_error(&error);
+    }
+    else
+    {
+        int tmp1, tmp2;
+        XParseGeometry(value, &tmp1, &tmp2, 
+            &configs.cols, &configs.rows);
+        if ((configs.cols == 0) 
+            || (configs.rows == 0))
+        {
+            configs.cols = default_cols;
+            configs.rows = default_rows;
+        }
+    }
+    TRACE_NUM(configs.cols);
+    TRACE_NUM(configs.rows);
 }
 
 static void set_termit_options()
