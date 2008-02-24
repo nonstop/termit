@@ -9,6 +9,9 @@ word_chars="-A-Za-z0-9,./?%&#:_~"
 # list of available encodings
 #encodings=UTF-8;KOI8-R;CP866;CP1251
 
+# default COLSxROWS
+geometry=80x24
+
 # list of bookmarks
 # format: bookmark_name:path
 [bookmarks]
