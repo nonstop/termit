@@ -8,6 +8,8 @@ struct Configs
     guint scrollback_lines;
     gchar *default_encoding;
     gchar *default_word_chars;
+    gint transparent_background;
+    gdouble transparent_saturation;
     gchar **encodings;
     guint enc_length;
     guint cols;

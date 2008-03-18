@@ -4,7 +4,9 @@
 #default_tab_name=Terminal
 default_font=Monospace 10
 scrollback_lines=4096
-word_chars="-A-Za-z0-9,./?%&#:_~"
+word_chars="-AA-Za-z0-9,./?%&#:_~"
+transparent_background=true
+transparent_saturation=0,4
 
 # list of available encodings
 #encodings=UTF-8;KOI8-R;CP866;CP1251

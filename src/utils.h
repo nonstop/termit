@@ -15,6 +15,7 @@
 #define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_STR(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_NUM(x) g_fprintf(stderr, "%s:%d %s = %d\n", __FILE__, __LINE__, #x, x)
+#define TRACE_FLT(x) g_fprintf(stderr, "%s:%d %s = %f\n", __FILE__, __LINE__, #x, x)
 #define ERROR(x) g_fprintf(stderr, "%s:%d error: %s\n", __FILE__, __LINE__, x)
 #else
 #define TRACE 

@@ -10,6 +10,7 @@ static gchar *default_tab_name = "Terminal";
 static gchar *default_font = "Monospace 10";
 static gint scrollback_lines = 4096;
 static gchar *default_word_chars = "-A-Za-z0-9,./?%&#:_~";
+static gdouble default_transparent_saturation = 0.2;
 static guint default_cols = 80;
 static guint default_rows = 24;
 
@@ -60,14 +61,40 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.default_font = value;
     TRACE_STR(configs.default_font);
     
-    value = g_key_file_get_value(keyfile, "termit", "scrollback_lines", &error);
-    if (!value)
+
+    configs.transparent_background = g_key_file_get_boolean(keyfile, "termit", "transparent_background", &error);
+    if (error)
+    {
+        configs.transparent_background = FALSE;
+        config_error(&error);
+    }
+    TRACE_NUM(configs.transparent_background);
+    
+    if  (configs.transparent_background)
+    {
+        value = g_key_file_get_value(keyfile, "termit", "transparent_saturation", &error);
+        if (!value)
+        {
+            configs.transparent_saturation = default_transparent_saturation;
+            config_error(&error);
+        }
+        else
+        {
+            configs.transparent_saturation = atof(value);
+            if (configs.transparent_saturation > 1
+                || configs.transparent_saturation < 0)
+                configs.transparent_saturation = default_transparent_saturation;
+        }
+        TRACE_FLT(configs.transparent_saturation);
+    }
+	
+    configs.scrollback_lines = g_key_file_get_integer(keyfile, "termit", "scrollback_lines", &error);
+    if (error)
     {
         configs.scrollback_lines = scrollback_lines;
         config_error(&error);
     }
-    else
-        configs.scrollback_lines = atoi(value);
+        
     if (!configs.scrollback_lines)
         configs.scrollback_lines = scrollback_lines;
     TRACE_NUM(configs.scrollback_lines);

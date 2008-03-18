@@ -54,6 +54,12 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
 
     TRACE_NUM(index);
     TRACE_STR(vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+    
+    if (configs.transparent_background)
+    {
+        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), configs.transparent_saturation);
+    }
 
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
     if (!tabWidget)
