@@ -6,7 +6,7 @@
 extern struct TermitData termit;
 extern struct Configs configs;
 
-void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, const gchar* working_dir, const gchar* encoding)
+void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cmd, const gchar* working_dir, const gchar* encoding)
 {
     TRACE_MSG(__FUNCTION__);
     struct TermitTab* pTab = g_malloc(sizeof(struct TermitTab));
@@ -30,17 +30,44 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell, c
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
 
-    gchar* argv[2];
-    argv[0] = g_strdup(shell);
-    argv[1] = NULL;
-    gchar* env[1];
-    env[0] = NULL;
-    pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte), 
-            argv[0], argv, env, 
-            working_dir, TRUE, TRUE,TRUE);
-    TRACE_NUM(pTab->pid);
+    /* parse command */
+    gchar **cmd_argv;
+    GError *cmd_err;
+    gchar *cmd_path = NULL;
+    gchar *cmd_file = NULL;
+
+    if (!g_shell_parse_argv(shell_cmd, NULL, &cmd_argv, &cmd_err))
+    {
+        ERROR(_("Cannot parse command. Creating tab with shell"));
+        g_error_free(cmd_err);
+    }
+    else
+    {
+        cmd_path = g_find_program_in_path(cmd_argv[0]);
+        cmd_file = g_path_get_basename(cmd_argv[0]);
+    }
+
+    if (cmd_path && cmd_file)
+    {
+        g_free(cmd_argv[0]);
+        cmd_argv[0] = g_strdup(cmd_file);
+
+        pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
+                cmd_path, cmd_argv, NULL, working_dir, TRUE, TRUE, TRUE);
+    }
+    else
+    {
+        /* default tab */
+        pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
+                g_getenv("SHELL"), NULL, NULL, working_dir, TRUE, TRUE, TRUE);
+    }
+
+    g_strfreev(cmd_argv);
+    g_free(cmd_path);
+    g_free(cmd_file);
+
     int index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
-    if (index ==-1)
+    if (index == -1)
     {
         ERROR(_("Cannot create a new tab"));
         return;
@@ -91,6 +118,7 @@ void termit_append_tab()
 
 void termit_set_font()
 {
+    TRACE_MSG(__FUNCTION__);
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint minWidth = 0, minHeight = 0;
     /* Set the font for all tabs */

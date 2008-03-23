@@ -102,7 +102,7 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
             ts.tab_name = g_strdup_printf("%s %d", configs.default_tab_name, i);
         else
             ts.tab_name = value;
-        value = g_key_file_get_value(kf, groupName, "shell", NULL);
+        value = g_key_file_get_value(kf, groupName, "shell_cmd", NULL);
         if (!value)
             ts.shell_cmd = g_strdup(g_getenv("SHELL"));
         else
