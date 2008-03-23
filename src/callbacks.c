@@ -283,7 +283,6 @@ void termit_menu_exit()
 
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
 {   
-    TRACE_NUM(page_num);
     termit_set_statusbar_encoding(page_num);
 }
 
