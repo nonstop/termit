@@ -15,6 +15,7 @@ struct Configs
     guint cols;
     guint rows;
     GArray *bookmarks;
+    GArray *key_bindings;
 };
 struct Bookmark
 {
@@ -22,6 +23,13 @@ struct Bookmark
     gchar *path;
 };
 
+typedef void(*BindingCallback)();
+struct KeyBindging
+{
+    guint state;
+    guint keyval;
+    BindingCallback callback;
+};
 
 void termit_load_config();
 

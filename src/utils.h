@@ -47,6 +47,7 @@ struct TermitTab
     pid_t pid;
 };
 
+
 struct TermitTab* termit_get_tab_by_index(gint index);
 #define TERMIT_GET_TAB_BY_INDEX(pTab, ind) \
     struct TermitTab* pTab = termit_get_tab_by_index(ind); \

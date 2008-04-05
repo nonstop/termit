@@ -1,6 +1,9 @@
 #include <stdlib.h>
 
+#include <gdk/gdkkeysyms.h>
+
 #include "utils.h"
+#include "callbacks.h"
 #include "configs.h"
 
 extern struct Configs configs;
@@ -169,9 +172,52 @@ static void load_bookmark_options(GKeyFile *keyfile)
     g_strfreev(names);
 }
 
+static void termit_load_key_bindings(GKeyFile* keyfile)
+{
+    struct KeyBindging kb;
+    // previous tab - Alt-Left
+    kb.state = GDK_MOD1_MASK;
+    kb.keyval = GDK_Left;
+    kb.callback = termit_prev_tab;
+    g_array_append_val(configs.key_bindings, kb);
+    // next tab - Alt-Right
+    kb.state = GDK_MOD1_MASK;
+    kb.keyval = GDK_Right;
+    kb.callback = termit_next_tab;
+    g_array_append_val(configs.key_bindings, kb);
+    // copu - Ctrl-Insert
+    kb.state = GDK_CONTROL_MASK;
+    kb.keyval = GDK_Insert;
+    kb.callback = termit_copy;
+    g_array_append_val(configs.key_bindings, kb);
+    // paste - Shift-Insert
+    kb.state = GDK_SHIFT_MASK;
+    kb.keyval = GDK_Insert;
+    kb.callback = termit_paste;
+    g_array_append_val(configs.key_bindings, kb);
+    // open tab - Ctrl-t
+    kb.state = GDK_CONTROL_MASK;
+    kb.keyval = GDK_t;
+    kb.callback = termit_new_tab;
+    g_array_append_val(configs.key_bindings, kb);
+    // close tab - Ctrl-w
+    kb.state = GDK_CONTROL_MASK;
+    kb.keyval = GDK_w;
+    kb.callback = termit_close_tab;
+    g_array_append_val(configs.key_bindings, kb);
+    int i = 0;
+    for (; i<configs.key_bindings->len; ++i)
+    {
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        TRACE_NUM(kb->state);
+        TRACE_NUM(kb->keyval);
+    }
+}
+
 void termit_load_config()
 {
     configs.bookmarks = g_array_new(FALSE, TRUE, sizeof(struct Bookmark));
+    configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBindging));
 
     GKeyFile * keyfile = g_key_file_new();
     GError * error = NULL;
@@ -198,6 +244,7 @@ void termit_load_config()
 
         if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
             load_bookmark_options(keyfile);
+        termit_load_key_bindings(NULL);
         g_key_file_free(keyfile);
     }
     else

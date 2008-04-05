@@ -39,6 +39,7 @@ static void termit_quit()
     
     g_strfreev(configs.encodings);
     g_array_free(configs.bookmarks, TRUE);
+    g_array_free(configs.key_bindings, TRUE);
     pango_font_description_free(termit.font);
 
     gtk_main_quit();
@@ -103,49 +104,18 @@ gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
 
 gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-//  Alt-left, Alt-right switch pages
-    if (event->state & GDK_MOD1_MASK)
+    int i = 0;
+    for (; i<configs.key_bindings->len; ++i)
     {
-        if (event->keyval == GDK_Left)
-        {
-            termit_prev_tab();
-            return TRUE;
-        }
-        if (event->keyval == GDK_Right)
-        {
-            termit_next_tab();
-            return TRUE;
-        }
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        if (kb && (event->state & kb->state))
+            if (event->keyval == kb->keyval)
+            {
+                kb->callback();
+                return TRUE;
+            }
     }
-//  Ctrl-Insert, Shift-Insert copy paste
-    if (event->keyval == GDK_Insert)
-    {
-        if (event->state & GDK_SHIFT_MASK)
-        {
-            termit_paste();
-            return TRUE;
-        }
-        if (event->state & GDK_CONTROL_MASK)
-        {
-            termit_copy();
-            return TRUE;
-        }
-    }
-//  Ctrl+t new tab, Ctrl+w close tab
-    if (event->state & GDK_CONTROL_MASK)
-    {
-        if (event->keyval == GDK_t || event->keyval == GDK_T)
-        {
-            termit_append_tab();
-            return TRUE;
-        }
-        if (event->keyval == GDK_w || event->keyval == GDK_W)
-        {
-            termit_close_tab();
-            return TRUE;
-        }
-    }
-	return FALSE;
+    return FALSE;
 }
 
 void termit_set_encoding(GtkWidget *widget, void *data)
