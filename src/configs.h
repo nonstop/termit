@@ -26,6 +26,7 @@ struct Bookmark
 typedef void(*BindingCallback)();
 struct KeyBindging
 {
+    gchar* name;
     guint state;
     guint keyval;
     BindingCallback callback;
