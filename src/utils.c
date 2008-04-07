@@ -6,7 +6,7 @@
 extern struct TermitData termit;
 extern struct Configs configs;
 
-static termit_check_single_tab()
+static void termit_check_single_tab()
 {
     if (configs.hide_single_tab)
     {
@@ -17,7 +17,8 @@ static termit_check_single_tab()
     }
 }
 
-void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cmd, const gchar* working_dir, const gchar* encoding)
+void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cmd, 
+    const gchar* working_dir, const gchar* encoding)
 {
     TRACE("%s", __FUNCTION__);
     struct TermitTab* pTab = g_malloc(sizeof(struct TermitTab));
