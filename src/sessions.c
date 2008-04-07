@@ -64,7 +64,7 @@ void termit_init_sessions()
     {
         fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
     }
-    TRACE_STR(fullPath);
+    TRACE("%s %s", __FUNCTION__, fullPath);
     if (!parse_mkdir_path(fullPath, 0700))
     {
         g_message(_("Unable to create directory '%s': %s"), fullPath, g_strerror(errno));
@@ -83,7 +83,7 @@ static GArray* session_tabs;
 
 static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
 {
-    TRACE_NUM(tab_count);
+    TRACE("tab_count=%d", tab_count);
     gint i = 0;
     session_tabs = g_array_new(FALSE, TRUE, sizeof(struct TermitSession));
     for (; i < tab_count; ++i)
@@ -94,7 +94,7 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
             g_free(groupName);
             continue;
         }
-        TRACE_STR(groupName);
+        TRACE("%s", groupName);
         struct TermitSession ts;
         gchar *value = NULL;
         value = g_key_file_get_value(kf, groupName, "tab_name", NULL);
@@ -122,13 +122,10 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
     }
     for (i=0; i<session_tabs->len; ++i)
     {
-        TRACE_NUM(i);
         struct TermitSession ts;
         ts = g_array_index(session_tabs, struct TermitSession, i);
-        TRACE_STR(ts.tab_name);
-        TRACE_STR(ts.shell_cmd);
-        TRACE_STR(ts.working_dir);
-        TRACE_STR(ts.encoding);
+        TRACE("%3d  name=%s, cmd=%s, dir=%s, encoding=%s",
+                i, ts.tab_name, ts.shell_cmd, ts.working_dir, ts.encoding);
     }
 }
 
@@ -148,14 +145,12 @@ static void free_session_tabs()
 
 void termit_load_session(const gchar* sessionFile)
 {
-    TRACE_MSG("loading sesions from");
-    TRACE_STR(sessionFile);
+    TRACE("loading sesions from %s", sessionFile);
     GError* err = NULL;
     GKeyFile *kf = g_key_file_new();
     if (g_key_file_load_from_file(kf, sessionFile, G_KEY_FILE_NONE, &err) != TRUE)
     {
-        TRACE_STR(g_strerror(err->code));
-        TRACE_MSG("failed loading sessions");
+        TRACE("failed loading sessions: %s", g_strerror(err->code));
         return;
     }
     if (g_key_file_has_group(kf, "session") != TRUE)

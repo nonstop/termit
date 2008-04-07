@@ -81,7 +81,7 @@ static GtkWidget* create_menubar()
     gtk_menu_bar_append(menu_bar, mi_sessions);
 
     // Bookmarks menu
-    TRACE_NUM(configs.bookmarks->len);
+    TRACE("bookmarks->len=%d", configs.bookmarks->len);
     if (configs.bookmarks->len)
     {
         GtkWidget *mi_bookmarks = gtk_menu_item_new_with_label(_("Bookmarks"));
@@ -107,14 +107,14 @@ static GtkWidget* create_menubar()
     GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
     GtkWidget *enc_menu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
-    TRACE_NUM(configs.enc_length);
+    TRACE("configs.enc_length=%d", configs.enc_length);
     if (configs.enc_length)
     {
         GtkWidget *msi_enc[configs.enc_length];
         gint i=0;
         for (i=0; i<configs.enc_length; i++)
         {
-            TRACE_STR(configs.encodings[i]);
+            TRACE("%s", configs.encodings[i]);
             msi_enc[i] = gtk_menu_item_new_with_label(configs.encodings[i]);
             gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), msi_enc[i]);
         }
@@ -192,7 +192,7 @@ static void termit_create_popup_menu()
 	g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);	
 	g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);	
 
-    TRACE_NUM(configs.enc_length);
+    TRACE("configs.enc_length=%d", configs.enc_length);
     if (configs.enc_length)
     {
         GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
@@ -202,7 +202,7 @@ static void termit_create_popup_menu()
         gint i = 0;
         for (; i<configs.enc_length; i++)
         {
-            TRACE_STR(configs.encodings[i]);
+            TRACE("%s", configs.encodings[i]);
             msi_enc[i] = gtk_menu_item_new_with_label(configs.encodings[i]);
             gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), msi_enc[i]);
         }

@@ -61,8 +61,7 @@ void termit_child_exited()
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page)
 
-    TRACE_STR("waiting for pid");
-    TRACE_NUM(pTab->pid);
+    TRACE("waiting for pid %d", pTab->pid);
     
     int status = 0;
     waitpid(pTab->pid, &status, WNOHANG);
@@ -177,16 +176,13 @@ void termit_close_tab()
 
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    TRACE_NUM(event->keyval);
     switch (event->keyval)
     {
     case GDK_Return:
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_ACCEPT, NULL);
-        TRACE_STR("Enter");
         break;
     case GDK_Escape:
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_REJECT, NULL);
-        TRACE_STR("Escape");
         break;
     default:
         return FALSE;
@@ -282,7 +278,6 @@ gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gp
 
 gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
 {
-    TRACE_NUM(event->button);
     if (event->type == GDK_2BUTTON_PRESS)
         termit_append_tab();
 
@@ -299,7 +294,7 @@ gchar* termit_get_xdg_data_path()
     {
         fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
     }
-    TRACE_STR(fullPath);
+    TRACE("XDG_DATA_PATH=%s", fullPath);
     return fullPath;
 }
 
@@ -327,7 +322,7 @@ void termit_on_save_session()
     }
 
     gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
-    TRACE_STR(filename);
+    TRACE("saving session to file %s", filename);
     FILE* fd = g_fopen(filename, "w");
     if ((intptr_t)fd == -1)
     {

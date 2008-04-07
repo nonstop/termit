@@ -21,7 +21,7 @@ static guint default_rows = 24;
  * */
 static void config_error(GError** err)
 {
-    TRACE_STR((*err)->message);
+    TRACE("%s %s", __FUNCTION__, (*err)->message);
     g_error_free(*err);
     *err = NULL;
 }
@@ -40,28 +40,28 @@ static void load_termit_options(GKeyFile *keyfile)
         set_default_value(&configs.default_tab_name, default_tab_name, &error);
     else
         configs.default_tab_name = value;
-    TRACE_STR(configs.default_tab_name);
+    TRACE("default_tab_name=%s", configs.default_tab_name);
 
     value = g_key_file_get_value(keyfile, "termit", "default_encoding", &error);
     if (!value)
         set_default_value(&configs.default_encoding, default_encoding, &error);
     else
         configs.default_encoding = value;
-    TRACE_STR(configs.default_encoding);
+    TRACE("default_encoding=%s", configs.default_encoding);
     
     value = g_key_file_get_value(keyfile, "termit", "word_chars", &error);
     if (!value)
         set_default_value(&configs.default_word_chars, default_word_chars, &error);
     else
         configs.default_word_chars = value;
-    TRACE_STR(configs.default_word_chars);
+    TRACE("default_word_chars=%s", configs.default_word_chars);
 
     value = g_key_file_get_value(keyfile, "termit", "default_font", &error);
     if (!value)
         set_default_value(&configs.default_font, default_font, &error);
     else
         configs.default_font = value;
-    TRACE_STR(configs.default_font);
+    TRACE("default_font=%s", configs.default_font);
     
 
     configs.transparent_background = g_key_file_get_boolean(keyfile, "termit", "transparent_background", &error);
@@ -70,7 +70,7 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.transparent_background = FALSE;
         config_error(&error);
     }
-    TRACE_NUM(configs.transparent_background);
+    TRACE("transparent_background=%d", configs.transparent_background);
     
     if  (configs.transparent_background)
     {
@@ -87,9 +87,9 @@ static void load_termit_options(GKeyFile *keyfile)
                 || configs.transparent_saturation < 0)
                 configs.transparent_saturation = default_transparent_saturation;
         }
-        TRACE_FLT(configs.transparent_saturation);
+        TRACE("transparent_saturation=%f", configs.transparent_saturation);
     }
-	
+
     configs.scrollback_lines = g_key_file_get_integer(keyfile, "termit", "scrollback_lines", &error);
     if (error)
     {
@@ -99,11 +99,10 @@ static void load_termit_options(GKeyFile *keyfile)
         
     if (!configs.scrollback_lines)
         configs.scrollback_lines = scrollback_lines;
-    TRACE_NUM(configs.scrollback_lines);
+    TRACE("scrollback_lines=%d", configs.scrollback_lines);
 
     if (g_key_file_has_key(keyfile, "termit", "encodings", &error) == TRUE)
     {
-        TRACE;
         gsize enc_length = 0;
         gchar **encodings = g_key_file_get_string_list(keyfile, "termit", "encodings", &enc_length, &error);
         if (!encodings)
@@ -114,13 +113,8 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.encodings = encodings;
         configs.enc_length = enc_length;
     }
-    else
-    {
-        TRACE;
-    }
+    TRACE("configs.enc_length=%d", configs.enc_length);
 
-    TRACE_NUM(configs.enc_length);
-    
     value = g_key_file_get_value(keyfile, "termit", "geometry", &error);
     if (!value)
     {
@@ -140,8 +134,7 @@ static void load_termit_options(GKeyFile *keyfile)
             configs.rows = default_rows;
         }
     }
-    TRACE_NUM(configs.cols);
-    TRACE_NUM(configs.rows);
+    TRACE("geometry: cols=%d, rows=%d", configs.cols, configs.rows);
 }
 
 static void set_termit_options()
@@ -163,8 +156,7 @@ static void load_bookmark_options(GKeyFile *keyfile)
         struct Bookmark b;
         b.name = g_strdup(names[i]);
         b.path = g_key_file_get_value(keyfile, "bookmarks", b.name, &error);
-        TRACE_STR(b.name);
-        TRACE_STR(b.path);
+        TRACE("%s %s", b.name, b.path);
         g_array_append_val(configs.bookmarks, b);
     }
 
@@ -212,9 +204,5 @@ void termit_load_config()
         TRACE_MSG("config file not found");
         set_termit_options();
     }
-
-    TRACE_STR(configs.default_tab_name);
-    TRACE_STR(configs.default_font);
-    TRACE_NUM(configs.scrollback_lines);
 }
 

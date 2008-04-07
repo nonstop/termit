@@ -31,10 +31,8 @@ void termit_load_default_keybindings()
     for (; i<configs.key_bindings->len; ++i)
     {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
-        TRACE_STR(kb->name);
-        TRACE_NUM(kb->state);
-        TRACE_NUM(kb->keyval);
-        TRACE_STR(gdk_keyval_name(kb->keyval));
+        TRACE("%s: %d, %d, %s", 
+            kb->name, kb->state, kb->keyval, kb->default_binding);
     }
 }
 
@@ -82,13 +80,9 @@ static void set_keybinding(struct KeyBindging* kb, const gchar* value)
     guint tmp_keyval = gdk_keyval_from_name(tokens[1]);
     if (tmp_keyval == GDK_VoidSymbol)
         return;
-    TRACE_STR(kb->name);
-    TRACE_STR(tokens[0]);
-    TRACE_STR(tokens[1]);
-    TRACE_NUM(tmp_keyval);
+    TRACE("%s: %s(%d), %s(%d)", kb->name, tokens[0], tmp_state, tokens[1], tmp_keyval);
     kb->state = tmp_state;
-    kb->keyval = tmp_keyval;
-    //kb->keyval = gdk_keyval_to_lower(tmp_keyval);
+    kb->keyval = gdk_keyval_to_lower(tmp_keyval);
     g_strfreev(tokens);
 }
 
@@ -116,26 +110,15 @@ void termit_load_keybindings(GKeyFile* keyfile)
     int i = 0;
     for (; i<len; ++i)
     {
-        TRACE_STR(names[i]);
         gint index = get_kb_index(names[i]);
         if (index < 0)
             continue;
         gchar* value = g_key_file_get_value(keyfile, kb_group, names[i], &error);
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, index);
-        TRACE_STR(kb->name);
         set_keybinding(kb, value);
         g_free(value);
     }
 
     g_strfreev(names);
-    
-    for (i = 0; i<configs.key_bindings->len; ++i)
-    {
-        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
-        TRACE_STR(kb->name);
-        TRACE_NUM(kb->state);
-        TRACE_NUM(kb->keyval);
-        TRACE_STR(gdk_keyval_name(kb->keyval));
-    }
 }
 

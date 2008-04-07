@@ -10,20 +10,29 @@
 #include <libintl.h>
 #define _(String) gettext(String)
 
-#ifdef DEBUG
-#define TRACE g_fprintf(stderr, "%s:%d\n", __FILE__, __LINE__)
-#define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
-#define TRACE_STR(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
-#define TRACE_NUM(x) g_fprintf(stderr, "%s:%d %s = %d\n", __FILE__, __LINE__, #x, x)
-#define TRACE_FLT(x) g_fprintf(stderr, "%s:%d %s = %f\n", __FILE__, __LINE__, #x, x)
+//#ifdef DEBUG
+//#define TRACE g_fprintf(stderr, "%s:%d\n", __FILE__, __LINE__)
+//#define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
+//#define TRACE_STR(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
+//#define TRACE_NUM(x) g_fprintf(stderr, "%s:%d %s = %d\n", __FILE__, __LINE__, #x, x)
+//#define TRACE_FLT(x) g_fprintf(stderr, "%s:%d %s = %f\n", __FILE__, __LINE__, #x, x)
+//#else
+//#define TRACE 
+//#define TRACE_MSG(x)
+//#define TRACE_STR(x) 
+//#define TRACE_NUM(x) 
+//#endif // DEBUG
 #define ERROR(x) g_fprintf(stderr, "%s:%d error: %s\n", __FILE__, __LINE__, x)
+
+#ifdef DEBUG
+#define STDFMT " %s:%d "
+#define STD __FILE__, __LINE__
+#define TRACE(format, ...) g_fprintf(stderr, STDFMT # format, STD, ## __VA_ARGS__); g_fprintf(stderr, "\n")
+#define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #else
-#define TRACE 
+#define TRACE(format, ...)
 #define TRACE_MSG(x)
-#define TRACE_STR(x) 
-#define TRACE_NUM(x) 
-#define ERROR(x) 
-#endif // DEBUG
+#endif
 
 struct TermitData
 {

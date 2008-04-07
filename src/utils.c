@@ -8,7 +8,7 @@ extern struct Configs configs;
 
 void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cmd, const gchar* working_dir, const gchar* encoding)
 {
-    TRACE_MSG(__FUNCTION__);
+    TRACE("%s", __FUNCTION__);
     struct TermitTab* pTab = g_malloc(sizeof(struct TermitTab));
 
     pTab->tab_name = gtk_label_new(tab_name);
@@ -20,7 +20,7 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
     vte_terminal_set_scrollback_lines(VTE_TERMINAL(pTab->vte), configs.scrollback_lines);
     if (configs.default_word_chars)
     {
-        TRACE_STR(configs.default_word_chars);
+        TRACE("%s", configs.default_word_chars);
         vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
     }
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
@@ -79,8 +79,7 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
     
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
-    TRACE_NUM(index);
-    TRACE_STR(vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+    TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
     
     if (configs.transparent_background)
     {
@@ -118,7 +117,7 @@ void termit_append_tab()
 
 void termit_set_font()
 {
-    TRACE_MSG(__FUNCTION__);
+    TRACE("%s", __FUNCTION__);
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint minWidth = 0, minHeight = 0;
     /* Set the font for all tabs */
@@ -168,11 +167,10 @@ gchar* termit_get_pid_dir(pid_t pid)
 
 void termit_del_tab()
 {
-    TRACE;
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
             
     TERMIT_GET_TAB_BY_INDEX(pTab, page)
-    TRACE_NUM(pTab->pid);
+    TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
     g_free(pTab->encoding);
     g_free(pTab);
 
