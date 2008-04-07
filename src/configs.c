@@ -1,10 +1,9 @@
 #include <stdlib.h>
 
-#include <gdk/gdkkeysyms.h>
-
 #include "utils.h"
 #include "callbacks.h"
 #include "configs.h"
+#include "keybindings.h"
 
 extern struct Configs configs;
 
@@ -203,9 +202,9 @@ void termit_load_config()
         if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
             load_bookmark_options(keyfile);
         if (g_key_file_has_group(keyfile, "keybindings") == TRUE)
-            load_keybindings(keyfile);
+            termit_load_keybindings(keyfile);
         else
-            load_default_keybindings();
+            termit_load_default_keybindings();
         g_key_file_free(keyfile);
     }
     else

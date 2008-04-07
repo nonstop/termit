@@ -23,15 +23,6 @@ struct Bookmark
     gchar *path;
 };
 
-typedef void(*BindingCallback)();
-struct KeyBindging
-{
-    gchar* name;
-    guint state;
-    guint keyval;
-    BindingCallback callback;
-};
-
 void termit_load_config();
 
 

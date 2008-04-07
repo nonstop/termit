@@ -1,44 +1,32 @@
+#include <stdlib.h>
+#include <string.h>
 
+#include <gdk/gdkkeysyms.h>
 
-void termit_load_default_key_bindings()
+#include "keybindings.h"
+#include "configs.h"
+#include "utils.h"
+#include "callbacks.h"
+
+extern struct Configs configs;
+
+#define ADD_DEFAULT_KEYBINDING(name_, state_, keyval_, callback_, default_binding_) \
+    kb.name = name_; \
+    kb.state = state_; \
+    kb.keyval = keyval_; \
+    kb.callback = callback_; \
+    kb.default_binding = default_binding_; \
+    g_array_append_val(configs.key_bindings, kb);
+
+void termit_load_default_keybindings()
 {
     struct KeyBindging kb;
-    // previous tab - Alt-Left
-    kb.name = "prev_tab";
-    kb.state = GDK_MOD1_MASK;
-    kb.keyval = GDK_Left;
-    kb.callback = termit_prev_tab;
-    g_array_append_val(configs.key_bindings, kb);
-    // next tab - Alt-Right
-    kb.name = "next_tab";
-    kb.state = GDK_MOD1_MASK;
-    kb.keyval = GDK_Right;
-    kb.callback = termit_next_tab;
-    g_array_append_val(configs.key_bindings, kb);
-    // copu - Ctrl-Insert
-    kb.name = "copy";
-    kb.state = GDK_CONTROL_MASK;
-    kb.keyval = GDK_Insert;
-    kb.callback = termit_copy;
-    g_array_append_val(configs.key_bindings, kb);
-    // paste - Shift-Insert
-    kb.name = "paste";
-    kb.state = GDK_SHIFT_MASK;
-    kb.keyval = GDK_Insert;
-    kb.callback = termit_paste;
-    g_array_append_val(configs.key_bindings, kb);
-    // open tab - Ctrl-t
-    kb.name = "open_tab";
-    kb.state = GDK_CONTROL_MASK;
-    kb.keyval = GDK_t;
-    kb.callback = termit_new_tab;
-    g_array_append_val(configs.key_bindings, kb);
-    // close tab - Ctrl-w
-    kb.name = "close_tab";
-    kb.state = GDK_CONTROL_MASK;
-    kb.keyval = GDK_w;
-    kb.callback = termit_close_tab;
-    g_array_append_val(configs.key_bindings, kb);
+    ADD_DEFAULT_KEYBINDING("prev_tab", GDK_MOD1_MASK, GDK_Left, termit_prev_tab, "Alt-Left");
+    ADD_DEFAULT_KEYBINDING("next_tab", GDK_MOD1_MASK, GDK_Right, termit_next_tab, "Alt-Right");
+    ADD_DEFAULT_KEYBINDING("open_tab", GDK_CONTROL_MASK, GDK_t, termit_new_tab, "Ctrl-t");
+    ADD_DEFAULT_KEYBINDING("close_tab", GDK_CONTROL_MASK, GDK_w, termit_close_tab, "Ctrl-w");
+    ADD_DEFAULT_KEYBINDING("copy", GDK_CONTROL_MASK, GDK_Insert, termit_copy, "Ctrl-Insert");
+    ADD_DEFAULT_KEYBINDING("paste", GDK_SHIFT_MASK, GDK_Insert, termit_paste, "Shift-Insert");
     int i = 0;
     for (; i<configs.key_bindings->len; ++i)
     {
@@ -46,7 +34,62 @@ void termit_load_default_key_bindings()
         TRACE_STR(kb->name);
         TRACE_NUM(kb->state);
         TRACE_NUM(kb->keyval);
+        TRACE_STR(gdk_keyval_name(kb->keyval));
     }
+}
+
+struct TermitModifier {
+    gchar* name;
+    guint state;
+};
+struct TermitModifier termit_modifiers[] =
+{
+    {"Alt", GDK_MOD1_MASK}, 
+    {"Ctrl", GDK_CONTROL_MASK},
+    {"Shift", GDK_SHIFT_MASK}
+};
+static guint TermitModsSz = sizeof(termit_modifiers)/sizeof(struct TermitModifier);
+
+static guint get_modifier_state(const gchar* token)
+{
+    if (!token)
+        return 0;
+    int i = 0;
+    for (; i<TermitModsSz; ++i)
+    {
+        if (!strcmp(token, termit_modifiers[i].name))
+            return termit_modifiers[i].state;
+    }
+    return 0;
+}
+
+static void set_keybinding(struct KeyBindging* kb, const gchar* value)
+{
+    if (!strcmp(value, "None"))
+    {
+        kb->state = 0;
+        kb->keyval = 0;
+        return;
+    }
+    gchar** tokens = g_strsplit(value, "-", 2);
+    // token[0] - modifier. Only Alt, Ctrl or Shift allowed.
+    if (!tokens[0] || !tokens[1])
+        return;
+    guint tmp_state = get_modifier_state(tokens[0]);
+    if (!tmp_state)
+        return;
+    // token[1] - key. Only alfabet and numeric keys allowed.
+    guint tmp_keyval = gdk_keyval_from_name(tokens[1]);
+    if (tmp_keyval == GDK_VoidSymbol)
+        return;
+    TRACE_STR(kb->name);
+    TRACE_STR(tokens[0]);
+    TRACE_STR(tokens[1]);
+    TRACE_NUM(tmp_keyval);
+    kb->state = tmp_state;
+    kb->keyval = tmp_keyval;
+    //kb->keyval = gdk_keyval_to_lower(tmp_keyval);
+    g_strfreev(tokens);
 }
 
 static gint get_kb_index(const gchar* name)
@@ -55,16 +98,15 @@ static gint get_kb_index(const gchar* name)
     for (; i<configs.key_bindings->len; ++i)
     {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
-        if (!g_ascii_strcasecmp(kb->name, name))
+        if (!strcmp(kb->name, name))
             return i;
     }
     return -1;
 }
 
-
-void termit_load_keybindings(GKeyFile* key_file)
+void termit_load_keybindings(GKeyFile* keyfile)
 {
-    termit_load_default_key_bindings();
+    termit_load_default_keybindings();
     
     const gchar* kb_group = "keybindings";
     GError * error = NULL;
@@ -75,13 +117,25 @@ void termit_load_keybindings(GKeyFile* key_file)
     for (; i<len; ++i)
     {
         TRACE_STR(names[i]);
-        if (get_kb_index(names[i]) < 0)
+        gint index = get_kb_index(names[i]);
+        if (index < 0)
             continue;
         gchar* value = g_key_file_get_value(keyfile, kb_group, names[i], &error);
-        TRACE_STR(value);
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, index);
+        TRACE_STR(kb->name);
+        set_keybinding(kb, value);
         g_free(value);
     }
 
     g_strfreev(names);
+    
+    for (i = 0; i<configs.key_bindings->len; ++i)
+    {
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        TRACE_STR(kb->name);
+        TRACE_NUM(kb->state);
+        TRACE_NUM(kb->keyval);
+        TRACE_STR(gdk_keyval_name(kb->keyval));
+    }
 }
 

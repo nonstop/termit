@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "callbacks.h"
 #include "configs.h"
+#include "keybindings.h"
 #include "sessions.h"
 
 extern struct TermitData termit;
@@ -57,20 +58,20 @@ void termit_destroy(GtkWidget *widget, gpointer data)
 
 void termit_child_exited()
 {
-	gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page)
 
-	TRACE_STR("waiting for pid");
+    TRACE_STR("waiting for pid");
     TRACE_NUM(pTab->pid);
-	
+    
     int status = 0;
-	waitpid(pTab->pid, &status, WNOHANG);
-	/* TODO: check wait return */	
+    waitpid(pTab->pid, &status, WNOHANG);
+    /* TODO: check wait return */    
 
-	termit_del_tab();
-	
-	if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0)
-		termit_quit();
+    termit_del_tab();
+    
+    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0)
+        termit_quit();
 }
 
 void termit_eof()
@@ -83,23 +84,23 @@ void termit_title_changed()
 
 gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
 {
-	GtkMenu *menu;
-	GdkEventButton *event_button;
+    GtkMenu *menu;
+    GdkEventButton *event_button;
 
-	menu = GTK_MENU (widget);
+    menu = GTK_MENU (widget);
 
-	if (event->type == GDK_BUTTON_PRESS)
-    {		
-		event_button = (GdkEventButton *) event;
-		if (event_button->button == 3)
+    if (event->type == GDK_BUTTON_PRESS)
+    {        
+        event_button = (GdkEventButton *) event;
+        if (event_button->button == 3)
         {
-			gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
-			  			    event_button->button, event_button->time);
-		    return TRUE;
-		}
-	}
+            gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
+                              event_button->button, event_button->time);
+            return TRUE;
+        }
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
@@ -109,7 +110,7 @@ gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_d
     {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (kb && (event->state & kb->state))
-            if (event->keyval == kb->keyval)
+            if (gdk_keyval_to_lower(event->keyval) == kb->keyval)
             {
                 kb->callback();
                 return TRUE;
@@ -130,6 +131,7 @@ void termit_set_encoding(GtkWidget *widget, void *data)
 
 void termit_prev_tab()
 {
+    TRACE_MSG(__FUNCTION__);
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     if (index == -1)
         return;
@@ -142,6 +144,7 @@ void termit_prev_tab()
 
 void termit_next_tab()
 {
+    TRACE_MSG(__FUNCTION__);
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     if (index == -1)
         return;
