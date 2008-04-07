@@ -6,6 +6,17 @@
 extern struct TermitData termit;
 extern struct Configs configs;
 
+static termit_check_single_tab()
+{
+    if (configs.hide_single_tab)
+    {
+        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1)
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
+        else
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+    }
+}
+
 void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cmd, const gchar* working_dir, const gchar* encoding)
 {
     TRACE("%s", __FUNCTION__);
@@ -104,15 +115,21 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
 
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
     termit_set_statusbar_encoding(-1);
+
+    termit_check_single_tab();
+}
+
+void termit_append_tab_with_command(const gchar* command)
+{
+    gchar *label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
+
+    termit_append_tab_with_details(label_text, command, g_getenv("PWD"), configs.default_encoding);
+    g_free(label_text);
 }
 
 void termit_append_tab()
 {
-    gchar *label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
-    
-    termit_append_tab_with_details(label_text, g_getenv("SHELL"), g_getenv("PWD"), configs.default_encoding);
-
-    g_free(label_text);
+    termit_append_tab_with_command(g_getenv("SHELL"));
 }
 
 void termit_set_font()
@@ -175,6 +192,8 @@ void termit_del_tab()
     g_free(pTab);
 
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
+    
+    termit_check_single_tab();
 }
 
 struct TermitTab* termit_get_tab_by_index(gint index)

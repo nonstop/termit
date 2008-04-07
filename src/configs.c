@@ -90,6 +90,13 @@ static void load_termit_options(GKeyFile *keyfile)
         TRACE("transparent_saturation=%f", configs.transparent_saturation);
     }
 
+    configs.hide_single_tab = g_key_file_get_boolean(keyfile, "termit", "hide_single_tab", &error);
+    if (error)
+    {
+        configs.hide_single_tab = FALSE;
+        config_error(&error);
+    }
+
     configs.scrollback_lines = g_key_file_get_integer(keyfile, "termit", "scrollback_lines", &error);
     if (error)
     {

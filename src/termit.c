@@ -32,7 +32,7 @@ static GtkWidget* create_menubar()
     g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_close_tab), NULL);
     GtkWidget *separator1 = gtk_separator_menu_item_new();
     GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
-    g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);	
+    g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);
     
     GtkWidget *mi_file = gtk_menu_item_new_with_label(_("File"));
     GtkWidget *file_menu = gtk_menu_new();
@@ -53,7 +53,7 @@ static GtkWidget* create_menubar()
     GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_copy), NULL);
     GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
-    g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);	
+    g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);
 
     GtkWidget *mi_edit = gtk_menu_item_new_with_label(_("Edit"));
     GtkWidget *edit_menu = gtk_menu_new();
@@ -120,14 +120,14 @@ static GtkWidget* create_menubar()
         }
 
         for (i=0; i<configs.enc_length; i++)
-            g_signal_connect(G_OBJECT(msi_enc[i]), "activate", G_CALLBACK(termit_set_encoding), configs.encodings[i]);	
+            g_signal_connect(G_OBJECT(msi_enc[i]), "activate", G_CALLBACK(termit_set_encoding), configs.encodings[i]);    
     }
     gtk_menu_bar_append(menu_bar, mi_encodings);
     
     return menu_bar;
 }
 
-static void create_main_window(const gchar* sessionFile)
+static void create_main_window(const gchar* sessionFile, const gchar* command)
 {
     termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
@@ -135,7 +135,12 @@ static void create_main_window(const gchar* sessionFile)
     termit.menu_bar = create_menubar();
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
-    if (sessionFile)
+    if (command)
+    {
+        termit_append_tab_with_command(command);
+        termit_set_statusbar_encoding(0);
+    }
+    else if (sessionFile)
     {
         termit_load_session(sessionFile);
         if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
@@ -163,34 +168,34 @@ static void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
     GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
-	GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
+    GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
     GtkWidget *separator1 = gtk_separator_menu_item_new();
     GtkWidget *mi_set_tab_name = gtk_menu_item_new_with_label(_("Set tab name..."));
     GtkWidget *mi_select_font = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_FONT, NULL);
     GtkWidget *separator2 = gtk_separator_menu_item_new();
-	GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-	GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
+    GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
+    GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
     GtkWidget *separator3 = gtk_separator_menu_item_new();
     GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator1);
-	gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_set_tab_name);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_select_font);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator2);
-	gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_copy);
-	gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_paste);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_copy);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_paste);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator3);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_exit);
 
     g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_new_tab), NULL);
-	g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_set_tab_name), NULL);
+    g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_set_tab_name), NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_select_font), NULL);
-	g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_close_tab), NULL);
-	g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_copy), NULL);
-	g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);	
-	g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);	
+    g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_close_tab), NULL);
+    g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_copy), NULL);
+    g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);    
+    g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);    
 
     TRACE("configs.enc_length=%d", configs.enc_length);
     if (configs.enc_length)
@@ -208,7 +213,7 @@ static void termit_create_popup_menu()
         }
 
         for (i = 0; i<configs.enc_length; i++)
-            g_signal_connect(G_OBJECT(msi_enc[i]), "activate", G_CALLBACK(termit_set_encoding), configs.encodings[i]);	
+            g_signal_connect(G_OBJECT(msi_enc[i]), "activate", G_CALLBACK(termit_set_encoding), configs.encodings[i]);    
         
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_encodings, 4);
     }
@@ -216,12 +221,12 @@ static void termit_create_popup_menu()
     gtk_widget_show_all(termit.menu);
 }
 
-static void termit_init(const gchar* sessionFile)
+static void termit_init(const gchar* sessionFile, const gchar* command)
 {
     termit.tab_max_number = 1;
 
     termit_create_popup_menu();
-    create_main_window(sessionFile);
+    create_main_window(sessionFile, command);
     
     termit.font = pango_font_description_from_string(configs.default_font);
     termit_set_font();
@@ -232,27 +237,30 @@ static void termit_print_usage()
     g_print(
 "termit - terminal emulator\n"
 "Options:\n"
-"    --help - print this help\n"
-"    --version - print version number\n"
+"    --help                 - print this help message\n"
+"    --version              - print version number\n"
+"    --command              - execute command"
 "    --session=session_file - start session using session_file\n");
 }
 
 int main(int argc, char **argv)
 {
     gchar* sessionFile = NULL;
+    gchar* command = NULL;
     while (1)
     {
         static struct option long_options[] =
         {
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
+            {"command", required_argument, 0, 'c'},
             {"session", required_argument, 0, 's'},
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "hvs:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvs:c:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
@@ -267,6 +275,9 @@ int main(int argc, char **argv)
             g_printf(PACKAGE_VERSION);
             g_printf("\n");
             return 0;
+        case 'c':
+            command = g_strdup(optarg);
+            break;
         case 's':
             sessionFile = g_strdup(optarg);
             break;
@@ -287,7 +298,8 @@ int main(int argc, char **argv)
     termit_load_config();
     gtk_init(&argc, &argv);
     termit_init_sessions();
-    termit_init(sessionFile);
+    termit_init(sessionFile, command);
+    g_free(command);
     g_free(sessionFile);
 
     /**

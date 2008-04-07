@@ -1,6 +1,8 @@
 #ifndef CONFIGS_H
 #define CONFIGS_H
 
+#include <gtk/gtk.h>
+
 struct Configs
 {
     gchar *default_tab_name;
@@ -16,7 +18,9 @@ struct Configs
     guint rows;
     GArray *bookmarks;
     GArray *key_bindings;
+    gboolean hide_single_tab;
 };
+
 struct Bookmark
 {
     gchar *name;
