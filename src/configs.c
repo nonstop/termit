@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <X11/Xlib.h>
 
 #include "utils.h"
 #include "callbacks.h"
