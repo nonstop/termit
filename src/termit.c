@@ -239,7 +239,7 @@ static void termit_print_usage()
 "Options:\n"
 "    --help                 - print this help message\n"
 "    --version              - print version number\n"
-"    --command              - execute command"
+"    --execute              - execute command"
 "    --session=session_file - start session using session_file\n");
 }
 
@@ -253,7 +253,7 @@ int main(int argc, char **argv)
         {
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
-            {"command", required_argument, 0, 'c'},
+            {"execute", required_argument, 0, 'e'},
             {"session", required_argument, 0, 's'},
             {0, 0, 0, 0}
         };
@@ -275,7 +275,7 @@ int main(int argc, char **argv)
             g_printf(PACKAGE_VERSION);
             g_printf("\n");
             return 0;
-        case 'c':
+        case 'e':
             command = g_strdup(optarg);
             break;
         case 's':

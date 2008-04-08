@@ -15,6 +15,7 @@
     Command-line arguments:
         * --version (-v) - prints version info
         * --session=[sess.file] - load session at startup
+        * --command=[cmd] - start using command (also -c)
 
     Useful keys:
         * Ctrl-t - open tab
