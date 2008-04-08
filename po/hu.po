@@ -14,9 +14,13 @@ msgstr ""
 msgid "Bookmarks"
 msgstr "Knyvjelzk"
 
-#: /home/nonstop/coding/termit/src/utils.c:45
+#: /home/nonstop/coding/termit/src/utils.c:84
 msgid "Cannot create a new tab"
 msgstr "Nem sikerlt j flet ltrehozni"
+
+#: /home/nonstop/coding/termit/src/utils.c:53
+msgid "Cannot parse command. Creating tab with shell"
+msgstr ""
 
 #: /home/nonstop/coding/termit/src/termit.c:58
 msgid "Edit"
@@ -24,7 +28,7 @@ msgstr "Szerkeszts"
 
 #. Encoding menu
 #: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:198
+#: /home/nonstop/coding/termit/src/termit.c:205
 msgid "Encoding"
 msgstr "Kdols"
 
@@ -32,15 +36,15 @@ msgstr "Kdols"
 msgid "File"
 msgstr "Fjl"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:399
+#: /home/nonstop/coding/termit/src/callbacks.c:366
 msgid "Open session"
 msgstr "Megnyits"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:339
+#: /home/nonstop/coding/termit/src/callbacks.c:306
 msgid "Save session"
 msgstr "Ments"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:259
+#: /home/nonstop/coding/termit/src/callbacks.c:228
 msgid "Select font"
 msgstr "Betkszlet"
 
@@ -50,11 +54,11 @@ msgstr "Munkamenetek"
 
 #. Edit menu
 #: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:168
+#: /home/nonstop/coding/termit/src/termit.c:175
 msgid "Set tab name..."
 msgstr "Fl tnevezse..."
 
-#: /home/nonstop/coding/termit/src/callbacks.c:26
+#: /home/nonstop/coding/termit/src/callbacks.c:27
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -62,8 +66,8 @@ msgstr ""
 "Tbb fl is nyitva van.\n"
 "Bezrja mind?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:227
-#: /home/nonstop/coding/termit/src/callbacks.c:236
+#: /home/nonstop/coding/termit/src/callbacks.c:196
+#: /home/nonstop/coding/termit/src/callbacks.c:205
 msgid "Tab name"
 msgstr "Fl neve"
 

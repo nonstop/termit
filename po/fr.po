@@ -15,9 +15,13 @@ msgstr ""
 msgid "Bookmarks"
 msgstr "Marques-page"
 
-#: /home/nonstop/coding/termit/src/utils.c:45
+#: /home/nonstop/coding/termit/src/utils.c:84
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
+
+#: /home/nonstop/coding/termit/src/utils.c:53
+msgid "Cannot parse command. Creating tab with shell"
+msgstr ""
 
 #: /home/nonstop/coding/termit/src/termit.c:58
 msgid "Edit"
@@ -25,7 +29,7 @@ msgstr "Éditer"
 
 #. Encoding menu
 #: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:198
+#: /home/nonstop/coding/termit/src/termit.c:205
 msgid "Encoding"
 msgstr "Encodage"
 
@@ -33,15 +37,15 @@ msgstr "Encodage"
 msgid "File"
 msgstr "Fichier"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:399
+#: /home/nonstop/coding/termit/src/callbacks.c:366
 msgid "Open session"
 msgstr "Ouvrir une session"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:339
+#: /home/nonstop/coding/termit/src/callbacks.c:306
 msgid "Save session"
 msgstr "Enregistrer la session"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:259
+#: /home/nonstop/coding/termit/src/callbacks.c:228
 msgid "Select font"
 msgstr "Définir la police"
 
@@ -51,11 +55,11 @@ msgstr "Sessions"
 
 #. Edit menu
 #: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:168
+#: /home/nonstop/coding/termit/src/termit.c:175
 msgid "Set tab name..."
 msgstr "Définir le nom de l'onglet..."
 
-#: /home/nonstop/coding/termit/src/callbacks.c:26
+#: /home/nonstop/coding/termit/src/callbacks.c:27
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -63,8 +67,8 @@ msgstr ""
 "Vous êtes sur le point de fermer plusieurs onglets.\n"
 "Voulez-vous vraiment continuer ?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:227
-#: /home/nonstop/coding/termit/src/callbacks.c:236
+#: /home/nonstop/coding/termit/src/callbacks.c:196
+#: /home/nonstop/coding/termit/src/callbacks.c:205
 msgid "Tab name"
 msgstr "Nom de l'onglet"
 
