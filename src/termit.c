@@ -145,11 +145,14 @@ static void create_main_window(const gchar* sessionFile, const gchar* command)
     {
         TRACE("using command: %s", command);
         termit_append_tab_with_command(command);
+        termit_set_statusbar_encoding(0);
     }
 
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
+    {
         termit_append_tab();
-    termit_set_statusbar_encoding(0);
+        termit_set_statusbar_encoding(0);
+    }
    
     GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), termit.menu_bar, FALSE, 0, 0);
