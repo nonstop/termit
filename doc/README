@@ -5,22 +5,16 @@
     Features:
         * tabs
         * bookmarks
-        * changing tab name
-        * changing font for tabs
         * encodings (all available from GTK2)
-        * sessions
+        * sessions (See doc/session.example for details.)
 
     Configuration can be changed via $HOME/.config/termit/termit.cfg file (example is provided).
     
     Command-line arguments:
         * --version (-v) - prints version info
         * --session=[sess.file] - load session at startup
-        * --command=[cmd] - start using command (also -c)
+        * --execute=[cmd] - execute command (also -c)
 
-    Useful keys:
-        * Ctrl-t - open tab
-        * Ctrl-w - close tab
-        * double-click on tab bar - open tab
-        * Ctrl-Ins - copy to buffer
-        * Shift-Ins - paste from buffer
+    Keybindings can be configured vie termit.cfg. See defaults in doc/termit.example.
+
 
