@@ -1,3 +1,12 @@
+version 1.3
+	when both -s and -e options are presented at command line load session and add tab with command
+	added --execute/-e command-line option
+	added hide_single_tab options in termit.cfg (hide tab tray when only one tab is opened)
+	added configurable keybindings (example here: doc/termit.example)
+	added support for shell_cmd in session file
+	added transparent background options in termit.cfg (patch by Tetralet)
+	added doc/session.example
+	code cleanup
 version 1.2
 	tabs are reordable for Gtk versions > 2.10.0
 	added geometry option in termit.cfg (setting COLSxROWS)
