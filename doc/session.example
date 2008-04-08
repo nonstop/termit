@@ -1,0 +1,17 @@
+# example for session file for termit
+[session]
+tab_count=4
+[tab0]
+tab_name=Etc
+encoding=UTF-8
+working_dir=/etc
+[tab1]
+tab_name=Tmp
+encoding=KOI8-R
+working_dir=/tmp
+[tab2]
+tab_name=Python
+shell_cmd=python
+[tab3]
+shell_cmd=zsh
+
