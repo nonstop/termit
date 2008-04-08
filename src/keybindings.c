@@ -27,6 +27,7 @@ void termit_load_default_keybindings()
     ADD_DEFAULT_KEYBINDING("close_tab", GDK_CONTROL_MASK, GDK_w, termit_close_tab, "Ctrl-w");
     ADD_DEFAULT_KEYBINDING("copy", GDK_CONTROL_MASK, GDK_Insert, termit_copy, "Ctrl-Insert");
     ADD_DEFAULT_KEYBINDING("paste", GDK_SHIFT_MASK, GDK_Insert, termit_paste, "Shift-Insert");
+#ifdef DEBUG
     int i = 0;
     for (; i<configs.key_bindings->len; ++i)
     {
@@ -34,6 +35,7 @@ void termit_load_default_keybindings()
         TRACE("%s: %d, %d, %s", 
             kb->name, kb->state, kb->keyval, kb->default_binding);
     }
+#endif
 }
 
 struct TermitModifier {
