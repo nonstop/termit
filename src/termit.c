@@ -135,22 +135,21 @@ static void create_main_window(const gchar* sessionFile, const gchar* command)
     termit.menu_bar = create_menubar();
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+    
+    if (sessionFile)
+    {
+        TRACE("using session: %s", sessionFile);
+        termit_load_session(sessionFile);
+    }
     if (command)
     {
+        TRACE("using command: %s", command);
         termit_append_tab_with_command(command);
-        termit_set_statusbar_encoding(0);
     }
-    else if (sessionFile)
-    {
-        termit_load_session(sessionFile);
-        if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
-            termit_append_tab();
-    }
-    else
-    {
+
+    if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
         termit_append_tab();
-        termit_set_statusbar_encoding(0);
-    }
+    termit_set_statusbar_encoding(0);
    
     GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), termit.menu_bar, FALSE, 0, 0);
@@ -260,7 +259,7 @@ int main(int argc, char **argv)
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "hvs:c:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvs:e:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
