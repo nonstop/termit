@@ -241,7 +241,7 @@ static void termit_print_usage()
 "Options:\n"
 "    --help                 - print this help message\n"
 "    --version              - print version number\n"
-"    --execute              - execute command"
+"    --execute              - execute command\n"
 "    --session=session_file - start session using session_file\n");
 }
 
