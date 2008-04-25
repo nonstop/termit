@@ -75,6 +75,7 @@ void termit_init_sessions()
 struct TermitSession
 {
     gchar* tab_name;
+    gchar* shell;
     gchar* shell_cmd;
     gchar* working_dir;
     gchar* encoding;
@@ -102,9 +103,14 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
             ts.tab_name = g_strdup_printf("%s %d", configs.default_tab_name, i);
         else
             ts.tab_name = value;
+        value = g_key_file_get_value(kf, groupName, "shell", NULL);
+        if (!value)
+            ts.shell = g_strdup(g_getenv("SHELL"));
+        else
+            ts.shell = value;
         value = g_key_file_get_value(kf, groupName, "shell_cmd", NULL);
         if (!value)
-            ts.shell_cmd = g_strdup(g_getenv("SHELL"));
+            ts.shell_cmd = g_strdup("");
         else
             ts.shell_cmd = value;
         value = g_key_file_get_value(kf, groupName, "working_dir", NULL);
@@ -124,8 +130,8 @@ static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
     {
         struct TermitSession ts;
         ts = g_array_index(session_tabs, struct TermitSession, i);
-        TRACE("%3d  name=%s, cmd=%s, dir=%s, encoding=%s",
-                i, ts.tab_name, ts.shell_cmd, ts.working_dir, ts.encoding);
+        TRACE("%3d  name=%s, shell=%s, cmd=%s, dir=%s, encoding=%s",
+                i, ts.tab_name, ts.shell, ts.shell_cmd, ts.working_dir, ts.encoding);
     }
 }
 
@@ -136,6 +142,7 @@ static void free_session_tabs()
     {
         struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
         g_free(ts.tab_name);
+        g_free(ts.shell);
         g_free(ts.shell_cmd);
         g_free(ts.working_dir);
         g_free(ts.encoding);
@@ -183,7 +190,9 @@ void termit_load_session(const gchar* sessionFile)
     for (; i<session_tabs->len; ++i)
     {
         struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
-        termit_append_tab_with_details(ts.tab_name, ts.shell_cmd, ts.working_dir, ts.encoding);
+        gchar* cmd = g_strdup_printf("%s %s", ts.shell, ts.shell_cmd);
+        termit_append_tab_with_details(ts.tab_name, cmd, ts.working_dir, ts.encoding);
+        g_free(cmd);
     }
 //  finally block
 free_session_tabs:

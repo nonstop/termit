@@ -44,10 +44,11 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
 
     /* parse command */
     gchar **cmd_argv;
-    GError *cmd_err;
+    GError *cmd_err = NULL;
     gchar *cmd_path = NULL;
     gchar *cmd_file = NULL;
 
+    TRACE("shell_cmd=%s", shell_cmd);
     if (!g_shell_parse_argv(shell_cmd, NULL, &cmd_argv, &cmd_err))
     {
         ERROR(_("Cannot parse command. Creating tab with shell"));
