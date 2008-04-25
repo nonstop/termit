@@ -11,7 +11,7 @@ encoding=KOI8-R
 working_dir=/tmp
 [tab2]
 tab_name=Python
-shell_cmd=python
+shell=zsh
+shell_cmd=-c 'su - root'
 [tab3]
-shell_cmd=zsh
-
+shell=zsh
