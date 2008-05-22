@@ -13,6 +13,9 @@ word_chars="-AA-Za-z0-9,./?%&#:_~"
 # hide tabbar when only one tab is opened
 hide_single_tab=false
 
+# hide scrollbar by default
+show_scrollbar=false
+
 # list of available encodings
 #encodings=UTF-8;KOI8-R;CP866;CP1251
 

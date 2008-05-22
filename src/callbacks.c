@@ -56,10 +56,23 @@ void termit_destroy(GtkWidget *widget, gpointer data)
     termit_quit();
 }
 
+void termit_toggle_scrollbar()
+{
+    TRACE_MSG(__FUNCTION__);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+
+    if (pTab->scrollbar_is_shown)
+        gtk_widget_hide(GTK_WIDGET(pTab->scrollbar));
+    else
+        gtk_widget_show(GTK_WIDGET(pTab->scrollbar));
+    pTab->scrollbar_is_shown = !pTab->scrollbar_is_shown;
+}
+
 void termit_child_exited()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
 
     TRACE("waiting for pid %d", pTab->pid);
     
@@ -121,7 +134,7 @@ gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_d
 void termit_set_encoding(GtkWidget *widget, void *data)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), (gchar*)data);
     g_free(pTab->encoding);
     pTab->encoding = g_strdup((gchar*)data);
@@ -156,14 +169,14 @@ void termit_next_tab()
 void termit_paste()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
     vte_terminal_paste_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
 void termit_copy()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
     vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
@@ -201,7 +214,7 @@ void termit_set_tab_name()
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
 
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page)
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
     GtkWidget *label = gtk_label_new(_("Tab name"));
     GtkWidget *entry = gtk_entry_new();
     gtk_entry_set_text(
@@ -252,6 +265,11 @@ void termit_menu_exit()
 
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
 {   
+    TRACE_MSG(__FUNCTION__);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
+    // it seems that set_active eventually calls toggle callback
+    ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;
+
     termit_set_statusbar_encoding(page_num);
 }
 
@@ -261,7 +279,7 @@ gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gp
         termit_append_tab();
         
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE)
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
     gchar* cmd = g_strdup_printf("cd %s\n", ((struct Bookmark*)user_data)->path);
     GString* cmdStr = g_string_new(cmd);
     vte_terminal_feed_child(VTE_TERMINAL(pTab->vte), cmdStr->str, cmdStr->len);
@@ -340,7 +358,7 @@ void termit_on_save_session()
     for (; i < pages; ++i)
     {
         gchar* groupName = g_strdup_printf("tab%d", i);
-        TERMIT_GET_TAB_BY_INDEX(pTab, i)
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
         g_key_file_set_string(kf, groupName, "tab_name", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
         g_key_file_set_string(kf, groupName, "encoding", pTab->encoding);
         gchar* working_dir = termit_get_pid_dir(pTab->pid);

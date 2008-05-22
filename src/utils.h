@@ -41,6 +41,7 @@ struct TermitData
     GtkWidget *statusbar;
     GtkWidget *cb_bookmarks;
     GtkWidget *menu;
+    GtkWidget *mi_show_scrollbar;
     GtkWidget *menu_bar;
     gint tab_max_number;
     PangoFontDescription *font;
@@ -52,6 +53,7 @@ struct TermitTab
     GtkWidget *hbox;
     GtkWidget *vte;
     GtkWidget *scrollbar;
+    gboolean scrollbar_is_shown;
     gchar *encoding;
     pid_t pid;
 };

@@ -64,6 +64,13 @@ static void load_termit_options(GKeyFile *keyfile)
         configs.default_font = value;
     TRACE("default_font=%s", configs.default_font);
     
+    configs.show_scrollbar = g_key_file_get_boolean(keyfile, "termit", "show_scrollbar", &error);
+    if (error)
+    {
+        configs.show_scrollbar = TRUE;
+        config_error(&error);
+    }
+    TRACE("show_scrollbar=%d", configs.show_scrollbar);
 
     configs.transparent_background = g_key_file_get_boolean(keyfile, "termit", "transparent_background", &error);
     if (error)

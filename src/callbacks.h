@@ -18,6 +18,7 @@ void termit_copy();
 void termit_close_tab();
 void termit_set_tab_name();
 void termit_select_font();
+void termit_toggle_scrollbar();
 void termit_menu_exit();
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data);
 gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gpointer user_data);

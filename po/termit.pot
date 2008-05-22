@@ -1,63 +1,67 @@
-#: /home/nonstop/coding/termit/src/termit.c:87
+#: /home/nonstop/programs/termit/src/termit.c:88
 msgid "Bookmarks"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/utils.c:84
+#: /home/nonstop/programs/termit/src/utils.c:85
 msgid "Cannot create a new tab"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/utils.c:53
+#: /home/nonstop/programs/termit/src/utils.c:54
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:58
+#: /home/nonstop/programs/termit/src/termit.c:59
 msgid "Edit"
 msgstr ""
 
 #. Encoding menu
-#: /home/nonstop/coding/termit/src/termit.c:107
-#: /home/nonstop/coding/termit/src/termit.c:205
+#: /home/nonstop/programs/termit/src/termit.c:108
+#: /home/nonstop/programs/termit/src/termit.c:210
 msgid "Encoding"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:37
+#: /home/nonstop/programs/termit/src/termit.c:37
 msgid "File"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:366
+#: /home/nonstop/programs/termit/src/callbacks.c:384
 msgid "Open session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:306
+#: /home/nonstop/programs/termit/src/callbacks.c:324
 msgid "Save session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:228
+#: /home/nonstop/programs/termit/src/callbacks.c:241
 msgid "Select font"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:75
+#: /home/nonstop/programs/termit/src/termit.c:76
 msgid "Sessions"
 msgstr ""
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:175
+#: /home/nonstop/programs/termit/src/termit.c:48
+#: /home/nonstop/programs/termit/src/termit.c:177
 msgid "Set tab name..."
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:27
+#: /home/nonstop/programs/termit/src/callbacks.c:27
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:196
-#: /home/nonstop/coding/termit/src/callbacks.c:205
+#: /home/nonstop/programs/termit/src/termit.c:184
+msgid "Show scrollbar"
+msgstr ""
+
+#: /home/nonstop/programs/termit/src/callbacks.c:209
+#: /home/nonstop/programs/termit/src/callbacks.c:218
 msgid "Tab name"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/sessions.c:70
+#: /home/nonstop/programs/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr ""

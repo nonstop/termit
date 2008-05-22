@@ -54,6 +54,7 @@ static GtkWidget* create_menubar()
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_copy), NULL);
     GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
     g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);
+    
 
     GtkWidget *mi_edit = gtk_menu_item_new_with_label(_("Edit"));
     GtkWidget *edit_menu = gtk_menu_new();
@@ -169,6 +170,7 @@ static void create_main_window(const gchar* sessionFile, const gchar* command)
 static void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
+    
     GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
     GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
     GtkWidget *separator1 = gtk_separator_menu_item_new();
@@ -179,12 +181,14 @@ static void termit_create_popup_menu()
     GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
     GtkWidget *separator3 = gtk_separator_menu_item_new();
     GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
+    termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Show scrollbar"));
 
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator1);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_select_font);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), termit.mi_show_scrollbar);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator2);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_copy);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_paste);
@@ -194,6 +198,7 @@ static void termit_create_popup_menu()
     g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_new_tab), NULL);
     g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_set_tab_name), NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_select_font), NULL);
+    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_toggle_scrollbar), NULL);
     g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_close_tab), NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_copy), NULL);
     g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);    

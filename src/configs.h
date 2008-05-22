@@ -19,6 +19,7 @@ struct Configs
     GArray *bookmarks;
     GArray *key_bindings;
     gboolean hide_single_tab;
+    gboolean show_scrollbar;
 };
 
 struct Bookmark
