@@ -204,6 +204,8 @@ static void termit_create_popup_menu()
     g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_paste), NULL);    
     g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_menu_exit), NULL);    
 
+    ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;
+
     TRACE("configs.enc_length=%d", configs.enc_length);
     if (configs.enc_length)
     {

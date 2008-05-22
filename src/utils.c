@@ -118,10 +118,10 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
         TRACE(hide);
         pTab->scrollbar_is_shown = FALSE;
         gtk_widget_show(termit.notebook);
+        gtk_widget_hide(pTab->scrollbar);
         gtk_widget_show(pTab->hbox);
         gtk_widget_show(pTab->tab_name);
         gtk_widget_show(pTab->vte);
-        gtk_widget_hide(pTab->scrollbar);
     }
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
