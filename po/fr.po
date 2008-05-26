@@ -15,11 +15,11 @@ msgstr ""
 msgid "Bookmarks"
 msgstr "Marques-page"
 
-#: /home/nonstop/programs/termit/src/utils.c:85
+#: /home/nonstop/programs/termit/src/utils.c:82
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
 
-#: /home/nonstop/programs/termit/src/utils.c:54
+#: /home/nonstop/programs/termit/src/utils.c:51
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr "Éditer"
 
 #. Encoding menu
 #: /home/nonstop/programs/termit/src/termit.c:108
-#: /home/nonstop/programs/termit/src/termit.c:210
+#: /home/nonstop/programs/termit/src/termit.c:212
 msgid "Encoding"
 msgstr "Encodage"
 
@@ -37,15 +37,19 @@ msgstr "Encodage"
 msgid "File"
 msgstr "Fichier"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:384
+#: /home/nonstop/programs/termit/src/callbacks.c:381
 msgid "Open session"
 msgstr "Ouvrir une session"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:324
+#: /home/nonstop/programs/termit/src/callbacks.c:321
 msgid "Save session"
 msgstr "Enregistrer la session"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:241
+#: /home/nonstop/programs/termit/src/termit.c:184
+msgid "Scrollbar"
+msgstr ""
+
+#: /home/nonstop/programs/termit/src/callbacks.c:239
 msgid "Select font"
 msgstr "Définir la police"
 
@@ -67,12 +71,8 @@ msgstr ""
 "Vous êtes sur le point de fermer plusieurs onglets.\n"
 "Voulez-vous vraiment continuer ?"
 
-#: /home/nonstop/programs/termit/src/termit.c:184
-msgid "Show scrollbar"
-msgstr ""
-
-#: /home/nonstop/programs/termit/src/callbacks.c:209
-#: /home/nonstop/programs/termit/src/callbacks.c:218
+#: /home/nonstop/programs/termit/src/callbacks.c:207
+#: /home/nonstop/programs/termit/src/callbacks.c:216
 msgid "Tab name"
 msgstr "Nom de l'onglet"
 

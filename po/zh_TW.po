@@ -17,11 +17,11 @@ msgstr ""
 msgid "Bookmarks"
 msgstr "書籤"
 
-#: /home/nonstop/programs/termit/src/utils.c:85
+#: /home/nonstop/programs/termit/src/utils.c:82
 msgid "Cannot create a new tab"
 msgstr "無法建立新分頁"
 
-#: /home/nonstop/programs/termit/src/utils.c:54
+#: /home/nonstop/programs/termit/src/utils.c:51
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
@@ -31,7 +31,7 @@ msgstr "編輯"
 
 #. Encoding menu
 #: /home/nonstop/programs/termit/src/termit.c:108
-#: /home/nonstop/programs/termit/src/termit.c:210
+#: /home/nonstop/programs/termit/src/termit.c:212
 msgid "Encoding"
 msgstr "編碼"
 
@@ -39,15 +39,19 @@ msgstr "編碼"
 msgid "File"
 msgstr "檔案"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:384
+#: /home/nonstop/programs/termit/src/callbacks.c:381
 msgid "Open session"
 msgstr "開啟作業階段"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:324
+#: /home/nonstop/programs/termit/src/callbacks.c:321
 msgid "Save session"
 msgstr "儲存作業階段"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:241
+#: /home/nonstop/programs/termit/src/termit.c:184
+msgid "Scrollbar"
+msgstr ""
+
+#: /home/nonstop/programs/termit/src/callbacks.c:239
 msgid "Select font"
 msgstr "選擇字型"
 
@@ -67,12 +71,8 @@ msgid ""
 "Close anyway?"
 msgstr "已開啟數個分頁。是否關閉？"
 
-#: /home/nonstop/programs/termit/src/termit.c:184
-msgid "Show scrollbar"
-msgstr ""
-
-#: /home/nonstop/programs/termit/src/callbacks.c:209
-#: /home/nonstop/programs/termit/src/callbacks.c:218
+#: /home/nonstop/programs/termit/src/callbacks.c:207
+#: /home/nonstop/programs/termit/src/callbacks.c:216
 msgid "Tab name"
 msgstr "分頁名稱"
 

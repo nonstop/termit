@@ -14,11 +14,11 @@ msgstr ""
 msgid "Bookmarks"
 msgstr "Knyvjelzk"
 
-#: /home/nonstop/programs/termit/src/utils.c:85
+#: /home/nonstop/programs/termit/src/utils.c:82
 msgid "Cannot create a new tab"
 msgstr "Nem sikerlt j flet ltrehozni"
 
-#: /home/nonstop/programs/termit/src/utils.c:54
+#: /home/nonstop/programs/termit/src/utils.c:51
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
@@ -28,7 +28,7 @@ msgstr "Szerkeszts"
 
 #. Encoding menu
 #: /home/nonstop/programs/termit/src/termit.c:108
-#: /home/nonstop/programs/termit/src/termit.c:210
+#: /home/nonstop/programs/termit/src/termit.c:212
 msgid "Encoding"
 msgstr "Kdols"
 
@@ -36,15 +36,19 @@ msgstr "Kdols"
 msgid "File"
 msgstr "Fjl"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:384
+#: /home/nonstop/programs/termit/src/callbacks.c:381
 msgid "Open session"
 msgstr "Megnyits"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:324
+#: /home/nonstop/programs/termit/src/callbacks.c:321
 msgid "Save session"
 msgstr "Ments"
 
-#: /home/nonstop/programs/termit/src/callbacks.c:241
+#: /home/nonstop/programs/termit/src/termit.c:184
+msgid "Scrollbar"
+msgstr ""
+
+#: /home/nonstop/programs/termit/src/callbacks.c:239
 msgid "Select font"
 msgstr "Betkszlet"
 
@@ -66,12 +70,8 @@ msgstr ""
 "Tbb fl is nyitva van.\n"
 "Bezrja mind?"
 
-#: /home/nonstop/programs/termit/src/termit.c:184
-msgid "Show scrollbar"
-msgstr ""
-
-#: /home/nonstop/programs/termit/src/callbacks.c:209
-#: /home/nonstop/programs/termit/src/callbacks.c:218
+#: /home/nonstop/programs/termit/src/callbacks.c:207
+#: /home/nonstop/programs/termit/src/callbacks.c:216
 msgid "Tab name"
 msgstr "Fl neve"
 
