@@ -181,7 +181,7 @@ static void termit_create_popup_menu()
     GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
     GtkWidget *separator3 = gtk_separator_menu_item_new();
     GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
-    termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Show scrollbar"));
+    termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Scrollbar"));
 
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);

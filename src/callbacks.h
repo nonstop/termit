@@ -28,6 +28,7 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
 gchar* termit_get_pid_dir(pid_t pid);
 void termit_del_tab();
 
+void termit_hide_scrollbars();
 void termit_set_font();
 void termit_set_statusbar_encoding(gint page);
 gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data);
