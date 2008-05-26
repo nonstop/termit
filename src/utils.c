@@ -31,10 +31,7 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
 
     vte_terminal_set_scrollback_lines(VTE_TERMINAL(pTab->vte), configs.scrollback_lines);
     if (configs.default_word_chars)
-    {
-        TRACE("%s", configs.default_word_chars);
         vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
-    }
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
 
     pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
@@ -147,6 +144,21 @@ void termit_append_tab_with_command(const gchar* command)
 void termit_append_tab()
 {
     termit_append_tab_with_command(g_getenv("SHELL"));
+}
+
+/**
+ * hide scrollbars
+ * */
+void termit_hide_scrollbars()
+{
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    int i=0;
+    for (i=0; i<page_num; i++)
+    {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        if (!pTab->scrollbar_is_shown)
+            gtk_widget_hide(pTab->scrollbar);
+    }
 }
 
 void termit_set_font()

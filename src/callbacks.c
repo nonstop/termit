@@ -143,7 +143,6 @@ void termit_set_encoding(GtkWidget *widget, void *data)
 
 void termit_prev_tab()
 {
-    TRACE_MSG(__FUNCTION__);
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     if (index == -1)
         return;
@@ -156,7 +155,6 @@ void termit_prev_tab()
 
 void termit_next_tab()
 {
-    TRACE_MSG(__FUNCTION__);
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     if (index == -1)
         return;
@@ -265,7 +263,6 @@ void termit_menu_exit()
 
 void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
 {   
-    TRACE_MSG(__FUNCTION__);
     TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
     // it seems that set_active eventually calls toggle callback
     ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;

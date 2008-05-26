@@ -324,6 +324,7 @@ int main(int argc, char **argv)
 
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
+    termit_hide_scrollbars();
 
     gtk_main();
 
