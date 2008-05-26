@@ -1,3 +1,12 @@
+version 1.3.1
+	added show_scrollbar option in popup menu and termit.cfg
+	shell_cmd variable splitted into shell (eg bash, zsh, python, etc) 
+		and shell_cmd (eg -c 'su - root', etc)
+	updated documentation
+	bugfix with uninitialized GError
+	fixed --usage output
+	fixed statusbar encoding when loading session
+	fixed compilation warnings
 version 1.3
 	when both -s and -e options are presented at command line load session and add tab with command
 	added --execute/-e command-line option
