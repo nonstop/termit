@@ -8,15 +8,6 @@
 
 extern struct Configs configs;
 
-static gchar *default_encoding = "UTF-8";
-static gchar *default_tab_name = "Terminal";
-static gchar *default_font = "Monospace 10";
-static gint scrollback_lines = 4096;
-static gchar *default_word_chars = "-A-Za-z0-9,./?%&#:_~";
-static gdouble default_transparent_saturation = 0.2;
-static guint default_cols = 80;
-static guint default_rows = 24;
-
 /**
  * print error message, free GError
  * */
@@ -26,40 +17,33 @@ static void config_error(GError** err)
     g_error_free(*err);
     *err = NULL;
 }
-static void set_default_value(gchar** var, gchar* value, GError** err)
-{
-    *var = value;
-    config_error(err);
-}
 
 static void load_termit_options(GKeyFile *keyfile)
 {
     gchar *value = NULL;
     GError * error = NULL;
     value = g_key_file_get_value(keyfile, "termit", "default_tab_name", &error);
-    if (!value)
-        set_default_value(&configs.default_tab_name, default_tab_name, &error);
-    else
+    if (value)
         configs.default_tab_name = value;
     TRACE("default_tab_name=%s", configs.default_tab_name);
 
     value = g_key_file_get_value(keyfile, "termit", "default_encoding", &error);
     if (!value)
-        set_default_value(&configs.default_encoding, default_encoding, &error);
+        config_error(&error);
     else
         configs.default_encoding = value;
     TRACE("default_encoding=%s", configs.default_encoding);
     
     value = g_key_file_get_value(keyfile, "termit", "word_chars", &error);
     if (!value)
-        set_default_value(&configs.default_word_chars, default_word_chars, &error);
+        config_error(&error);
     else
         configs.default_word_chars = value;
     TRACE("default_word_chars=%s", configs.default_word_chars);
 
     value = g_key_file_get_value(keyfile, "termit", "default_font", &error);
     if (!value)
-        set_default_value(&configs.default_font, default_font, &error);
+        config_error(&error);
     else
         configs.default_font = value;
     TRACE("default_font=%s", configs.default_font);
@@ -67,7 +51,7 @@ static void load_termit_options(GKeyFile *keyfile)
     configs.show_scrollbar = g_key_file_get_boolean(keyfile, "termit", "show_scrollbar", &error);
     if (error)
     {
-        configs.show_scrollbar = TRUE;
+        configs.show_scrollbar = True;
         config_error(&error);
     }
     TRACE("show_scrollbar=%d", configs.show_scrollbar);
@@ -75,7 +59,7 @@ static void load_termit_options(GKeyFile *keyfile)
     configs.transparent_background = g_key_file_get_boolean(keyfile, "termit", "transparent_background", &error);
     if (error)
     {
-        configs.transparent_background = FALSE;
+        configs.transparent_background = False;
         config_error(&error);
     }
     TRACE("transparent_background=%d", configs.transparent_background);
@@ -85,15 +69,13 @@ static void load_termit_options(GKeyFile *keyfile)
         value = g_key_file_get_value(keyfile, "termit", "transparent_saturation", &error);
         if (!value)
         {
-            configs.transparent_saturation = default_transparent_saturation;
             config_error(&error);
         }
         else
         {
-            configs.transparent_saturation = atof(value);
-            if (configs.transparent_saturation > 1
-                || configs.transparent_saturation < 0)
-                configs.transparent_saturation = default_transparent_saturation;
+            gdouble tr_sat = atof(value);
+            if ((tr_sat <= 1) && (tr_sat >= 0))
+                configs.transparent_saturation = tr_sat;
         }
         TRACE("transparent_saturation=%f", configs.transparent_saturation);
     }
@@ -101,18 +83,17 @@ static void load_termit_options(GKeyFile *keyfile)
     configs.hide_single_tab = g_key_file_get_boolean(keyfile, "termit", "hide_single_tab", &error);
     if (error)
     {
-        configs.hide_single_tab = FALSE;
+        configs.hide_single_tab = False;
         config_error(&error);
     }
 
-    configs.scrollback_lines = g_key_file_get_integer(keyfile, "termit", "scrollback_lines", &error);
+    guint scrollback_lines = g_key_file_get_integer(keyfile, "termit", "scrollback_lines", &error);
     if (error)
     {
-        configs.scrollback_lines = scrollback_lines;
         config_error(&error);
     }
         
-    if (!configs.scrollback_lines)
+    if (scrollback_lines)
         configs.scrollback_lines = scrollback_lines;
     TRACE("scrollback_lines=%d", configs.scrollback_lines);
 
@@ -123,40 +104,60 @@ static void load_termit_options(GKeyFile *keyfile)
         if (!encodings)
         {
             config_error(&error);
-            return;
         }
-        configs.encodings = encodings;
-        configs.enc_length = enc_length;
+        else
+        {
+            configs.encodings = encodings;
+            configs.enc_length = enc_length;
+        }
     }
     TRACE("configs.enc_length=%d", configs.enc_length);
 
     value = g_key_file_get_value(keyfile, "termit", "geometry", &error);
     if (!value)
     {
-        configs.cols = default_cols;
-        configs.rows = default_rows;
         config_error(&error);
     }
     else
     {
+        uint cols, rows;
         int tmp1, tmp2;
         XParseGeometry(value, &tmp1, &tmp2, 
-            &configs.cols, &configs.rows);
-        if ((configs.cols == 0) 
-            || (configs.rows == 0))
+            &cols, &rows);
+        if ((cols > 0) && (rows > 0))
         {
-            configs.cols = default_cols;
-            configs.rows = default_rows;
+            configs.cols = cols;
+            configs.rows = rows;
         }
     }
     TRACE("geometry: cols=%d, rows=%d", configs.cols, configs.rows);
 }
 
-static void set_termit_options()
+
+static void termit_set_default_options()
 {
-    configs.default_tab_name = default_tab_name;
-    configs.scrollback_lines = scrollback_lines;
-    configs.default_font = default_font;
+    configs.default_tab_name = "Terminal";
+    configs.default_font = "Monospace 10";
+    configs.scrollback_lines = 4096;
+    configs.default_encoding = "UTF-8";
+    configs.default_word_chars = "-A-Za-z0-9,./?%&#_~";
+    configs.transparent_background = False;
+    configs.transparent_saturation = 0.2;
+    configs.enc_length = 0;
+    configs.cols = 80;
+    configs.rows = 24;
+
+    configs.bookmarks = g_array_new(FALSE, TRUE, sizeof(struct Bookmark));
+    configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBindging));
+
+    configs.hide_single_tab = False;
+    configs.show_scrollbar = True;
+}
+
+void termit_set_defaults()
+{
+    termit_set_default_options();
+    termit_set_default_keybindings();
 }
 
 static void load_bookmark_options(GKeyFile *keyfile)
@@ -180,9 +181,6 @@ static void load_bookmark_options(GKeyFile *keyfile)
 
 void termit_load_config()
 {
-    configs.bookmarks = g_array_new(FALSE, TRUE, sizeof(struct Bookmark));
-    configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBindging));
-
     GKeyFile * keyfile = g_key_file_new();
     GError * error = NULL;
     
@@ -203,21 +201,16 @@ void termit_load_config()
         TRACE_MSG("config file found");
         if (g_key_file_has_group(keyfile, "termit") == TRUE)
             load_termit_options(keyfile);
-        else
-            set_termit_options();
 
         if (g_key_file_has_group(keyfile, "bookmarks") == TRUE)
             load_bookmark_options(keyfile);
         if (g_key_file_has_group(keyfile, "keybindings") == TRUE)
             termit_load_keybindings(keyfile);
-        else
-            termit_load_default_keybindings();
         g_key_file_free(keyfile);
     }
     else
     {
         TRACE_MSG("config file not found");
-        set_termit_options();
     }
 }
 

@@ -13,7 +13,7 @@ struct KeyBindging
     gchar* default_binding;
 };
 
-void termit_load_default_keybindings();
+void termit_set_default_keybindings();
 void termit_load_keybindings(GKeyFile* key_file);
 
 #endif /* KEYBINDINGS_H */

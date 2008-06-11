@@ -18,7 +18,7 @@ extern struct Configs configs;
     kb.default_binding = default_binding_; \
     g_array_append_val(configs.key_bindings, kb);
 
-void termit_load_default_keybindings()
+void termit_set_default_keybindings()
 {
     struct KeyBindging kb;
     ADD_DEFAULT_KEYBINDING("prev_tab", GDK_MOD1_MASK, GDK_Left, termit_prev_tab, "Alt-Left");
@@ -102,7 +102,7 @@ static gint get_kb_index(const gchar* name)
 
 void termit_load_keybindings(GKeyFile* keyfile)
 {
-    termit_load_default_keybindings();
+    termit_set_default_keybindings();
     
     const gchar* kb_group = "keybindings";
     GError * error = NULL;

@@ -301,11 +301,12 @@ int main(int argc, char **argv)
     bind_textdomain_codeset(PACKAGE, "UTF-8");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
-
     gtk_set_locale();
-    
-    termit_load_config();
     gtk_init(&argc, &argv);
+
+    termit_set_defaults();
+    termit_load_config();
+
     termit_init_sessions();
     termit_init(sessionFile, command);
     g_free(command);

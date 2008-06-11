@@ -28,6 +28,7 @@ struct Bookmark
     gchar *path;
 };
 
+void termit_set_defaults();
 void termit_load_config();
 
 
