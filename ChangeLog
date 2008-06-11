@@ -1,3 +1,6 @@
+versoin 1.3.2
+	fixed loading default options when no config file was found
+	added session.example to installed docs
 version 1.3.1
 	added show_scrollbar option in popup menu and termit.cfg
 	shell_cmd variable splitted into shell (eg bash, zsh, python, etc) 
