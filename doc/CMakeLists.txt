@@ -1,4 +1,4 @@
-SET(TERMIT_DOCS README termit.example)
+SET(TERMIT_DOCS README termit.example session.example)
 
 INSTALL(FILES ${TERMIT_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/${TERMIT_PACKAGE})
 INSTALL(FILES termit.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
