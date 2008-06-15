@@ -1,0 +1,15 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+termit: termit (terminal emulator)
+termit:
+termit: Small terminal emulator. The only dependencies are Vte and Gtk2 libs.
+termit: Termit supports tabs, bookmarks, encoding switching and sessions.
+termit: 
+termit: http://code.google.com/p/termit/wiki/TermIt
+termit: 

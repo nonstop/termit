@@ -1,3 +1,5 @@
+version 1.3.3
+	added termit.SlackBuild and termit.ebuild
 versoin 1.3.2
 	fixed loading default options when no config file was found
 	added session.example to installed docs
