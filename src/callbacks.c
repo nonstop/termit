@@ -117,18 +117,7 @@ gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
 
 gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    int i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
-        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
-        if (kb && (event->state & kb->state))
-            if (gdk_keyval_to_lower(event->keyval) == kb->keyval)
-            {
-                kb->callback();
-                return TRUE;
-            }
-    }
-    return FALSE;
+    return termit_process_key(event);
 }
 
 void termit_set_encoding(GtkWidget *widget, void *data)

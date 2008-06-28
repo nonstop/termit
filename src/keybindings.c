@@ -10,16 +10,36 @@
 
 extern struct Configs configs;
 
+static Display* disp;
+
 #define ADD_DEFAULT_KEYBINDING(name_, state_, keyval_, callback_, default_binding_) \
     kb.name = name_; \
     kb.state = state_; \
     kb.keyval = keyval_; \
     kb.callback = callback_; \
+    kb.keycode = XKeysymToKeycode(disp, keyval_); \
     kb.default_binding = default_binding_; \
     g_array_append_val(configs.key_bindings, kb);
 
+static void trace_keybindings()
+{
+#ifdef DEBUG
+    TRACE_MSG("");
+    int i = 0;
+    for (; i<configs.key_bindings->len; ++i)
+    {
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        TRACE("%s: %d, %d(%ld), %s", 
+            kb->name, kb->state, kb->keyval, kb->keycode, kb->default_binding);
+    }
+    TRACE_MSG("");
+#endif
+}
+
 void termit_set_default_keybindings()
 {
+    disp = XOpenDisplay(NULL);
+
     struct KeyBindging kb;
     ADD_DEFAULT_KEYBINDING("prev_tab", GDK_MOD1_MASK, GDK_Left, termit_prev_tab, "Alt-Left");
     ADD_DEFAULT_KEYBINDING("next_tab", GDK_MOD1_MASK, GDK_Right, termit_next_tab, "Alt-Right");
@@ -27,15 +47,8 @@ void termit_set_default_keybindings()
     ADD_DEFAULT_KEYBINDING("close_tab", GDK_CONTROL_MASK, GDK_w, termit_close_tab, "Ctrl-w");
     ADD_DEFAULT_KEYBINDING("copy", GDK_CONTROL_MASK, GDK_Insert, termit_copy, "Ctrl-Insert");
     ADD_DEFAULT_KEYBINDING("paste", GDK_SHIFT_MASK, GDK_Insert, termit_paste, "Shift-Insert");
-#ifdef DEBUG
-    int i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
-        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
-        TRACE("%s: %d, %d, %s", 
-            kb->name, kb->state, kb->keyval, kb->default_binding);
-    }
-#endif
+
+    trace_keybindings();
 }
 
 struct TermitModifier {
@@ -122,5 +135,53 @@ void termit_load_keybindings(GKeyFile* keyfile)
     }
 
     g_strfreev(names);
+}
+
+static gboolean termit_key_press_use_keycode(GdkEventKey *event)
+{
+    int i = 0;
+    for (; i<configs.key_bindings->len; ++i)
+    {
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        if (kb && (event->state & kb->state))
+            if (event->hardware_keycode == kb->keycode)
+            {
+                kb->callback();
+                return TRUE;
+            }
+    }
+    return FALSE;
+}
+
+static gboolean termit_key_press_use_keysym(GdkEventKey *event)
+{
+    int i = 0;
+    for (; i<configs.key_bindings->len; ++i)
+    {
+        struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
+        if (kb && (event->state & kb->state))
+            if (gdk_keyval_to_lower(event->keyval) == kb->keyval)
+            {
+                kb->callback();
+                return TRUE;
+            }
+    }
+    return FALSE;
+}
+
+gboolean termit_process_key(GdkEventKey* event)
+{
+    switch(configs.kb_policy)
+    {
+    case TermitKbUseKeycode:
+        return termit_key_press_use_keycode(event);
+        break;
+    case TermitKbUseKeysym:
+        return termit_key_press_use_keysym(event);
+        break;
+    default:
+        ERROR("unknown kb_policy");
+    }
+    return FALSE;
 }
 

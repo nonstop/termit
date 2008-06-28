@@ -3,6 +3,8 @@
 
 #include <gtk/gtk.h>
 
+enum TermitKbPolicy {TermitKbUseKeycode = 1, TermitKbUseKeysym = 2};
+
 struct Configs
 {
     gchar *default_tab_name;
@@ -20,6 +22,7 @@ struct Configs
     GArray *key_bindings;
     gboolean hide_single_tab;
     gboolean show_scrollbar;
+    enum TermitKbPolicy kb_policy;    
 };
 
 struct Bookmark

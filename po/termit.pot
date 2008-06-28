@@ -1,67 +1,67 @@
-#: /home/nonstop/coding/termit/src/termit.c:88
+#: /home/evgeny/coding/termit/src/termit.c:88
 msgid "Bookmarks"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/utils.c:82
+#: /home/evgeny/coding/termit/src/utils.c:82
 msgid "Cannot create a new tab"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/utils.c:51
+#: /home/evgeny/coding/termit/src/utils.c:51
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:59
+#: /home/evgeny/coding/termit/src/termit.c:59
 msgid "Edit"
 msgstr ""
 
 #. Encoding menu
-#: /home/nonstop/coding/termit/src/termit.c:108
-#: /home/nonstop/coding/termit/src/termit.c:212
+#: /home/evgeny/coding/termit/src/termit.c:108
+#: /home/evgeny/coding/termit/src/termit.c:212
 msgid "Encoding"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:37
+#: /home/evgeny/coding/termit/src/termit.c:37
 msgid "File"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:381
+#: /home/evgeny/coding/termit/src/callbacks.c:370
 msgid "Open session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:321
+#: /home/evgeny/coding/termit/src/callbacks.c:310
 msgid "Save session"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:184
+#: /home/evgeny/coding/termit/src/termit.c:184
 msgid "Scrollbar"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:239
+#: /home/evgeny/coding/termit/src/callbacks.c:228
 msgid "Select font"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:76
+#: /home/evgeny/coding/termit/src/termit.c:76
 msgid "Sessions"
 msgstr ""
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:177
+#: /home/evgeny/coding/termit/src/termit.c:48
+#: /home/evgeny/coding/termit/src/termit.c:177
 msgid "Set tab name..."
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:27
+#: /home/evgeny/coding/termit/src/callbacks.c:27
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/callbacks.c:207
-#: /home/nonstop/coding/termit/src/callbacks.c:216
+#: /home/evgeny/coding/termit/src/callbacks.c:196
+#: /home/evgeny/coding/termit/src/callbacks.c:205
 msgid "Tab name"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/sessions.c:70
+#: /home/evgeny/coding/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr ""

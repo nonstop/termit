@@ -6,6 +6,12 @@ default_font=Monospace 10
 scrollback_lines=4096
 word_chars="-AA-Za-z0-9,./?%&#:_~"
 
+# keyboard policy for shortcuts
+# available values:
+#   keycode - use hardware keycode (doesn't depend on keymap)
+#   keysym - use letter code (depends on keymap)
+kb_policy=keycode
+
 # to enable transparency uncomment both lines below
 #transparent_background=true
 #transparent_saturation=0,4

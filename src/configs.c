@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <X11/Xlib.h>
 
 #include "utils.h"
@@ -131,6 +132,23 @@ static void load_termit_options(GKeyFile *keyfile)
         }
     }
     TRACE("geometry: cols=%d, rows=%d", configs.cols, configs.rows);
+    g_free(value);
+
+    value = g_key_file_get_value(keyfile, "termit", "kb_policy", &error);
+    if (!value)
+    {
+        config_error(&error);
+    }
+    else
+    {
+        if (!strcmp(value, "keycode"))
+            configs.kb_policy = TermitKbUseKeycode;
+        else if (!strcmp(value, "keysym"))
+            configs.kb_policy = TermitKbUseKeysym;
+        else
+            ERROR("unknown value for kb_policy");
+    }
+    g_free(value);
 }
 
 
@@ -146,6 +164,7 @@ static void termit_set_default_options()
     configs.enc_length = 0;
     configs.cols = 80;
     configs.rows = 24;
+    configs.kb_policy = TermitKbUseKeysym;    
 
     configs.bookmarks = g_array_new(FALSE, TRUE, sizeof(struct Bookmark));
     configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBindging));
