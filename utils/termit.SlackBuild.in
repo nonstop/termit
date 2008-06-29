@@ -5,10 +5,10 @@
 # Written by Evgeny Ratnikov (ratnikov dot ev at gmail dot com)
 
 PRGNAM=termit
-VERSION=${VERSION:-1.3.3}
+VERSION=${VERSION:-"@TERMIT_PACKAGE_VERSION@"}
 ARCH=${ARCH:-i686}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_evgeny}
+TAG=${TAG:-_SBo}
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/$TAG}

@@ -1,5 +1,6 @@
 version 1.3.3
 	added termit.SlackBuild and termit.ebuild
+	added support for kb_policy (for shortcuts)
 versoin 1.3.2
 	fixed loading default options when no config file was found
 	added session.example to installed docs
