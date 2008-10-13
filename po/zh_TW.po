@@ -13,65 +13,65 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:136
+#: /home/nonstop/coding/termit/src/termit_core_api.c:165
 msgid "Cannot create a new tab"
 msgstr "無法建立新分頁"
 
-#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:105
+#: /home/nonstop/coding/termit/src/termit_core_api.c:134
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/evgeny/coding/termit-lua/src/termit.c:86
+#: /home/nonstop/coding/termit/src/termit.c:104
 msgid "Edit"
 msgstr "編輯"
 
-#: /home/evgeny/coding/termit-lua/src/termit.c:115
-#: /home/evgeny/coding/termit-lua/src/termit.c:236
+#: /home/nonstop/coding/termit/src/termit.c:133
+#: /home/nonstop/coding/termit/src/termit.c:222
 msgid "Encoding"
 msgstr "編碼"
 
-#: /home/evgeny/coding/termit-lua/src/termit.c:64
+#: /home/nonstop/coding/termit/src/termit.c:82
 msgid "File"
 msgstr "檔案"
 
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:259
+#: /home/nonstop/coding/termit/src/callbacks.c:274
 msgid "Open session"
 msgstr "開啟作業階段"
 
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:228
+#: /home/nonstop/coding/termit/src/callbacks.c:243
 msgid "Save session"
 msgstr "儲存作業階段"
 
-#: /home/evgeny/coding/termit-lua/src/termit.c:208
+#: /home/nonstop/coding/termit/src/termit.c:194
 msgid "Scrollbar"
 msgstr ""
 
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:168
+#: /home/nonstop/coding/termit/src/callbacks.c:181
 msgid "Select font"
 msgstr "選擇字型"
 
-#: /home/evgeny/coding/termit-lua/src/termit.c:103
+#: /home/nonstop/coding/termit/src/termit.c:121
 msgid "Sessions"
 msgstr "作業階段"
 
 #. Edit menu
-#: /home/evgeny/coding/termit-lua/src/termit.c:75
-#: /home/evgeny/coding/termit-lua/src/termit.c:201
+#: /home/nonstop/coding/termit/src/termit.c:93
+#: /home/nonstop/coding/termit/src/termit.c:187
 msgid "Set tab name..."
 msgstr "設定分頁名稱..."
 
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:22
+#: /home/nonstop/coding/termit/src/callbacks.c:22
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr "已開啟數個分頁。是否關閉？"
 
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:136
-#: /home/evgeny/coding/termit-lua/src/callbacks.c:145
+#: /home/nonstop/coding/termit/src/callbacks.c:149
+#: /home/nonstop/coding/termit/src/callbacks.c:158
 msgid "Tab name"
 msgstr "分頁名稱"
 
-#: /home/evgeny/coding/termit-lua/src/sessions.c:86
+#: /home/nonstop/coding/termit/src/sessions.c:86
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "無法建立目錄 '%s': %s"
