@@ -1,5 +1,6 @@
 version 2.0.0
 	embedded Lua - configs and sessions replaced with lua-scripts
+	xterm-like dynamic window title
 version 1.3.5
 	added Korean translation (by SeonKon Choi)
 	added termit.spec.in for Fedora 8 (by SeonKon Choi)
