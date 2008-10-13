@@ -1,19 +1,14 @@
-
 #include <sys/wait.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <stdint.h>
-#include <glib/gstdio.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "utils.h"
-#include "callbacks.h"
+#include "termit.h"
 #include "configs.h"
-#include "keybindings.h"
 #include "sessions.h"
-
-extern struct TermitData termit;
-extern struct Configs configs;
+#include "termit_core_api.h"
+#include "lua_api.h"
+#include "keybindings.h"
+#include "callbacks.h"
 
 static gboolean confirm_exit()
 {
@@ -33,30 +28,30 @@ static gboolean confirm_exit()
         return TRUE;
 }
 
-static void termit_quit()
-{
-    while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
-        termit_del_tab();
-    
-    g_strfreev(configs.encodings);
-    g_array_free(configs.bookmarks, TRUE);
-    g_array_free(configs.key_bindings, TRUE);
-    pango_font_description_free(termit.font);
-
-    gtk_main_quit();
-}
-
-gboolean termit_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+gboolean termit_on_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     return confirm_exit();
 }
 
-void termit_destroy(GtkWidget *widget, gpointer data)
+void termit_on_destroy(GtkWidget *widget, gpointer data)
 {
     termit_quit();
 }
 
-void termit_toggle_scrollbar()
+void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data)
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+
+    const char* title = vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte));
+    TRACE("old title: %s, new title: %s", pTab->title, title);
+    if (pTab->title)
+        g_free(pTab->title);
+    pTab->title = g_strdup(title);
+    termit_set_window_title(pTab->title);
+}
+
+void termit_on_toggle_scrollbar()
 {
     TRACE_MSG(__FUNCTION__);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
@@ -69,7 +64,7 @@ void termit_toggle_scrollbar()
     pTab->scrollbar_is_shown = !pTab->scrollbar_is_shown;
 }
 
-void termit_child_exited()
+void termit_on_child_exited()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
@@ -80,26 +75,13 @@ void termit_child_exited()
     waitpid(pTab->pid, &status, WNOHANG);
     /* TODO: check wait return */    
 
-    termit_del_tab();
-    
-    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0)
-        termit_quit();
+    termit_close_tab();
 }
 
-void termit_eof()
+gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
 {
-}
-
-void termit_title_changed()
-{
-}
-
-gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
-{
-    GtkMenu *menu;
+    GtkMenu *menu = GTK_MENU(termit.menu);
     GdkEventButton *event_button;
-
-    menu = GTK_MENU (widget);
 
     if (event->type == GDK_BUTTON_PRESS)
     {        
@@ -115,63 +97,34 @@ gboolean termit_popup(GtkWidget *widget, GdkEvent *event)
     return FALSE;
 }
 
-gboolean termit_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+void termit_on_set_encoding(GtkWidget *widget, void *data)
 {
-    return termit_process_key(event);
+    termit_set_encoding((const gchar*)data);
 }
 
-void termit_set_encoding(GtkWidget *widget, void *data)
+void termit_on_prev_tab()
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), (gchar*)data);
-    g_free(pTab->encoding);
-    pTab->encoding = g_strdup((gchar*)data);
-    termit_set_statusbar_encoding(-1);
+    termit_prev_tab();
 }
 
-void termit_prev_tab()
+void termit_on_next_tab()
 {
-    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    if (index == -1)
-        return;
-    if (index)
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index - 1);        
-    else
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), 
-            gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1);
+    termit_next_tab();
 }
 
-void termit_next_tab()
+void termit_on_paste()
 {
-    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    if (index == -1)
-        return;
-    if (index == (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1))
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), 0);
-    else
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index + 1);
+    termit_paste();
 }
 
-void termit_paste()
+void termit_on_copy()
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    vte_terminal_paste_clipboard(VTE_TERMINAL(pTab->vte));
+    termit_copy();
 }
 
-void termit_copy()
+void termit_on_close_tab()
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
-}
-
-void termit_close_tab()
-{
-    termit_del_tab();
-    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0)
-        termit_quit();
+    termit_close_tab();
 }
 
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
@@ -190,7 +143,7 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
     return TRUE;
 }
 
-void termit_set_tab_name()
+void termit_on_set_tab_name()
 {
     GtkWidget *dlg = gtk_dialog_new_with_buttons(
         _("Tab name"), 
@@ -218,69 +171,45 @@ void termit_set_tab_name()
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg)))
-        gtk_label_set_text(GTK_LABEL(pTab->tab_name), gtk_entry_get_text(GTK_ENTRY(entry)));
+        termit_set_tab_name(page, gtk_entry_get_text(GTK_ENTRY(entry)));
     
     gtk_widget_destroy(dlg);
 }
 
-void termit_select_font()
+void termit_on_select_font()
 {
     GtkWidget *dlg = gtk_font_selection_dialog_new(_("Select font"));
     gtk_font_selection_dialog_set_font_name(GTK_FONT_SELECTION_DIALOG(dlg), 
                                             pango_font_description_to_string(termit.font));
 
     if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg)))
-    {
-        pango_font_description_free(termit.font);
-        termit.font = pango_font_description_from_string(gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG(dlg)));
-        termit_set_font();
-    }
+        termit_set_font(gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG(dlg)));
 
     gtk_widget_destroy(dlg);
 }
 
-void termit_new_tab()
+void termit_on_new_tab()
 {
     termit_append_tab();
 }
 
-void termit_menu_exit()
+void termit_on_exit()
 {
     if (confirm_exit() == FALSE)
         termit_quit();
 }
 
-void termit_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
-{   
+void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
+{
     TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
     // it seems that set_active eventually calls toggle callback
     ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;
-
     termit_set_statusbar_encoding(page_num);
+    if (configs.allow_changing_title)
+        termit_set_window_title(pTab->title);
 }
 
-gboolean termit_bookmark_selected(GtkComboBox *widget, GdkEventButton *event, gpointer user_data)
-{
-    if (event->button == 2)
-        termit_append_tab();
-        
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
-    gchar* cmd = g_strdup_printf("cd %s\n", ((struct Bookmark*)user_data)->path);
-    GString* cmdStr = g_string_new(cmd);
-    vte_terminal_feed_child(VTE_TERMINAL(pTab->vte), cmdStr->str, cmdStr->len);
-
-    g_string_free(cmdStr, TRUE);
-    g_free(cmd);
-
-    if (event->button == 2)
-        gtk_notebook_set_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox,
-            ((struct Bookmark*)user_data)->name);
-    gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
-    return TRUE;
-}
-
-gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
+gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
 {
     if (event->type == GDK_2BUTTON_PRESS)
         termit_append_tab();
@@ -288,7 +217,7 @@ gint termit_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func
     return FALSE;
 }
 
-gchar* termit_get_xdg_data_path()
+static gchar* termit_get_xdg_data_path()
 {
     gchar* fullPath = NULL;
     const gchar *dataHome = g_getenv("XDG_DATA_HOME");
@@ -304,6 +233,10 @@ gchar* termit_get_xdg_data_path()
 
 void termit_on_save_session()
 {
+/*  // debug   
+    termit_save_session("tmpSess");
+    return;
+*/
     gchar* fullPath = termit_get_xdg_data_path();
     
     GtkWidget* dlg = gtk_file_chooser_dialog_new(
@@ -326,36 +259,7 @@ void termit_on_save_session()
     }
 
     gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
-    TRACE("saving session to file %s", filename);
-    FILE* fd = g_fopen(filename, "w");
-    if ((intptr_t)fd == -1)
-    {
-        gtk_widget_destroy(dlg);
-        g_free(filename);
-        g_free(fullPath);
-        return;
-    }
-    
-    GKeyFile *kf = g_key_file_new();
-    guint pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    g_key_file_set_integer(kf, "session", "tab_count", pages);
-    
-    guint i = 0;
-    for (; i < pages; ++i)
-    {
-        gchar* groupName = g_strdup_printf("tab%d", i);
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        g_key_file_set_string(kf, groupName, "tab_name", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-        g_key_file_set_string(kf, groupName, "encoding", pTab->encoding);
-        gchar* working_dir = termit_get_pid_dir(pTab->pid);
-        g_key_file_set_string(kf, groupName, "working_dir", working_dir);
-        g_free(working_dir);
-        g_free(groupName);
-    }
-    gchar* data = g_key_file_to_data(kf, NULL, NULL);
-    g_fprintf(fd, data);
-    fclose(fd);
-    g_key_file_free(kf);
+    termit_save_session(filename);
 
     g_free(filename);
     gtk_widget_destroy(dlg);
@@ -385,5 +289,17 @@ void termit_on_load_session()
 free_dlg:
     gtk_widget_destroy(dlg);
     g_free(fullPath);
+}
+
+void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
+{
+    struct UserMenuItem* pMi = (struct UserMenuItem*)data;
+    TRACE("%s: %s", pMi->name, pMi->userFunc);
+    termit_lua_execute(pMi->userFunc);
+}
+
+gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+    return termit_process_key(event);
 }
 

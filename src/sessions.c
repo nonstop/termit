@@ -1,15 +1,31 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 #include <glib.h>
+#include <glib/gstdio.h>
 
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+
+#include "termit.h"
 #include "configs.h"
-#include "utils.h"
-#include "sessions.h"
 #include "callbacks.h"
+#include "lua_api.h"
+#include "sessions.h"
 
-extern struct TermitData termit;
-extern struct Configs configs;
+extern lua_State* L;
+
+static gchar* termit_get_pid_dir(pid_t pid)
+{
+    gchar* file = g_strdup_printf("/proc/%d/cwd", pid);
+    gchar* link = g_file_read_link(file, NULL);
+    g_free(file);
+    return link;
+}
 
 // from Openbox
 static gboolean parse_mkdir(const gchar *path, gint mode)
@@ -72,130 +88,44 @@ void termit_init_sessions()
     g_free(fullPath);
 }
 
-struct TermitSession
-{
-    gchar* tab_name;
-    gchar* shell;
-    gchar* shell_cmd;
-    gchar* working_dir;
-    gchar* encoding;
-};
-static GArray* session_tabs;
-
-static void termit_load_session_tabs(GKeyFile* kf, gint tab_count)
-{
-    TRACE("tab_count=%d", tab_count);
-    gint i = 0;
-    session_tabs = g_array_new(FALSE, TRUE, sizeof(struct TermitSession));
-    for (; i < tab_count; ++i)
-    {
-        gchar* groupName = g_strdup_printf("tab%d", i);
-        if (!g_key_file_has_group(kf, groupName))
-        {
-            g_free(groupName);
-            continue;
-        }
-        TRACE("%s", groupName);
-        struct TermitSession ts;
-        gchar *value = NULL;
-        value = g_key_file_get_value(kf, groupName, "tab_name", NULL);
-        if (!value)
-            ts.tab_name = g_strdup_printf("%s %d", configs.default_tab_name, i);
-        else
-            ts.tab_name = value;
-        value = g_key_file_get_value(kf, groupName, "shell", NULL);
-        if (!value)
-            ts.shell = g_strdup(g_getenv("SHELL"));
-        else
-            ts.shell = value;
-        value = g_key_file_get_value(kf, groupName, "shell_cmd", NULL);
-        if (!value)
-            ts.shell_cmd = g_strdup("");
-        else
-            ts.shell_cmd = value;
-        value = g_key_file_get_value(kf, groupName, "working_dir", NULL);
-        if (!value)
-            ts.working_dir = g_strdup(g_getenv("PWD"));
-        else
-            ts.working_dir = value;
-        value = g_key_file_get_value(kf, groupName, "encoding", NULL);
-        if (!value)
-            ts.encoding = g_strdup(configs.default_encoding);
-        else
-            ts.encoding = value;
-        g_free(groupName);
-        g_array_append_val(session_tabs, ts);
-    }
-    for (i=0; i<session_tabs->len; ++i)
-    {
-        struct TermitSession ts;
-        ts = g_array_index(session_tabs, struct TermitSession, i);
-        TRACE("%3d  name=%s, shell=%s, cmd=%s, dir=%s, encoding=%s",
-                i, ts.tab_name, ts.shell, ts.shell_cmd, ts.working_dir, ts.encoding);
-    }
-}
-
-static void free_session_tabs()
-{
-    guint i = 0;
-    for (; i<session_tabs->len; ++i)
-    {
-        struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
-        g_free(ts.tab_name);
-        g_free(ts.shell);
-        g_free(ts.shell_cmd);
-        g_free(ts.working_dir);
-        g_free(ts.encoding);
-    }
-    g_array_free(session_tabs, TRUE);
-}
-
 void termit_load_session(const gchar* sessionFile)
 {
     TRACE("loading sesions from %s", sessionFile);
-    GError* err = NULL;
-    GKeyFile *kf = g_key_file_new();
-    if (g_key_file_load_from_file(kf, sessionFile, G_KEY_FILE_NONE, &err) != TRUE)
+    int s = luaL_dofile(L, sessionFile);
+    termit_report_lua_error(s);
+}
+
+/**
+ * saves session as lua-script
+ * */
+void termit_save_session(const gchar* sessionFile)
+{
+    TRACE("saving session to file %s", sessionFile);
+    FILE* fd = g_fopen(sessionFile, "w");
+    if ((intptr_t)fd == -1)
     {
-        TRACE("failed loading sessions: %s", g_strerror(err->code));
+        TRACE("failed savimg to %s", sessionFile);
         return;
-    }
-    if (g_key_file_has_group(kf, "session") != TRUE)
-    {
-        TRACE_MSG("default group not found in session file");
-        return;
-    }
-    gint tab_count = g_key_file_get_integer(kf, "session", "tab_count", &err);
-    if (err && 
-        ((err->code == G_KEY_FILE_ERROR_KEY_NOT_FOUND)
-        || (err->code == G_KEY_FILE_ERROR_INVALID_VALUE)))
-    {
-        TRACE_MSG("failed loading tab_count");
-        return;
-    }
-    termit_load_session_tabs(kf, tab_count);
-    if (!session_tabs->len)
-    {
-        termit_append_tab();
-        goto free_session_tabs;
     }
 
     guint pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    while (pages)
-    {
-        termit_del_tab();
-        pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    }
+
     guint i = 0;
-    for (; i<session_tabs->len; ++i)
+    for (; i < pages; ++i)
     {
-        struct TermitSession ts = g_array_index(session_tabs, struct TermitSession, i);
-        gchar* cmd = g_strdup_printf("%s %s", ts.shell, ts.shell_cmd);
-        termit_append_tab_with_details(ts.tab_name, cmd, ts.working_dir, ts.encoding);
-        g_free(cmd);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        gchar* working_dir = termit_get_pid_dir(pTab->pid);
+        gchar* groupName = g_strdup_printf("tab%d", i);
+        g_fprintf(fd, "%s = {}\n", groupName);
+        g_fprintf(fd, "%s.name = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        g_fprintf(fd, "%s.working_dir = \"%s\"\n", groupName, working_dir);
+        g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->command);
+        g_fprintf(fd, "%s.encoding = \"%s\"\n", groupName, pTab->encoding);
+        g_fprintf(fd, "openTab(%s)\n\n", groupName);
+        g_free(groupName);
+        g_free(working_dir);
     }
-//  finally block
-free_session_tabs:
-    free_session_tabs();
+//    g_fprintf(fd, data);
+    fclose(fd);
 }
 

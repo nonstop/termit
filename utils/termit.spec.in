@@ -1,0 +1,50 @@
+Summary: termit (terminal emulator)
+Name: termit
+Version: @TERMIT_PACKAGE_VERSION@
+Release: 1%{?dist}
+License: GPLv2
+URL: http://code.google.com/p/termit/wiki/TermIt
+Group: System Environment/Base
+Source: %{name}-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: vte, gtk2, gettext
+BuildRequires: cmake, gettext
+BuildRequires: vte-devel, gtk2-devel
+Prefix: /usr
+
+%description
+Small terminal emulator. The only dependencies are Vte and Gtk2 libs.
+Termit supports tabs, bookmarks, encoding switching and sessions.
+
+%prep
+%setup -q
+
+%build
+find . -type f -name CMakeCache.txt -exec rm -rf {} \;
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
+	cmake -DCMAKE_INSTALL_PREFIX=%{prefix} .
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir} install
+rm -rf $RPM_BUILD_ROOT/%{prefix}/share/doc
+
+%find_lang %{name}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}.lang
+%defattr(-,root,root)
+%doc BUGS
+%doc COPYING
+%doc TODO
+%doc doc/README
+%doc doc/termit.example
+%doc doc/session.example
+%{prefix}/bin/termit
+%{prefix}/share/applications/termit.desktop
+
+%changelog
+* Tue Sep  2 2008 SeonKon Choi <bushi at mizi dot com>
+- initial

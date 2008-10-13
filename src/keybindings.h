@@ -10,13 +10,13 @@ struct KeyBindging
     gchar* name;
     guint state;
     guint keyval;
-    KeySym keycode;    
+    KeySym keycode;
     BindingCallback callback;
     gchar* default_binding;
 };
 
+//void termit_load_keys();
 void termit_set_default_keybindings();
-void termit_load_keybindings(GKeyFile* key_file);
 gboolean termit_process_key(GdkEventKey* event);
 #endif /* KEYBINDINGS_H */
 

@@ -1,0 +1,109 @@
+setOptions(opts)
+Changes default options.
+opts - table with new options:
+    tabName - default tab name
+    encoding - default encosing
+    wordChars - word characters (double click selects word)
+    font - font name
+    showScrollbar
+    transparentBackground - use trancparency
+    transparentSaturation - level of saturation [0,1]
+    hideSingleTab
+    scrollbackLines
+    defaultGeometry - cols x rows to start with
+Example:
+    inside init.lua.example
+
+setKeys(keys)
+Changes default keybindings.
+keys - table with new keybindings:
+    prevTab
+    nextTab
+    openTab
+    closeTab
+    copy
+    paste
+Example:
+    keys = {}
+    keys.nextTab = 'Alt-Up'
+    keys.prevTab = 'Alt-Down'
+    setKeys(keys)
+
+setKbPolicy(kb_policy)
+Sets keyuboard policy for shortcuts.
+kb_policy - string with one of those values:
+    keycode - use hardware keyboard codes (XkbLayout-independent)
+    keysym - use keysym values (XkbLayout-dependent)
+Example:
+    setKbPolicy('keysym')
+
+
+openTab(tabInfo)
+Opens new tab.
+tabinfo - table with tab settings:
+    name - tab name
+    command - command to run as "shell"
+    encoding
+    working_dir
+Example:
+    tabInfo = {}
+    tabInfo.name = 'Zsh tab'
+    tabInfo.command = 'zsh'
+    tabInfo.encoding = 'UTF-8'
+    tabInfo.working_dir = '/tmp'
+    openTab(tabInfo)
+
+
+closeTab()
+Closes active tab.
+Example:
+    closeTab()
+
+addMenu(menu)
+Adds menu in menubar.
+manu - table with nested menuitems
+    menuitem - also table
+        name - name for menuitem
+        action - string in lua to perform when item activated
+Example:
+    userMenu = {}
+    mi = {}
+    mi.name = 'Named tab'
+    mi.action = 'onNamed()'
+    table.insert(userMenu, mi)
+
+    mi = {}
+    mi.name = 'Zsh tab'
+    mi.action = 'onZsh()'
+    table.insert(userMenu, mi)
+
+    addMenu(userMenu, "User menu")
+
+
+addPopupMenu(menu)
+Adds menu in popup menu, similar to addMenu.
+Example:
+    addPopupMenu(userMenu, "User menu")
+
+
+setEncoding(encoding)
+Changes encoding for active tab.
+encoding - string with encoding name.
+Example:
+    setEncoding('UTF-8')
+
+
+setTabName(tabName)
+Changes name for active tab.
+tabName - string with tab name.
+Example:
+    setTabName('New tab name')
+
+
+reconfigure()
+Sets all configurable variables to defaults and forces rereading init.lua.
+Example:
+    reconfigure()
+
+
+

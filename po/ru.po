@@ -15,59 +15,54 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit/src/termit.c:88
-msgid "Bookmarks"
-msgstr "Закладки"
-
-#: /home/nonstop/coding/termit/src/utils.c:82
+#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:136
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: /home/nonstop/coding/termit/src/utils.c:51
+#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:105
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/nonstop/coding/termit/src/termit.c:59
+#: /home/evgeny/coding/termit-lua/src/termit.c:86
 msgid "Edit"
 msgstr "Правка"
 
-#. Encoding menu
-#: /home/nonstop/coding/termit/src/termit.c:108
-#: /home/nonstop/coding/termit/src/termit.c:212
+#: /home/evgeny/coding/termit-lua/src/termit.c:115
+#: /home/evgeny/coding/termit-lua/src/termit.c:236
 msgid "Encoding"
 msgstr "Кодировка"
 
-#: /home/nonstop/coding/termit/src/termit.c:37
+#: /home/evgeny/coding/termit-lua/src/termit.c:64
 msgid "File"
 msgstr "Файл"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:370
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:259
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:310
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:228
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: /home/nonstop/coding/termit/src/termit.c:184
+#: /home/evgeny/coding/termit-lua/src/termit.c:208
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:228
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:168
 msgid "Select font"
 msgstr "Выбор шрифта"
 
-#: /home/nonstop/coding/termit/src/termit.c:76
+#: /home/evgeny/coding/termit-lua/src/termit.c:103
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:177
+#: /home/evgeny/coding/termit-lua/src/termit.c:75
+#: /home/evgeny/coding/termit-lua/src/termit.c:201
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:27
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:22
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -75,12 +70,15 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:196
-#: /home/nonstop/coding/termit/src/callbacks.c:205
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:136
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:145
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: /home/nonstop/coding/termit/src/sessions.c:70
+#: /home/evgeny/coding/termit-lua/src/sessions.c:86
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
+
+#~ msgid "Bookmarks"
+#~ msgstr "Закладки"

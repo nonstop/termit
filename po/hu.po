@@ -3,79 +3,75 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-25 09:19+0400\n"
-"PO-Revision-Date: 2007-12-15 18:05+0400\n"
-"Last-Translator: Peter Polonkai polesz@nedudu.hu\n"
+"PO-Revision-Date: 2008-08-20 12:46+0100\n"
+"Last-Translator: Peter Polonkai <polesz@nedudu.hu>\n"
 "Language-Team: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit/src/termit.c:88
-msgid "Bookmarks"
-msgstr "Knyvjelzk"
-
-#: /home/nonstop/coding/termit/src/utils.c:82
+#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:136
 msgid "Cannot create a new tab"
-msgstr "Nem sikerlt j flet ltrehozni"
+msgstr "Nem sikerült új fület létrehozni"
 
-#: /home/nonstop/coding/termit/src/utils.c:51
+#: /home/evgeny/coding/termit-lua/src/termit_core_api.c:105
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
+"Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
 
-#: /home/nonstop/coding/termit/src/termit.c:59
+#: /home/evgeny/coding/termit-lua/src/termit.c:86
 msgid "Edit"
-msgstr "Szerkeszts"
+msgstr "Szerkesztés"
 
-#. Encoding menu
-#: /home/nonstop/coding/termit/src/termit.c:108
-#: /home/nonstop/coding/termit/src/termit.c:212
+#: /home/evgeny/coding/termit-lua/src/termit.c:115
+#: /home/evgeny/coding/termit-lua/src/termit.c:236
 msgid "Encoding"
-msgstr "Kdols"
+msgstr "Kódolás"
 
-#: /home/nonstop/coding/termit/src/termit.c:37
+#: /home/evgeny/coding/termit-lua/src/termit.c:64
 msgid "File"
-msgstr "Fjl"
+msgstr "Fájl"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:370
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:259
 msgid "Open session"
-msgstr "Megnyits"
+msgstr "Megnyitás"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:310
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:228
 msgid "Save session"
-msgstr "Ments"
+msgstr "Mentés"
 
-#: /home/nonstop/coding/termit/src/termit.c:184
+#: /home/evgeny/coding/termit-lua/src/termit.c:208
 msgid "Scrollbar"
-msgstr ""
+msgstr "Gördítősáv"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:228
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:168
 msgid "Select font"
 msgstr "Betkszlet"
 
-#: /home/nonstop/coding/termit/src/termit.c:76
+#: /home/evgeny/coding/termit-lua/src/termit.c:103
 msgid "Sessions"
 msgstr "Munkamenetek"
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:48
-#: /home/nonstop/coding/termit/src/termit.c:177
+#: /home/evgeny/coding/termit-lua/src/termit.c:75
+#: /home/evgeny/coding/termit-lua/src/termit.c:201
 msgid "Set tab name..."
-msgstr "Fl tnevezse..."
+msgstr "Fül átnevezése..."
 
-#: /home/nonstop/coding/termit/src/callbacks.c:27
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:22
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
-"Tbb fl is nyitva van.\n"
-"Bezrja mind?"
+"Több fül is nyitva van.\n"
+"Bezárja mind?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:196
-#: /home/nonstop/coding/termit/src/callbacks.c:205
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:136
+#: /home/evgeny/coding/termit-lua/src/callbacks.c:145
 msgid "Tab name"
-msgstr "Fl neve"
+msgstr "Fül neve"
 
-#: /home/nonstop/coding/termit/src/sessions.c:70
+#: /home/evgeny/coding/termit-lua/src/sessions.c:86
 #, c-format
 msgid "Unable to create directory '%s': %s"
-msgstr "A knyvtr ltrehozsa sikertelen '%s': %s"
+msgstr "A könyvtár létrehozása sikertelen '%s': %s"

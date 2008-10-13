@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style type="text/css">
+        <![CDATA[
+        .label {
+            fill:#8fa5d1;
+            font-weight:bold; font-family: mono; font-size:25px;
+            text-decoration:none;
+        }
+        .notes {
+            fill:#334b7d;
+            font-weight:normal; font-family: mono; font-size: 12px;
+            text-decoration:none;
+        }
+        .version {
+            fill:#334b7d;
+            font-weight:normal; font-family: serif; font-size:10px;
+            text-decoration:none;
+        }
+        ]]>
+        </style>
+    </defs>
+
+    <rect width="150" height="60"
+        style="fill:rgb(255,255,255);stroke-width:4;stroke:#8fa5d1"/>
+    <g id="version">
+        <text class="version" x="130" y="15">2.0</text>
+        <!--<text class="version" x="120" y="15">1.3.4</text>-->
+    </g>
+    <g id="label">
+        <text class="label" x="10" y="25">TermIt</text>
+    </g>
+    <g id="notes">
+        <text class="notes" x="10" y="45">terminal emulator</text>
+        <!--<text class="notes" x="140" y="65">emulator</text>-->
+    </g>
+
+</svg>
