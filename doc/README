@@ -3,10 +3,11 @@
     Simple terminal emulator based on vte library, extensible via lua.
 
     Features:
-        * tabs
-        * switch encodings (all available from GTK2)
-        * extensible via Lua-scripts
-
+        * multiple tabs
+        * switching encodings
+        * sessions
+        * configurable keybindings
+        * embedded Lua 
     Configuration can be changed via $HOME/.config/termit/init.lua file (example is provided).
     
     Command-line arguments:
