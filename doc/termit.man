@@ -1,0 +1,172 @@
+.\" Process this file with
+.\" groff -man -Tascii foo.1
+.\"
+.TH TERMIT 17 "OCT 2008" Linux "User Manuals"
+.SH NAME
+termit \- lightweight terminal emulator
+
+.SH SYNOPSIS
+.B termit [-option ...]
+
+.SH DESCRIPTION
+.B termit
+is a vte-based lightweight terminal emulator. All configuration
+is done via Lua-scripts. The only other dependencies are 
+Gtk+ and Vte.
+
+.SH OPTIONS
+.BR -h
+or
+.BR --help
+.RS
+Print help
+.RE
+.BR -v
+or
+.BR --version
+.RS
+Print version number
+.RE
+.BR -e
+or
+.BR --execute
+.I cmd
+.RS
+Use
+.I cmd
+as shell
+.P
+termit --execute=zsh
+.P
+.RE
+.BR -i
+or
+.BR --init
+.I file
+.RS
+Use
+.I file
+instead of default init.lua
+.P
+termit --init=session.lua
+.P
+.RE
+.SH FILES
+.I $HOME/.config/termit/init.lua
+.RS
+Per user configuration file. See section
+.BR "TERMIT LUA API"
+for further details.
+.RE
+.I /usr/share/doc/termit/init.lua.example
+.RS
+Example init.lua file. Demonstrates usage of almost all available settings.
+.SH "TERMIT LUA API"
+.B setOptions
+(
+.I opts
+)
+Changes default options.
+.RS
+opts - table with new options:
+    tabName - default tab name
+    encoding - default encosing
+    wordChars - word characters (double click selects word)
+    font - font name
+    showScrollbar
+    transparentBackground - use trancparency
+    transparentSaturation - level of saturation [0,1]
+    hideSingleTab
+    scrollbackLines
+    defaultGeometry - cols x rows to start with
+.RE
+.P
+.B setKeys
+(
+.I keys
+)
+Changes default keybindings.
+.RS
+keys - table with new keybindings:
+    prevTab
+    nextTab
+    openTab
+    closeTab
+    copy
+    paste
+.RE
+.P
+.B setKbPolicy
+(
+.I kb_policy
+)
+Sets keyuboard policy for shortcuts.
+.RS
+kb_policy - string with one of those values:
+    keycode - use hardware keyboard codes (XkbLayout-independent)
+    keysym - use keysym values (XkbLayout-dependent)
+.RE
+.P
+.B openTab
+(
+.I tabInfo
+)
+Opens new tab.
+.RS
+tabinfo - table with tab settings:
+    name - tab name
+    command - command to run as "shell"
+    encoding
+    working_dir
+.RE
+.P
+.B closeTab
+()
+Closes active tab.
+.P
+.B addMenu
+(
+.I menu
+)
+Adds menu in menubar.
+.RS
+manu - table with nested menuitems
+    menuitem - also table
+        name - name for menuitem
+        action - string in lua to perform when item activated
+.RE
+.P
+.B addPopupMenu
+(
+.I menu
+)
+Adds menu in popup menu, similar to addMenu.
+.P
+.B setEncoding
+(
+.I encoding
+)
+Changes encoding for active tab.
+.RS
+encoding - string with encoding name.
+.RE
+.P
+.B setTabName
+(
+.I tabName
+)
+Changes name for active tab.
+.RS
+tabName - string with tab name.
+.RE
+.P
+.B reconfigure
+()
+Sets all configurable variables to defaults and forces rereading init.lua.
+.SH BUGS
+The command name should have been chosen more carefully
+to reflect its purpose.
+.SH AUTHOR
+Evgeny Ratnikov <ratnikov.ev at gmail dot com>
+.SH "SEE ALSO"
+.BR lua (1)
