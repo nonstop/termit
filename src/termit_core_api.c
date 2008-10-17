@@ -242,6 +242,35 @@ void termit_set_tab_name(guint page_index, const gchar* name)
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
 }
 
+#warning ABORT
+void abort(void);
+void termit_set_default_colors()
+{
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    gint i=0;
+    for (; i<page_num; ++i)
+    {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
+    }
+    termit_free_colors();
+}
+
+void termit_set_foreground_color(const gchar* color_name)
+{
+    abort();
+}
+
+void termit_set_background_color(const gchar* color_name)
+{
+    abort();
+}
+
+void termit_set_colors(const struct TermitColors* colors)
+{
+    abort();
+}
+
 void termit_set_font(const gchar* font_name)
 {
     TRACE("%s", __FUNCTION__);

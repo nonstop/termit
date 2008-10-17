@@ -56,6 +56,17 @@ void termit_set_defaults()
     termit_set_default_keybindings();
 }
 
+void termit_free_colors()
+{
+    gint i=0;
+    for (; i<configs.colors.palette_size; ++i)
+        gdk_color_free(configs.colors.palette[i]);
+    gdk_color_free(configs.colors.foreground);
+    gdk_color_free(configs.colors.background);
+    struct TermitColors tmp = {0};
+    configs.colors = tmp;
+}
+
 static void free_menu(GArray* menus)
 {
     gint i=0;
@@ -92,7 +103,9 @@ void termit_deinit_config()
     g_array_free(configs.user_menus, TRUE);
     free_menu(configs.user_popup_menus);
     g_array_free(configs.user_popup_menus, TRUE);
-    
+
+    termit_free_colors();
+
     // name and default_binding are static (e.g. can be in readonly mempage)
     g_array_free(configs.key_bindings, TRUE);
 }

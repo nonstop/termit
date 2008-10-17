@@ -19,7 +19,12 @@ void termit_close_tab();
 void termit_quit();
 
 void termit_set_window_title(const gchar* title);
+void termit_set_default_colors();
 void termit_set_font(const gchar* font_name);
+void termit_set_foreground_color(const gchar*);
+void termit_set_background_color(const gchar*);
+struct TermitColors;
+void termit_set_colors(const struct TermitColors*);
 void termit_hide_scrollbars();
 void termit_hide_tab_scrollbar();
 void termit_set_encoding(const gchar* encoding);

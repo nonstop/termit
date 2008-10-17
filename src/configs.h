@@ -5,6 +5,14 @@
 
 enum TermitKbPolicy {TermitKbUseKeycode = 1, TermitKbUseKeysym = 2};
 
+struct TermitColors
+{
+    GdkColor *foreground;
+    GdkColor *background;
+    GdkColor **palette;
+    glong palette_size;
+};
+
 struct Configs
 {
     gchar* default_window_title;
@@ -26,6 +34,7 @@ struct Configs
     gboolean show_scrollbar;
     gboolean allow_changing_title;
     enum TermitKbPolicy kb_policy;
+    struct TermitColors colors;
 };
 
 struct UserMenuItem
@@ -44,6 +53,7 @@ extern struct Configs configs;
 void termit_deinit_config();
 void termit_set_defaults();
 void termit_load_config();
+void termit_free_colors();
 
 void trace_configs();
 void trace_keybindings();
