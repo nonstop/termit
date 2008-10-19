@@ -249,6 +249,23 @@ static int termit_lua_setTabName(lua_State* ls)
     termit_set_tab_name(page, val);
     return 0;
 }
+static int termit_lua_setColor(lua_State* ls)
+{
+    if (lua_isnil(ls, 1))
+    {
+        TRACE_MSG("no color defined: skipping");
+        return 0;
+    }
+    else if (!lua_isstring(ls, 1))
+    {
+        TRACE_MSG("color is not string: skipping");
+        return 0;
+    }
+    const gchar* val =  lua_tostring(ls, 1);
+    
+    termit_set_color(val);
+    return 0;
+}
 
 static int termit_lua_reconfigure(lua_State* ls)
 {
@@ -268,6 +285,7 @@ void termit_init_lua_api()
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
     lua_register(L, "setTabName", termit_lua_setTabName);
+    lua_register(L, "setColor", termit_lua_setColor);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
 }
 

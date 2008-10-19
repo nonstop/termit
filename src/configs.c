@@ -58,6 +58,7 @@ void termit_set_defaults()
 
 void termit_free_colors()
 {
+#if 0
     gint i=0;
     for (; i<configs.colors.palette_size; ++i)
         gdk_color_free(configs.colors.palette[i]);
@@ -65,6 +66,7 @@ void termit_free_colors()
     gdk_color_free(configs.colors.background);
     struct TermitColors tmp = {0};
     configs.colors = tmp;
+#endif
 }
 
 static void free_menu(GArray* menus)

@@ -246,6 +246,7 @@ void termit_set_tab_name(guint page_index, const gchar* name)
 void abort(void);
 void termit_set_default_colors()
 {
+#if 0
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
     for (; i<page_num; ++i)
@@ -254,11 +255,30 @@ void termit_set_default_colors()
         vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     }
     termit_free_colors();
+#endif
+}
+
+void termit_set_color(const gchar* color_name)
+{
+    GdkColor color = {0};
+    gdk_color_parse(color_name, &color);
+    fprintf(stderr, "color (%d,%d,%d)", color.red, color.green, color.blue);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    gtk_widget_modify_text(pTab->vte, GTK_STATE_NORMAL, &color);
 }
 
 void termit_set_foreground_color(const gchar* color_name)
 {
-    abort();
+    GdkColor color;
+    gdk_color_parse ("red", &color);
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    gint i=0;
+    for (; i<page_num; ++i)
+    {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        gtk_widget_modify_text(pTab->vte, GTK_STATE_NORMAL, &color);
+    }
 }
 
 void termit_set_background_color(const gchar* color_name)

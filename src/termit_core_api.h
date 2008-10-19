@@ -21,6 +21,7 @@ void termit_quit();
 void termit_set_window_title(const gchar* title);
 void termit_set_default_colors();
 void termit_set_font(const gchar* font_name);
+void termit_set_color(const gchar*);
 void termit_set_foreground_color(const gchar*);
 void termit_set_background_color(const gchar*);
 struct TermitColors;
