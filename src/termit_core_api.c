@@ -265,7 +265,7 @@ void termit_set_color(const gchar* color_name)
     fprintf(stderr, "color (%d,%d,%d)", color.red, color.green, color.blue);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    gtk_widget_modify_text(pTab->vte, GTK_STATE_NORMAL, &color);
+    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &color);
 }
 
 void termit_set_foreground_color(const gchar* color_name)
