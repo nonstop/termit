@@ -1,3 +1,4 @@
+#include <gdk/gdk.h>
 
 #include "termit.h"
 #include "keybindings.h"
@@ -14,6 +15,13 @@ void trace_configs()
     TRACE("     default_encoding        = %s", configs.default_encoding);
     TRACE("     default_word_chars      = %s", configs.default_word_chars);
     TRACE("     default_font            = %s", configs.default_font);
+    if (configs.default_foreground_color) {
+        TRACE("     default_foreground_color= (%d,%d,%d)", 
+                configs.default_foreground_color->red,
+                configs.default_foreground_color->green,
+                configs.default_foreground_color->blue);
+        } else
+        TRACE("     default_foreground_color= %p", configs.default_foreground_color);
     TRACE("     show_scrollbar          = %d", configs.show_scrollbar);
     TRACE("     transparent_background  = %d", configs.transparent_background);
     TRACE("     transparent_saturation  = %f", configs.transparent_saturation);
@@ -30,6 +38,7 @@ void termit_set_default_options()
     configs.default_window_title = g_strdup("Termit");
     configs.default_tab_name = g_strdup("Terminal");
     configs.default_font = g_strdup("Monospace 10");
+    configs.default_foreground_color = NULL;
     configs.default_command = g_strdup(g_getenv("SHELL"));
     configs.default_encoding = g_strdup("UTF-8");
     configs.default_word_chars = g_strdup("-A-Za-z0-9,./?%&#_~");
@@ -92,6 +101,8 @@ void termit_deinit_config()
     g_free(configs.default_window_title);
     g_free(configs.default_tab_name);
     g_free(configs.default_font);
+    if (configs.default_foreground_color)
+        g_free(configs.default_foreground_color);
     g_free(configs.default_command);
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);

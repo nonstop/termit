@@ -206,6 +206,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
+    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &termit.foreground_color);
     termit_set_statusbar_encoding(-1);
     
     termit_check_single_tab();
@@ -242,11 +243,8 @@ void termit_set_tab_name(guint page_index, const gchar* name)
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
 }
 
-#warning ABORT
-void abort(void);
 void termit_set_default_colors()
 {
-#if 0
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
     for (; i<page_num; ++i)
@@ -255,45 +253,29 @@ void termit_set_default_colors()
         vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     }
     termit_free_colors();
-#endif
 }
 
-void termit_set_color(const gchar* color_name)
+void termit_set_foreground_color(const GdkColor* p_color)
 {
-    GdkColor color = {0};
-    gdk_color_parse(color_name, &color);
-    fprintf(stderr, "color (%d,%d,%d)", color.red, color.green, color.blue);
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &color);
-}
-
-void termit_set_foreground_color(const gchar* color_name)
-{
-    GdkColor color;
-    gdk_color_parse ("red", &color);
-    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    TRACE("%s: color=%p", __FUNCTION__, p_color);
+    if (!p_color) {
+        TRACE_MSG("p_color is NULL");
+        return;
+    }
+    termit.foreground_color = *p_color;
     gint i=0;
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     for (; i<page_num; ++i)
     {
+        TRACE("set_color: tab=%d", i);
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        gtk_widget_modify_text(pTab->vte, GTK_STATE_NORMAL, &color);
+        vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &termit.foreground_color);
     }
-}
-
-void termit_set_background_color(const gchar* color_name)
-{
-    abort();
-}
-
-void termit_set_colors(const struct TermitColors* colors)
-{
-    abort();
 }
 
 void termit_set_font(const gchar* font_name)
 {
-    TRACE("%s", __FUNCTION__);
+    TRACE("%s: font_name=%s", __FUNCTION__, font_name);
 
     pango_font_description_free(termit.font);
     termit.font = pango_font_description_from_string(font_name);

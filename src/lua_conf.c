@@ -77,7 +77,20 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getstring(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
         config_getstring(&(p_cfg->default_font), ls, index);
-    else if (!strcmp(name, "showScrollbar"))
+    else if (!strcmp(name, "foreground_color")) {
+        gchar* color_str = NULL;
+        config_getstring(&color_str, ls, index);
+        TRACE("color_str=%s", color_str);
+        if (color_str) {
+            //struct GdkColor color;
+            GdkColor color;
+            if (gdk_color_parse(color_str, &color) == TRUE) {
+                configs.default_foreground_color = (GdkColor*)g_malloc0(sizeof(color));
+                *configs.default_foreground_color = color;
+            }
+        }
+        g_free(color_str);
+    } else if (!strcmp(name, "showScrollbar"))
         config_getboolean(&(p_cfg->show_scrollbar), ls, index);
     else if (!strcmp(name, "transparentBackground"))
         config_getboolean(&(p_cfg->transparent_background), ls, index);

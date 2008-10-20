@@ -94,6 +94,8 @@ void termit_create_menubar()
     g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_on_set_tab_name), NULL);
     GtkWidget *mi_select_font = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_FONT, NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_on_select_font), NULL);
+    GtkWidget *mi_select_foreground_color = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_COLOR, NULL);
+    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_foreground_color), NULL);
     GtkWidget *separator2 = gtk_separator_menu_item_new();
     GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
@@ -108,6 +110,7 @@ void termit_create_menubar()
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), separator2);
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_select_font);
+    gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_select_foreground_color);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_edit), edit_menu);
 
     gtk_menu_bar_append(menu_bar, mi_edit);
@@ -186,6 +189,7 @@ void termit_create_popup_menu()
     GtkWidget *separator1 = gtk_separator_menu_item_new();
     GtkWidget *mi_set_tab_name = gtk_menu_item_new_with_label(_("Set tab name..."));
     GtkWidget *mi_select_font = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_FONT, NULL);
+    GtkWidget *mi_select_foreground_color = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_COLOR, NULL);
     GtkWidget *separator2 = gtk_separator_menu_item_new();
     GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
     GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
@@ -198,6 +202,7 @@ void termit_create_popup_menu()
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator1);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_select_font);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_select_foreground_color);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), termit.mi_show_scrollbar);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator2);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_copy);
@@ -208,6 +213,7 @@ void termit_create_popup_menu()
     g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);
     g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_on_set_tab_name), NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_on_select_font), NULL);
+    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_foreground_color), NULL);
     g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
     g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_on_close_tab), NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
@@ -231,7 +237,7 @@ void termit_create_popup_menu()
                 G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
         }
 
-        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_encodings, 4);
+        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_encodings, 5);
     }
     
     // User popup menus
@@ -257,7 +263,7 @@ void termit_create_popup_menu()
                 G_CALLBACK(termit_on_user_menu_item_selected), &g_array_index(um->items, struct UserMenuItem, i));
         }
         
-        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 5);
+        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
     }
 
     gtk_widget_show_all(termit.menu);
@@ -276,7 +282,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
     termit_create_menubar();
     pack_widgets();
     termit_create_popup_menu();
-    
+
     termit_set_font(configs.default_font);
 }
 
@@ -368,10 +374,13 @@ int main(int argc, char **argv)
 
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
+    
     termit_hide_scrollbars();
+    termit_set_foreground_color(configs.default_foreground_color);
   
     gtk_main();
     termit_deinit_config();
     termit_lua_close();
     return 0;
 }
+

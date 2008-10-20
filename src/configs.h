@@ -2,22 +2,17 @@
 #define CONFIGS_H
 
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 enum TermitKbPolicy {TermitKbUseKeycode = 1, TermitKbUseKeysym = 2};
 
-struct TermitColors
-{
-    GdkColor *foreground;
-    GdkColor *background;
-    GdkColor **palette;
-    glong palette_size;
-};
 
 struct Configs
 {
     gchar* default_window_title;
     gchar* default_tab_name;
     gchar* default_font;
+    GdkColor* default_foreground_color;
     gchar* default_command;
     gchar* default_encoding;
     gchar* default_word_chars;
@@ -34,7 +29,6 @@ struct Configs
     gboolean show_scrollbar;
     gboolean allow_changing_title;
     enum TermitKbPolicy kb_policy;
-    struct TermitColors colors;
 };
 
 struct UserMenuItem
