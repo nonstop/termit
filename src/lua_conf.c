@@ -127,12 +127,9 @@ static void load_init(const gchar* initFile)
 {
     TRACE_FUNC;
     gchar* fullPath = NULL;
-    if (initFile)
-    {
+    if (initFile) {
         fullPath = g_strdup(initFile);
-    }
-    else
-    {
+    } else {
         const gchar *configFile = "init.lua";
         const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
         if (configHome)
@@ -168,7 +165,8 @@ void termit_lua_init(const gchar* initFile)
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    termit_init_file = initFile;
+    if (!termit_init_file)
+        termit_init_file = g_strdup(initFile);
     termit_init_lua_api();
     termit_load_lua_config();
 }
