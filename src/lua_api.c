@@ -145,8 +145,9 @@ static int termit_lua_setKbPolicy(lua_State* ls)
         termit_set_kb_policy(TermitKbUseKeycode);
     else if (!strcmp(val, "keysym"))
         termit_set_kb_policy(TermitKbUseKeysym);
-    else
+    else {
         ERROR("unknown kbPolicy: %s", val);
+    }
     return 0;
 }
 
@@ -196,22 +197,26 @@ static int loadMenu(lua_State* ls, GArray* menus)
         }
         g_array_append_val(menus, um);
     }
+    TRACE_MSG(__FUNCTION__);
     lua_pop(ls, 1);
+    TRACE_MSG(__FUNCTION__);
 
     return res;
 }
 
 static int termit_lua_addMenu(lua_State* ls)
 {
-    if (loadMenu(ls, configs.user_menus) < 0)
+    if (loadMenu(ls, configs.user_menus) < 0) {
         ERROR("addMenu failed");
+    }
     return 0;
 }
 
 static int termit_lua_addPopupMenu(lua_State* ls)
 {
-    if (loadMenu(ls, configs.user_popup_menus) < 0)
+    if (loadMenu(ls, configs.user_popup_menus) < 0) {
         ERROR("addMenu failed");
+    }
     return 0;
 }
 
