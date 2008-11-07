@@ -1,5 +1,0 @@
-    Sessions with option shell
-Troubles with loading session with shell=mc/mutt.
-Tested sessions with shell=bash/zsh/python and it works nice.
-But with mc and mutt there is black screen.
-
