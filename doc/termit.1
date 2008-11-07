@@ -164,8 +164,9 @@ tabName - string with tab name.
 ()
 Sets all configurable variables to defaults and forces rereading init.lua.
 .SH BUGS
-The command name should have been chosen more carefully
-to reflect its purpose.
+When using sessions with optional shell (or -e option) sometimes(!) there
+is a black screen. It happened with mc/mutt, but never happened with
+bash/zsh/python. May be there is some conflict with ncurses-based programs.
 .SH AUTHOR
 Evgeny Ratnikov <ratnikov.ev at gmail dot com>
 .SH "SEE ALSO"
