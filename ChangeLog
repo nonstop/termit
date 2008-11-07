@@ -1,6 +1,8 @@
 version 2.1.0
 	added support for changing foreground color
 	added man page
+	cmake_minimum_required changed to 2.6.1, 2.6.0 have problems with
+		FindLua51.cmake module
 	fixed reconfigure when running with --init option
 version 2.0.0
 	embedded Lua - configs and sessions replaced with lua-scripts
