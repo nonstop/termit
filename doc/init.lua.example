@@ -11,7 +11,7 @@ defaults.transparentBackground = false
 defaults.transparentSaturation = 0.5
 defaults.hideSingleTab = false
 defaults.scrollbackLines = 4096
-defaults.defaultGeometry = '80x24'
+defaults.geometry = '80x24'
 setOptions(defaults)
 
 keys = {}
