@@ -31,8 +31,7 @@ void trace_keybindings()
     TRACE_MSG("");
     TRACE("len: %d", configs.key_bindings->len);
     gint i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
+    for (; i<configs.key_bindings->len; ++i) {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         TRACE("%s: %d, %d(%ld), %s", 
             kb->name, kb->state, kb->keyval, kb->keycode, kb->default_binding);
@@ -73,8 +72,7 @@ static guint get_modifier_state(const gchar* token)
     if (!token)
         return 0;
     gint i = 0;
-    for (; i<TermitModsSz; ++i)
-    {
+    for (; i<TermitModsSz; ++i) {
         if (!strcmp(token, termit_modifiers[i].name))
             return termit_modifiers[i].state;
     }
@@ -83,8 +81,7 @@ static guint get_modifier_state(const gchar* token)
 
 static void set_keybinding(struct KeyBindging* kb, const gchar* value)
 {
-    if (!strcmp(value, "None"))
-    {
+    if (!strcmp(value, "None")) {
         kb->state = 0;
         kb->keyval = 0;
         return;
@@ -109,8 +106,7 @@ static void set_keybinding(struct KeyBindging* kb, const gchar* value)
 static gint get_kb_index(const gchar* name)
 {
     gint i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
+    for (; i<configs.key_bindings->len; ++i) {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (!strcmp(kb->name, name))
             return i;
@@ -120,15 +116,13 @@ static gint get_kb_index(const gchar* name)
 
 void termit_kb_loader(const gchar* name, struct lua_State* ls, int index, void* data)
 {
-    if (!lua_isstring(ls, index))
-    {
+    if (!lua_isstring(ls, index)) {
         TRACE("bad value for kb: %s", name);
         return;
     }
     const gchar* value = lua_tostring(ls, index);
     gint kb_index = get_kb_index(name);
-    if (kb_index < 0)
-    {
+    if (kb_index < 0) {
         TRACE("not found kb: %s", name);
         return;
     }
@@ -140,12 +134,10 @@ void termit_kb_loader(const gchar* name, struct lua_State* ls, int index, void* 
 static gboolean termit_key_press_use_keycode(GdkEventKey *event)
 {
     gint i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
+    for (; i<configs.key_bindings->len; ++i) {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (kb && (event->state & kb->state))
-            if (event->hardware_keycode == kb->keycode)
-            {
+            if (event->hardware_keycode == kb->keycode) {
                 kb->callback();
                 return TRUE;
             }
@@ -156,12 +148,10 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
 static gboolean termit_key_press_use_keysym(GdkEventKey *event)
 {
     gint i = 0;
-    for (; i<configs.key_bindings->len; ++i)
-    {
+    for (; i<configs.key_bindings->len; ++i) {
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (kb && (event->state & kb->state))
-            if (gdk_keyval_to_lower(event->keyval) == kb->keyval)
-            {
+            if (gdk_keyval_to_lower(event->keyval) == kb->keyval) {
                 kb->callback();
                 return TRUE;
             }
@@ -171,8 +161,7 @@ static gboolean termit_key_press_use_keysym(GdkEventKey *event)
 
 gboolean termit_process_key(GdkEventKey* event)
 {
-    switch(configs.kb_policy)
-    {
+    switch(configs.kb_policy) {
     case TermitKbUseKeycode:
         return termit_key_press_use_keycode(event);
         break;

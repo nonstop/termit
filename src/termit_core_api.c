@@ -252,7 +252,6 @@ void termit_set_default_colors()
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
         vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     }
-    termit_free_colors();
 }
 
 void termit_set_foreground_color(const GdkColor* p_color)

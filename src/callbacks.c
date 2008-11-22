@@ -83,11 +83,9 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
     GtkMenu *menu = GTK_MENU(termit.menu);
     GdkEventButton *event_button;
 
-    if (event->type == GDK_BUTTON_PRESS)
-    {        
+    if (event->type == GDK_BUTTON_PRESS) {
         event_button = (GdkEventButton *) event;
-        if (event_button->button == 3)
-        {
+        if (event_button->button == 3) {
             gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
                               event_button->button, event_button->time);
             return TRUE;
@@ -129,8 +127,7 @@ void termit_on_close_tab()
 
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    switch (event->keyval)
-    {
+    switch (event->keyval) {
     case GDK_Return:
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_ACCEPT, NULL);
         break;
@@ -228,7 +225,6 @@ gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer f
 {
     if (event->type == GDK_2BUTTON_PRESS)
         termit_append_tab();
-
     return FALSE;
 }
 
@@ -239,9 +235,7 @@ static gchar* termit_get_xdg_data_path()
     if (dataHome)
         fullPath = g_strdup_printf("%s/termit", dataHome);
     else
-    {
         fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
-    }
     TRACE("XDG_DATA_PATH=%s", fullPath);
     return fullPath;
 }
@@ -266,8 +260,7 @@ void termit_on_save_session()
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dlg), fullPath);
     gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dlg), "New session");
 
-    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT)
-    {
+    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT) {
         gtk_widget_destroy(dlg);
         g_free(fullPath);
         return;

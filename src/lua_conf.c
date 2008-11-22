@@ -24,13 +24,11 @@ static void trace_menus(GArray* menus)
 {
 #ifdef DEBUG
     gint i = 0;
-    for (; i<menus->len; ++i)
-    {
+    for (; i<menus->len; ++i) {
         struct UserMenu* um = &g_array_index(menus, struct UserMenu, i);
         TRACE("%s items %d", um->name, um->items->len);
         gint j = 0;
-        for (; j<um->items->len; ++j)
-        {
+        for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
             TRACE("  %s: %s", umi->name, umi->userFunc);
         }
@@ -40,8 +38,7 @@ static void trace_menus(GArray* menus)
 
 static void config_getstring(gchar** opt, lua_State* ls, int index)
 {
-    if (!lua_isnil(ls, index) && lua_isstring(ls, index))
-    {
+    if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         if (*opt)
             g_free(*opt);
         *opt = g_strdup(lua_tostring(ls, index));
@@ -102,17 +99,14 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))
         config_getboolean(&(p_cfg->allow_changing_title), ls, index);
-    else if (!strcmp(name, "geometry"))
-    {
+    else if (!strcmp(name, "geometry")) {
         gchar* geometry_str = NULL;
         config_getstring(&geometry_str, ls, index);
-        if (geometry_str)
-        {
+        if (geometry_str) {
             uint cols, rows;
             int tmp1, tmp2;
             XParseGeometry(geometry_str, &tmp1, &tmp2, &cols, &rows);
-            if ((cols != 0) && (rows != 0))
-            {
+            if ((cols != 0) && (rows != 0)) {
                 p_cfg->cols = cols;
                 p_cfg->rows = rows;
             }

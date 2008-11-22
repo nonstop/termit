@@ -77,14 +77,10 @@ void termit_init_sessions()
     if (dataHome)
         fullPath = g_strdup_printf("%s/termit", dataHome);
     else
-    {
         fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
-    }
     TRACE("%s %s", __FUNCTION__, fullPath);
     if (!parse_mkdir_path(fullPath, 0700))
-    {
         g_message(_("Unable to create directory '%s': %s"), fullPath, g_strerror(errno));
-    }
     g_free(fullPath);
 }
 
@@ -102,8 +98,7 @@ void termit_save_session(const gchar* sessionFile)
 {
     TRACE("saving session to file %s", sessionFile);
     FILE* fd = g_fopen(sessionFile, "w");
-    if ((intptr_t)fd == -1)
-    {
+    if ((intptr_t)fd == -1) {
         TRACE("failed savimg to %s", sessionFile);
         return;
     }
@@ -111,8 +106,7 @@ void termit_save_session(const gchar* sessionFile)
     guint pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
 
     guint i = 0;
-    for (; i < pages; ++i)
-    {
+    for (; i < pages; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
         gchar* working_dir = termit_get_pid_dir(pTab->pid);
         gchar* groupName = g_strdup_printf("tab%d", i);

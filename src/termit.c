@@ -18,8 +18,7 @@ struct TermitData termit = {0};
 struct TermitTab* termit_get_tab_by_index(gint index)
 {
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
-    if (!tabWidget)
-    {
+    if (!tabWidget) {
         ERROR("tabWidget is NULL");
         return NULL;
     }
@@ -40,8 +39,7 @@ static void create_main_widgets(const gchar* command)
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
     
-    if (command)
-    {
+    if (command) {
         TRACE("using command: %s", command);
         termit_append_tab_with_command(command);
     }
@@ -59,9 +57,7 @@ static void pack_widgets()
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
     
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
-    {
         termit_append_tab();
-    }
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_on_switch_page), NULL);
     g_signal_connect(G_OBJECT(termit.main_window), "button-press-event", G_CALLBACK(termit_on_double_click), NULL);
 }
@@ -131,15 +127,13 @@ void termit_create_menubar()
 
     // Encoding menu
     TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len)
-    {
+    if (configs.encodings->len) {
         GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
         GtkWidget *enc_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
 
         gint i=0;
-        for (; i<configs.encodings->len; ++i)
-        {
+        for (; i<configs.encodings->len; ++i) {
             TRACE("%s", g_array_index(configs.encodings, gchar*, i));
             GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
             gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
@@ -147,15 +141,13 @@ void termit_create_menubar()
             g_signal_connect(G_OBJECT(mi_enc), "activate", 
                 G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
         }
-
         gtk_menu_bar_append(menu_bar, mi_encodings);
     }
 
     // User menus
     TRACE("user_menus->len=%d", configs.user_menus->len);
     gint j = 0;
-    for (; j<configs.user_menus->len; ++j)
-    {
+    for (; j<configs.user_menus->len; ++j) {
         struct UserMenu* um = &g_array_index(configs.user_menus, struct UserMenu, j);
 
         GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
@@ -165,18 +157,15 @@ void termit_create_menubar()
         TRACE("%s items->len=%d", um->name, um->items->len);
         
         gint i=0;
-        for (; i<um->items->len; ++i)
-        {
+        for (; i<um->items->len; ++i) {
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(
                 g_array_index(um->items, struct UserMenuItem, i).name);
             g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_user_menu_item_selected),
                 &g_array_index(um->items, struct UserMenuItem, i));
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
         }
-        
         gtk_menu_bar_append(menu_bar, mi_util);
     }
-
     termit.menu_bar = menu_bar;
 }
 
@@ -223,14 +212,12 @@ void termit_create_popup_menu()
     ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;
 
     TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len)
-    {
+    if (configs.encodings->len) {
         GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
         GtkWidget *enc_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
         gint i = 0;
-        for (; i<configs.encodings->len; ++i)
-        {
+        for (; i<configs.encodings->len; ++i) {
             GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
             gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
             g_signal_connect(G_OBJECT(mi_enc), "activate", 
@@ -243,8 +230,7 @@ void termit_create_popup_menu()
     // User popup menus
     TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
     gint j = 0;
-    for (; j<configs.user_popup_menus->len; ++j)
-    {
+    for (; j<configs.user_popup_menus->len; ++j) {
         struct UserMenu* um = &g_array_index(configs.user_popup_menus, struct UserMenu, j);
 
         GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
@@ -254,18 +240,15 @@ void termit_create_popup_menu()
         TRACE("%s items->len=%d", um->name, um->items->len);
         
         gint i = 0;
-        for (; i<um->items->len; i++)
-        {
+        for (; i<um->items->len; i++) {
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(
                 g_array_index(um->items, struct UserMenuItem, i).name);
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
             g_signal_connect(G_OBJECT(mi_tmp), "activate", 
                 G_CALLBACK(termit_on_user_menu_item_selected), &g_array_index(um->items, struct UserMenuItem, i));
         }
-        
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
     }
-
     gtk_widget_show_all(termit.menu);
 }
 
@@ -307,10 +290,8 @@ int main(int argc, char **argv)
 {
     gchar* initFile = NULL;
     gchar* command = NULL;
-    while (1)
-    {
-        static struct option long_options[] =
-        {
+    while (1) {
+        static struct option long_options[] = {
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
             {"execute", required_argument, 0, 'e'},
@@ -326,8 +307,7 @@ int main(int argc, char **argv)
         if (flag == -1)
             break;
 
-        switch (flag)
-        {
+        switch (flag) {
         case 'h':
             termit_print_usage();
             return 0;

@@ -14,27 +14,22 @@ typedef enum {LOADER_OK, LOADER_FAILED} LoaderResult;
 typedef void (*LoaderFunc)(const gchar*, lua_State*, int, void*);
 static LoaderResult load_lua_table(lua_State* ls, LoaderFunc func, void* data)
 {
-    if (!data)
-    {
+    if (!data) {
         TRACE_MSG("data is NULL: skipping");
         return LOADER_FAILED;
     }
-    if (lua_isnil(ls, 1))
-    {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("tabInfo not defined: skipping");
         return LOADER_FAILED;
     }
-    if (!lua_istable(ls, 1))
-    {
+    if (!lua_istable(ls, 1)) {
         TRACE_MSG("tabInfo is not table: skipping");
         lua_pop(ls, 1);
         return LOADER_FAILED;
     }
     lua_pushnil(ls);
-    while (lua_next(ls, 1) != 0)
-    {
-        if (lua_isstring(ls, -2))
-        {
+    while (lua_next(ls, 1) != 0) {
+        if (lua_isstring(ls, -2)) {
             const gchar* name = lua_tostring(ls, -2);
             func(name, ls, -1, data);
         }
@@ -80,26 +75,19 @@ static int termit_lua_setKeys(lua_State* ls)
 static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
-    if (!strcmp(name, "name") && lua_isstring(ls, index))
-    {
+    if (!strcmp(name, "name") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->name = g_strdup(value);
-    }
-    else if (!strcmp(name, "command") && lua_isstring(ls, index))
-    {
+    } else if (!strcmp(name, "command") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->command = g_strdup(value);
-    }
-    else if (!strcmp(name, "encoding") && lua_isstring(ls, index))
-    {
+    } else if (!strcmp(name, "encoding") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->encoding = g_strdup(value);
-    }
-    else if (!strcmp(name, "working_dir") && lua_isstring(ls, index))
-    {
+    } else if (!strcmp(name, "working_dir") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->working_dir = g_strdup(value);
@@ -129,13 +117,10 @@ static int termit_lua_closeTab(lua_State* ls)
 
 static int termit_lua_setKbPolicy(lua_State* ls)
 {
-    if (lua_isnil(ls, 1))
-    {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("no kbPolicy defined: skipping");
         return 0;
-    }
-    else if (!lua_isstring(ls, 1))
-    {
+    } else if (!lua_isstring(ls, 1)) {
         TRACE_MSG("kbPolicy is not string: skipping");
         return 0;
     }
@@ -154,34 +139,25 @@ static int termit_lua_setKbPolicy(lua_State* ls)
 static int loadMenu(lua_State* ls, GArray* menus)
 {
     int res = 0;
-    if (lua_isnil(ls, 1) || lua_isnil(ls, 2))
-    {
+    if (lua_isnil(ls, 1) || lua_isnil(ls, 2)) {
         TRACE_MSG("menu not defined: skipping");
         res = -1;
-    }
-    else if (!lua_istable(ls, 1) || !lua_isstring(ls, 2))
-    {
+    } else if (!lua_istable(ls, 1) || !lua_isstring(ls, 2)) {
         TRACE_MSG("menu is not table: skipping");
         res = -1;
-    }
-    else
-    {
+    } else {
         const gchar* menuName = lua_tostring(ls, 2);
         TRACE("Menu: %s", menuName);
         lua_pushnil(ls);
         struct UserMenu um;
         um.name = g_strdup(menuName);
         um.items = g_array_new(FALSE, TRUE, sizeof(struct UserMenuItem));
-        while (lua_next(ls, 1) != 0)
-        {
-            if (lua_isstring(ls, -2))
-            {
+        while (lua_next(ls, 1) != 0) {
+            if (lua_isstring(ls, -2)) {
                 struct UserMenuItem umi = {0};
                 lua_pushnil(ls);
-                while (lua_next(ls, -2) != 0)
-                {
-                    if (lua_isstring(ls, -2))
-                    {
+                while (lua_next(ls, -2) != 0) {
+                    if (lua_isstring(ls, -2)) {
                         const gchar* name = lua_tostring(ls, -2);
                         const gchar* value = lua_tostring(ls, -1);
                         if (!strcmp(name, "name"))
@@ -222,13 +198,10 @@ static int termit_lua_addPopupMenu(lua_State* ls)
 
 static int termit_lua_setEncoding(lua_State* ls)
 {
-    if (lua_isnil(ls, 1))
-    {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("no encoding defined: skipping");
         return 0;
-    }
-    else if (!lua_isstring(ls, 1))
-    {
+    } else if (!lua_isstring(ls, 1)) {
         TRACE_MSG("encoding is not string: skipping");
         return 0;
     }
@@ -239,13 +212,10 @@ static int termit_lua_setEncoding(lua_State* ls)
 
 static int termit_lua_activateTab(lua_State* ls)
 {
-    if (lua_isnil(ls, 1))
-    {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("no tabNum defined: skipping");
         return 0;
-    }
-    else if (!lua_isnumber(ls, 1))
-    {
+    } else if (!lua_isnumber(ls, 1)) {
         TRACE_MSG("tabNum is not number: skipping");
         return 0;
     }
@@ -256,13 +226,10 @@ static int termit_lua_activateTab(lua_State* ls)
 
 static int termit_lua_setTabName(lua_State* ls)
 {
-    if (lua_isnil(ls, 1))
-    {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("no tabName defined: skipping");
         return 0;
-    }
-    else if (!lua_isstring(ls, 1))
-    {
+    } else if (!lua_isstring(ls, 1)) {
         TRACE_MSG("tabName is not string: skipping");
         return 0;
     }

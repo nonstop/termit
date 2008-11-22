@@ -47,7 +47,6 @@ extern struct Configs configs;
 void termit_deinit_config();
 void termit_set_defaults();
 void termit_load_config();
-void termit_free_colors();
 
 void trace_configs();
 void trace_keybindings();
