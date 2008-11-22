@@ -237,6 +237,23 @@ static int termit_lua_setEncoding(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_activateTab(lua_State* ls)
+{
+    if (lua_isnil(ls, 1))
+    {
+        TRACE_MSG("no tabNum defined: skipping");
+        return 0;
+    }
+    else if (!lua_isnumber(ls, 1))
+    {
+        TRACE_MSG("tabNum is not number: skipping");
+        return 0;
+    }
+    int tab_index =  lua_tointeger(ls, 1);
+    termit_activate_tab(tab_index - 1);
+    return 0;
+}
+
 static int termit_lua_setTabName(lua_State* ls)
 {
     if (lua_isnil(ls, 1))
@@ -267,6 +284,7 @@ void termit_init_lua_api()
     lua_register(L, "setKeys", termit_lua_setKeys);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
     lua_register(L, "openTab", termit_lua_openTab);
+    lua_register(L, "activateTab", termit_lua_activateTab);
     lua_register(L, "closeTab", termit_lua_closeTab);
     lua_register(L, "addMenu", termit_lua_addMenu);
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);

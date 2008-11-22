@@ -38,7 +38,9 @@ end
 function onReconf()
     reconfigure()
 end
-
+function onSetColor()
+    setColor('red')
+end
 -- 
 userMenu = {}
 mi = {}
@@ -54,6 +56,11 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Zsh tab'
 mi.action = 'onZsh()'
+table.insert(userMenu, mi)
+
+mi = {}
+mi.name = 'set red color'
+mi.action = 'onSetColor()'
 table.insert(userMenu, mi)
 
 mi = {}

@@ -237,9 +237,9 @@ void termit_set_encoding(const gchar* encoding)
     termit_set_statusbar_encoding(-1);
 }
 
-void termit_set_tab_name(guint page_index, const gchar* name)
+void termit_set_tab_name(guint tab_index, const gchar* name)
 {
-    TERMIT_GET_TAB_BY_INDEX(pTab, page_index);
+    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
 }
 
@@ -331,27 +331,34 @@ void termit_close_tab()
         termit_quit();
 }
 
+void termit_activate_tab(gint tab_index)
+{
+    if (tab_index < 0)
+    {
+        TRACE("tab_index(%d) < 0: skipping", tab_index);
+        return;
+    }
+    if (tab_index >= gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
+    {
+        TRACE("tab_index(%d) > n_pages: skipping", tab_index);
+        return;
+    }
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), tab_index);
+}
+
 void termit_prev_tab()
 {
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    if (index == -1)
-        return;
-    if (index)
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index - 1);        
-    else
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), 
-            gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1);
+    index = (index) ? index - 1 : gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1;
+    termit_activate_tab(index);
 }
 
 void termit_next_tab()
 {
     gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    if (index == -1)
-        return;
-    if (index == (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1))
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), 0);
-    else
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index + 1);
+    index = (index == gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1)
+        ? 0 : index + 1;
+    termit_activate_tab(index);
 }
 
 void termit_quit()
