@@ -9,6 +9,7 @@ void termit_report_lua_error(int status);
 void termit_lua_init(const gchar* initFile);
 void termit_load_lua_config();
 void termit_lua_execute(const gchar* cmd);
+int termit_lua_dofunction(int f);
 
 /**
  * Loaders

@@ -10,6 +10,7 @@
 #include "termit.h"
 #include "configs.h"
 #include "termit_core_api.h"
+#include "lua_api.h"
 #include "keybindings.h"
 
 extern lua_State* L;
@@ -43,7 +44,7 @@ void trace_keybindings()
 void termit_set_default_keybindings()
 {
     disp = XOpenDisplay(NULL);
-
+/*
     struct KeyBindging kb;
     ADD_DEFAULT_KEYBINDING("prevTab", GDK_MOD1_MASK, GDK_Left, termit_prev_tab, "Alt-Left");
     ADD_DEFAULT_KEYBINDING("nextTab", GDK_MOD1_MASK, GDK_Right, termit_next_tab, "Alt-Right");
@@ -51,7 +52,7 @@ void termit_set_default_keybindings()
     ADD_DEFAULT_KEYBINDING("closeTab", GDK_CONTROL_MASK, GDK_w, termit_close_tab, "Ctrl-w");
     ADD_DEFAULT_KEYBINDING("copy", GDK_CONTROL_MASK, GDK_Insert, termit_copy, "Ctrl-Insert");
     ADD_DEFAULT_KEYBINDING("paste", GDK_SHIFT_MASK, GDK_Insert, termit_paste, "Shift-Insert");
-    
+ */   
     trace_keybindings();
 }
 
@@ -138,7 +139,7 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (kb && (event->state & kb->state))
             if (event->hardware_keycode == kb->keycode) {
-                kb->callback();
+                termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
             }
     }
@@ -152,7 +153,7 @@ static gboolean termit_key_press_use_keysym(GdkEventKey *event)
         struct KeyBindging* kb = &g_array_index(configs.key_bindings, struct KeyBindging, i);
         if (kb && (event->state & kb->state))
             if (gdk_keyval_to_lower(event->keyval) == kb->keyval) {
-                kb->callback();
+                termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
             }
     }

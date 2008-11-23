@@ -72,6 +72,39 @@ static int termit_lua_setKeys(lua_State* ls)
     return 0;
 }
 
+int termit_lua_dofunction(int f)
+{
+    lua_State* ls = L;
+    if(f != LUA_REFNIL) {
+        lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
+        if (lua_pcall(ls, 0, 0, 0)) {
+            TRACE("error running function: %s", lua_tostring(ls, -1));
+            lua_pop(ls, 1);
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+static int termit_lua_bindKey(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    if (lua_isnil(ls, 1) || lua_isnil(ls, 2)) {
+        TRACE_MSG("nil args: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1) || !lua_isfunction(ls, 2)) {
+        TRACE_MSG("bad args: skipping");
+        return 0;
+    } else {
+        const char* keybinding = lua_tostring(ls, 1);
+        int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+        TRACE("bindKey: %s - %d", keybinding, func);
+        termit_lua_dofunction(func);
+    }
+    return 0;
+}
+
 static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
@@ -92,6 +125,34 @@ static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
         TRACE("  %s - %s", name, value);
         ti->working_dir = g_strdup(value);
     }
+}
+
+static int termit_lua_nextTab(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_next_tab();
+    return 0;
+}
+
+static int termit_lua_prevTab(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_prev_tab();
+    return 0;
+}
+
+static int termit_lua_copy(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_copy();
+    return 0;
+}
+
+static int termit_lua_paste(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_paste();
+    return 0;
 }
 
 static int termit_lua_openTab(lua_State* ls)
@@ -249,10 +310,15 @@ void termit_init_lua_api()
     TRACE_FUNC;
     lua_register(L, "setOptions", termit_lua_setOptions);
     lua_register(L, "setKeys", termit_lua_setKeys);
+    lua_register(L, "bindKey", termit_lua_bindKey);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
     lua_register(L, "openTab", termit_lua_openTab);
+    lua_register(L, "nextTab", termit_lua_nextTab);
+    lua_register(L, "prevTab", termit_lua_prevTab);
     lua_register(L, "activateTab", termit_lua_activateTab);
     lua_register(L, "closeTab", termit_lua_closeTab);
+    lua_register(L, "copy", termit_lua_copy);
+    lua_register(L, "paste", termit_lua_paste);
     lua_register(L, "addMenu", termit_lua_addMenu);
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "setEncoding", termit_lua_setEncoding);

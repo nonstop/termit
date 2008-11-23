@@ -11,7 +11,8 @@ struct KeyBindging
     guint state;
     guint keyval;
     KeySym keycode;
-    BindingCallback callback;
+//    BindingCallback callback;
+    int lua_callback;
     gchar* default_binding;
 };
 
