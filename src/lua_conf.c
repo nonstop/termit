@@ -162,6 +162,7 @@ void termit_lua_init(const gchar* initFile)
     if (!termit_init_file)
         termit_init_file = g_strdup(initFile);
     termit_init_lua_api();
+    termit_set_default_keybindings();
     termit_load_lua_config();
 }
 

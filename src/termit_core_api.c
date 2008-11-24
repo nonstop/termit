@@ -3,6 +3,7 @@
 #include "configs.h"
 #include "callbacks.h"
 #include "lua_api.h"
+#include "keybindings.h"
 #include "termit_core_api.h"
 
 void termit_create_popup_menu();
@@ -14,7 +15,8 @@ void termit_reconfigure()
     gtk_container_remove(GTK_CONTAINER(termit.hbox), termit.menu_bar);
 
     termit_deinit_config();
-    termit_set_defaults();
+    termit_set_default_options();
+    termit_set_default_keybindings();
     termit_load_lua_config();
     
     // for all tabs change event on-change-title

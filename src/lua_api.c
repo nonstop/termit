@@ -5,6 +5,7 @@
 
 #include "termit.h"
 #include "termit_core_api.h"
+#include "keybindings.h"
 #include "configs.h"
 #include "lua_api.h"
 
@@ -64,14 +65,6 @@ static int termit_lua_setOptions(lua_State* ls)
     return 0;
 }
 
-static int termit_lua_setKeys(lua_State* ls)
-{
-    TRACE_MSG(__FUNCTION__);
-    load_lua_table(ls, termit_kb_loader, configs.key_bindings);
-    trace_keybindings();
-    return 0;
-}
-
 int termit_lua_dofunction(int f)
 {
     lua_State* ls = L;
@@ -99,8 +92,8 @@ static int termit_lua_bindKey(lua_State* ls)
     } else {
         const char* keybinding = lua_tostring(ls, 1);
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+        termit_bind_key(keybinding, func);
         TRACE("bindKey: %s - %d", keybinding, func);
-        termit_lua_dofunction(func);
     }
     return 0;
 }
@@ -158,14 +151,18 @@ static int termit_lua_paste(lua_State* ls)
 static int termit_lua_openTab(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    struct TabInfo ti = {0};
-    if (load_lua_table(ls, tabLoader, &ti) != LOADER_OK)
-        return 0;
-    termit_append_tab_with_details(&ti);
-    g_free(ti.name);
-    g_free(ti.command);
-    g_free(ti.encoding);
-    g_free(ti.working_dir);
+    if (lua_istable(ls, 1)) {
+        struct TabInfo ti = {0};
+        if (load_lua_table(ls, tabLoader, &ti) != LOADER_OK)
+            return 0;
+        termit_append_tab_with_details(&ti);
+        g_free(ti.name);
+        g_free(ti.command);
+        g_free(ti.encoding);
+        g_free(ti.working_dir);
+    } else {
+        termit_append_tab();
+    }
     return 0;
 }
 
@@ -309,7 +306,6 @@ void termit_init_lua_api()
 {
     TRACE_FUNC;
     lua_register(L, "setOptions", termit_lua_setOptions);
-    lua_register(L, "setKeys", termit_lua_setKeys);
     lua_register(L, "bindKey", termit_lua_bindKey);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
     lua_register(L, "openTab", termit_lua_openTab);

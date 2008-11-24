@@ -45,7 +45,7 @@ struct UserMenu
 extern struct Configs configs;
 
 void termit_deinit_config();
-void termit_set_defaults();
+void termit_set_default_options();
 void termit_load_config();
 
 void trace_configs();

@@ -255,7 +255,7 @@ void termit_create_popup_menu()
 static void termit_init(const gchar* initFile, const gchar* command)
 {
     termit_init_sessions();
-    termit_set_defaults();
+    termit_set_default_options();
 
     termit.tab_max_number = 1;
     create_main_widgets(command);

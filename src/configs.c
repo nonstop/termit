@@ -50,19 +50,13 @@ void termit_set_default_options()
 
     configs.user_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.user_popup_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
-    configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBindging));
+    configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBinding));
     configs.encodings = g_array_new(FALSE, TRUE, sizeof(gchar*));
 
     configs.hide_single_tab = FALSE;
     configs.show_scrollbar = TRUE;
     configs.allow_changing_title = FALSE;
     configs.kb_policy = TermitKbUseKeysym;
-}
-
-void termit_set_defaults()
-{
-    termit_set_default_options();
-    termit_set_default_keybindings();
 }
 
 static void free_menu(GArray* menus)
