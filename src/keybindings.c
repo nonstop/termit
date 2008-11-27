@@ -120,6 +120,7 @@ void termit_bind_key(const gchar* keybinding, int lua_callback)
         kb->state = tmp_state;
         kb->keyval = gdk_keyval_to_lower(tmp_keyval);
         kb->keycode = XKeysymToKeycode(disp, kb->keyval);
+        luaL_unref(L, LUA_REGISTRYINDEX, kb->lua_callback);
         kb->lua_callback = lua_callback;
     }
 }
