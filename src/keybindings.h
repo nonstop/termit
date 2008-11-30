@@ -16,6 +16,7 @@ struct KeyBinding
 
 //void termit_load_keys();
 void termit_bind_key(const gchar* keys, int lua_callback);
+void termit_unbind_key(const gchar* keys);
 void termit_set_default_keybindings();
 gboolean termit_process_key(GdkEventKey* event);
 #endif /* KEYBINDINGS_H */

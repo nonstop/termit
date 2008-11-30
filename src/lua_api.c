@@ -83,13 +83,17 @@ int termit_lua_dofunction(int f)
 static int termit_lua_bindKey(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    if (lua_isnil(ls, 1) || lua_isnil(ls, 2)) {
+    if (lua_isnil(ls, 1)) {
         TRACE_MSG("nil args: skipping");
         return 0;
-    } else if (!lua_isstring(ls, 1) || !lua_isfunction(ls, 2)) {
+    } else if (!lua_isstring(ls, 1)) {
         TRACE_MSG("bad args: skipping");
         return 0;
-    } else {
+    } else if (lua_isnil(ls, 2)) {
+        const char* keybinding = lua_tostring(ls, 1);
+        termit_unbind_key(keybinding);
+        TRACE("unbindKey: %s", keybinding);
+    } else if (lua_isfunction(ls, 2)) {
         const char* keybinding = lua_tostring(ls, 1);
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
         termit_bind_key(keybinding, func);

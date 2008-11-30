@@ -1,7 +1,7 @@
 .\" Process this file with
 .\" groff -man -Tascii foo.1
 .\"
-.TH TERMIT 17 "OCT 2008" Linux "User Manuals"
+.TH TERMIT 30 "NOV 2008" Linux "User Manuals"
 .SH NAME
 termit \- lightweight terminal emulator
 
@@ -81,19 +81,20 @@ opts - table with new options:
     geometry - cols x rows to start with
 .RE
 .P
-.B setKeys
+.B bindKey
 (
 .I keys
+,
+.I luaFunction
 )
-Changes default keybindings.
+Sets new keybinding. If luaFunction is 
+.I nil
+removes keybinding.
 .RS
-keys - table with new keybindings:
-    prevTab
-    nextTab
-    openTab
-    closeTab
-    copy
-    paste
+keys - string with keybinding
+.RE
+.RS
+luaFunction - callback function
 .RE
 .P
 .B setKbPolicy
@@ -120,6 +121,14 @@ tabinfo - table with tab settings:
     working_dir
 .RE
 .P
+.B prevTab
+()
+Activates previous tab.
+.P
+.B nextTab
+()
+Activates next tab.
+.P
 .B closeTab
 ()
 Closes active tab.
@@ -133,21 +142,28 @@ Activates tab by index.
 tab_index - index of tab to activate. Index of the first tab is 1.
 .RE
 .P
+.B copy
+()
+Copies selection into tab's buffer.
+.P
+.B paste
+()
+Pastes tab's buffer.
+.P
 .B addMenu
 (
 .I menu
 )
 Adds menu in menubar.
 .RS
-manu - table with nested menuitems
+menu - table with nested menuitems
     menuitem - also table
         name - name for menuitem
         action - string in lua to perform when item activated
 .RE
 .P
 .B addPopupMenu
-(
-.I menu
+( .I menu
 )
 Adds menu in popup menu, similar to addMenu.
 .P

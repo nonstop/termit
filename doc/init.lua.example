@@ -14,10 +14,12 @@ defaults.scrollbackLines = 4096
 defaults.geometry = '80x24'
 setOptions(defaults)
 
-keys = {}
-keys.nextTab = 'Alt-Right'
-keys.prevTab = 'Alt-Left'
-setKeys(keys)
+bindKey('Alt-Right', nextTab)
+bindKey('Alt-Left', prevTab)
+bindKey('Alt-2', function () print('Hello2!') end)
+bindKey('Alt-3', function () print('Hello3!') end)
+bindKey('Alt-3', nil) -- remove previous binding
+
 
 setKbPolicy('keysym')
 

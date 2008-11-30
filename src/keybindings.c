@@ -86,6 +86,18 @@ static gint get_kb_index(const gchar* name)
     return -1;
 }
 
+void termit_unbind_key(const gchar* keybinding)
+{
+    gint kb_index = get_kb_index(keybinding);
+    if (kb_index < 0) {
+        TRACE("keybinding [%s] not found - skipping", keybinding);
+        return;
+    }
+    struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, kb_index);
+    g_free(kb->name);
+    g_array_remove_index(configs.key_bindings, kb_index);
+}
+
 void termit_bind_key(const gchar* keybinding, int lua_callback)
 {
     gchar** tokens = g_strsplit(keybinding, "-", 2);
