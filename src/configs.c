@@ -38,7 +38,14 @@ void termit_set_default_options()
     configs.default_window_title = g_strdup("Termit");
     configs.default_tab_name = g_strdup("Terminal");
     configs.default_font = g_strdup("Monospace 10");
-    configs.default_foreground_color = NULL;
+    {
+        GdkColor color;
+        if (gdk_color_parse("gray", &color) == TRUE) {
+            configs.default_foreground_color = (GdkColor*)g_malloc0(sizeof(color));
+            *configs.default_foreground_color = color;
+        }
+    }
+    
     configs.default_command = g_strdup(g_getenv("SHELL"));
     configs.default_encoding = g_strdup("UTF-8");
     configs.default_word_chars = g_strdup("-A-Za-z0-9,./?%&#_~");

@@ -249,8 +249,7 @@ void termit_set_default_colors()
 {
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
-    for (; i<page_num; ++i)
-    {
+    for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
         vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     }
@@ -266,8 +265,7 @@ void termit_set_foreground_color(const GdkColor* p_color)
     termit.foreground_color = *p_color;
     gint i=0;
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    for (; i<page_num; ++i)
-    {
+    for (; i<page_num; ++i) {
         TRACE("set_color: tab=%d", i);
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
         vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &termit.foreground_color);

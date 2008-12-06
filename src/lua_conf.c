@@ -140,7 +140,6 @@ static void load_init(const gchar* initFile)
 
     s = lua_pcall(L, 0, LUA_MULTRET, 0);
     termit_report_lua_error(s);
-
 }
 
 static const gchar* termit_init_file = NULL;
