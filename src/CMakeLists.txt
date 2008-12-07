@@ -17,7 +17,7 @@ ENDIF(NOT LUA51_FOUND)
 
 INCLUDE(Sources.cmake)
 
-SET(TERMIT_CFLAGS "${LUA_INCLUDE_DIR}")
+SET(TERMIT_CFLAGS "-I${LUA_INCLUDE_DIR}")
 foreach(cflag ${VTE_CFLAGS} ${GTK_CFLAGS})
   set(TERMIT_CFLAGS "${TERMIT_CFLAGS} ${cflag}")
 endforeach(cflag)
