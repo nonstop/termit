@@ -1,3 +1,6 @@
+version 2.1.1
+	fixed typo in docs, init foreground color with "gray", proper Lua-includes
+	when building from source
 version 2.1.0
 	added support for changing foreground color
 	added man page
