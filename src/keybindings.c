@@ -59,7 +59,19 @@ struct TermitModifier termit_modifiers[] =
 {
     {"Alt", GDK_MOD1_MASK}, 
     {"Ctrl", GDK_CONTROL_MASK},
-    {"Shift", GDK_SHIFT_MASK}
+    {"Shift", GDK_SHIFT_MASK},
+    {"AltCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK},
+    {"CtrlAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK},
+    {"ShiftCtrl", GDK_CONTROL_MASK | GDK_SHIFT_MASK},
+    {"CtrlShift", GDK_CONTROL_MASK | GDK_SHIFT_MASK},
+    {"AltShift", GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"ShiftAlt", GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"AltCtrlShift", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"AltShiftCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"CtrlAltShift", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"CtrlShiftAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"ShiftAltCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
+    {"ShiftCtrlAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK}
 };
 static guint TermitModsSz = sizeof(termit_modifiers)/sizeof(struct TermitModifier);
 
