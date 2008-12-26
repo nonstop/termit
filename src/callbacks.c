@@ -223,8 +223,8 @@ void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint p
 
 gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
 {
-    if (event->type == GDK_2BUTTON_PRESS)
-        termit_append_tab();
+    TRACE_MSG(__FUNCTION__);
+    termit_mouse_event(event);
     return FALSE;
 }
 
@@ -308,6 +308,6 @@ void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
 
 gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    return termit_process_key(event);
+    return termit_key_event(event);
 }
 

@@ -16,12 +16,13 @@ setOptions(defaults)
 
 bindKey('Alt-Right', nextTab)
 bindKey('Alt-Left', prevTab)
-bindKey('Alt-2', function () print('Hello2!') end)
-bindKey('Alt-3', function () print('Hello3!') end)
-bindKey('Alt-3', nil) -- remove previous binding
-
+bindKey('Ctrl-2', function () print('Hello2!') end)
+bindKey('Ctrl-3', function () print('Hello3!') end)
+bindKey('Ctrl-3', nil) -- remove previous binding
 
 setKbPolicy('keysym')
+
+bindMouse('DoubleClick', openTab)
 
 function onZsh()
     tabInfo = {}

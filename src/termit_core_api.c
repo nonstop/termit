@@ -118,10 +118,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
 
-    pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
-
-    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
 
     /* parse command */
     gchar **cmd_argv;
@@ -161,13 +157,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
-    gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
-    if (index == -1)
-    {
-        ERROR(_("Cannot create a new tab"));
-        return;
-    }
-    
     if (configs.allow_changing_title)
     {
         TRACE("allow_changing_title");
@@ -182,14 +171,26 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
-    TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
-    
     if (configs.transparent_background)
     {
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), configs.transparent_saturation);
     }
+    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
+    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &termit.foreground_color);
 
+    gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
+    if (index == -1)
+    {
+        ERROR(_("Cannot create a new tab"));
+        return;
+    }
+    TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+    
+    pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
+
+    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
     if (!tabWidget)
     {
@@ -207,8 +208,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 #endif
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
-    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
-    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &termit.foreground_color);
     termit_set_statusbar_encoding(-1);
     
     termit_check_single_tab();

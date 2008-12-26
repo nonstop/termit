@@ -58,6 +58,7 @@ void termit_set_default_options()
     configs.user_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.user_popup_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBinding));
+    configs.mouse_bindings = g_array_new(FALSE, TRUE, sizeof(struct MouseBinding));
     configs.encodings = g_array_new(FALSE, TRUE, sizeof(gchar*));
 
     configs.hide_single_tab = FALSE;
@@ -105,5 +106,6 @@ void termit_deinit_config()
 
     // name and default_binding are static (e.g. can be in readonly mempage)
     g_array_free(configs.key_bindings, TRUE);
+    g_array_free(configs.mouse_bindings, TRUE);
 }
 

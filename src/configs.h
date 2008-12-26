@@ -25,6 +25,7 @@ struct Configs
     GArray* user_menus;
     GArray* user_popup_menus;
     GArray* key_bindings;
+    GArray* mouse_bindings;
     gboolean hide_single_tab;
     gboolean show_scrollbar;
     gboolean allow_changing_title;

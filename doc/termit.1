@@ -97,6 +97,23 @@ keys - string with keybinding
 luaFunction - callback function
 .RE
 .P
+.B bindMouse
+(
+.I event
+,
+.I luaFunction
+)
+Sets new mouse-binding. If luaFunction is 
+.I nil
+removes mouse-binding.
+.RS
+event - string with one of those values:
+    DoubleClick
+.RE
+.RS
+luaFunction - callback function
+.RE
+.P
 .B setKbPolicy
 (
 .I kb_policy

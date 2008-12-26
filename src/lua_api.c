@@ -85,10 +85,8 @@ static int termit_lua_bindKey(lua_State* ls)
     TRACE_MSG(__FUNCTION__);
     if (lua_isnil(ls, 1)) {
         TRACE_MSG("nil args: skipping");
-        return 0;
     } else if (!lua_isstring(ls, 1)) {
         TRACE_MSG("bad args: skipping");
-        return 0;
     } else if (lua_isnil(ls, 2)) {
         const char* keybinding = lua_tostring(ls, 1);
         termit_unbind_key(keybinding);
@@ -98,6 +96,26 @@ static int termit_lua_bindKey(lua_State* ls)
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
         termit_bind_key(keybinding, func);
         TRACE("bindKey: %s - %d", keybinding, func);
+    }
+    return 0;
+}
+
+static int termit_lua_bindMouse(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("nil args: skipping");
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("bad args: skipping");
+    } else if (lua_isnil(ls, 2)) {
+        const char* mousebinding = lua_tostring(ls, 1);
+        termit_unbind_mouse(mousebinding);
+        TRACE("unbindMouse: %s", mousebinding);
+    } else if (lua_isfunction(ls, 2)) {
+        const char* mousebinding = lua_tostring(ls, 1);
+        int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+        termit_bind_mouse(mousebinding, func);
+        TRACE("bindMouse: %s - %d", mousebinding, func);
     }
     return 0;
 }
@@ -311,6 +329,7 @@ void termit_init_lua_api()
     TRACE_FUNC;
     lua_register(L, "setOptions", termit_lua_setOptions);
     lua_register(L, "bindKey", termit_lua_bindKey);
+    lua_register(L, "bindMouse", termit_lua_bindMouse);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
     lua_register(L, "openTab", termit_lua_openTab);
     lua_register(L, "nextTab", termit_lua_nextTab);
