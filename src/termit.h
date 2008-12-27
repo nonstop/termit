@@ -23,7 +23,6 @@ struct TermitData
     GtkWidget *menu_bar;
     gint tab_max_number;
     PangoFontDescription *font;
-    GdkColor foreground_color;
 };
 extern struct TermitData termit;
 
@@ -37,6 +36,7 @@ struct TermitTab
     gchar *encoding;
     gchar *command;
     gchar *title;
+    GdkColor* foreground_color;
     pid_t pid;
     gulong sig_wtc;
 };

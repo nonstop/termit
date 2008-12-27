@@ -173,16 +173,19 @@ void termit_on_set_tab_name()
     gtk_widget_destroy(dlg);
 }
 
-void termit_on_select_foreground_color()
+void termit_on_select_tab_foreground_color()
 {
     GtkWidget *dlg = gtk_color_selection_dialog_new(_("Select foreground color"));
     GtkColorSelection* p_color_sel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG(dlg)->colorsel));
-    gtk_color_selection_set_current_color(p_color_sel, &termit.foreground_color);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    if (pTab->foreground_color)
+        gtk_color_selection_set_current_color(p_color_sel, pTab->foreground_color);
 
     if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg))) {
         GdkColor color;
         gtk_color_selection_get_current_color(p_color_sel, &color);
-        termit_set_foreground_color(&color);
+        termit_set_tab_foreground_color(page, &color);
     }
 
     gtk_widget_destroy(dlg);

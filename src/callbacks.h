@@ -14,7 +14,7 @@ void termit_on_close_tab();
 void termit_on_paste();
 void termit_on_copy();
 void termit_on_select_font();
-void termit_on_select_foreground_color();
+void termit_on_select_tab_foreground_color();
 void termit_on_select_background_color();
 void termit_on_set_tab_name();
 void termit_on_toggle_scrollbar();

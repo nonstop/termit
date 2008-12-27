@@ -91,7 +91,7 @@ void termit_create_menubar()
     GtkWidget *mi_select_font = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_FONT, NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_on_select_font), NULL);
     GtkWidget *mi_select_foreground_color = gtk_image_menu_item_new_from_stock(GTK_STOCK_SELECT_COLOR, NULL);
-    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_foreground_color), NULL);
+    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_tab_foreground_color), NULL);
     GtkWidget *separator2 = gtk_separator_menu_item_new();
     GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
@@ -202,7 +202,7 @@ void termit_create_popup_menu()
     g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);
     g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_on_set_tab_name), NULL);
     g_signal_connect(G_OBJECT(mi_select_font), "activate", G_CALLBACK(termit_on_select_font), NULL);
-    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_foreground_color), NULL);
+    g_signal_connect(G_OBJECT(mi_select_foreground_color), "activate", G_CALLBACK(termit_on_select_tab_foreground_color), NULL);
     g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
     g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_on_close_tab), NULL);
     g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
@@ -267,6 +267,12 @@ static void termit_init(const gchar* initFile, const gchar* command)
     termit_create_popup_menu();
 
     termit_set_font(configs.default_font);
+}
+
+static void termit_after_show_all()
+{
+    termit_hide_scrollbars();
+    termit_set_colors();
 }
 
 static void termit_print_usage()
@@ -355,8 +361,8 @@ int main(int argc, char **argv)
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
     
-    termit_hide_scrollbars();
-    termit_set_foreground_color(configs.default_foreground_color);
+    // actions after display
+    termit_after_show_all();
   
     gtk_main();
     termit_deinit_config();
