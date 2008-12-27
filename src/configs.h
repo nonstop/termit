@@ -28,6 +28,7 @@ struct Configs
     GArray* mouse_bindings;
     gboolean hide_single_tab;
     gboolean show_scrollbar;
+    gboolean hide_menubar;
     gboolean allow_changing_title;
     enum TermitKbPolicy kb_policy;
 };

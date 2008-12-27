@@ -269,12 +269,6 @@ static void termit_init(const gchar* initFile, const gchar* command)
     termit_set_font(configs.default_font);
 }
 
-static void termit_after_show_all()
-{
-    termit_hide_scrollbars();
-    termit_set_colors();
-}
-
 static void termit_print_usage()
 {
     g_print(

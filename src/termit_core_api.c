@@ -9,6 +9,13 @@
 void termit_create_popup_menu();
 void termit_create_menubar();
 
+void termit_after_show_all()
+{
+    termit_hide_scrollbars();
+    termit_set_colors();
+    termit_toggle_menubar();
+}
+
 void termit_reconfigure()
 {
     gtk_widget_destroy(termit.menu);
@@ -252,6 +259,21 @@ void termit_append_tab_with_command(const gchar* command)
 void termit_append_tab()
 {
     termit_append_tab_with_command(configs.default_command);
+}
+
+void termit_toggle_menubar()
+{
+    static int menubar_visible = TRUE;
+    static int first_run = TRUE;
+    if (first_run) {
+        menubar_visible = !configs.hide_menubar;
+        first_run = FALSE;
+    }
+    if (menubar_visible)
+        gtk_widget_show(GTK_WIDGET(termit.hbox));
+    else
+        gtk_widget_hide(GTK_WIDGET(termit.hbox));
+    menubar_visible = !menubar_visible;
 }
 
 void termit_set_encoding(const gchar* encoding)

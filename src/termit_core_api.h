@@ -4,6 +4,7 @@
 #include "configs.h"
 
 void termit_reconfigure();
+void termit_after_show_all();
 
 void termit_append_tab();
 void termit_append_tab_with_command(const gchar* command);
@@ -26,6 +27,7 @@ void termit_set_tab_foreground_color(int tab_index, const GdkColor*);
 void termit_set_colors();
 void termit_hide_scrollbars();
 void termit_hide_tab_scrollbar();
+void termit_toggle_menubar();
 void termit_set_encoding(const gchar* encoding);
 void termit_set_tab_name(guint tab_index, const gchar* name);
 void termit_set_statusbar_encoding(gint page);

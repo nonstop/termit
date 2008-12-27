@@ -95,6 +95,8 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getdouble(&(p_cfg->transparent_saturation), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
         config_getboolean(&(p_cfg->hide_single_tab), ls, index);
+    else if (!strcmp(name, "hideMenubar"))
+        config_getboolean(&(p_cfg->hide_menubar), ls, index);
     else if (!strcmp(name, "scrollbackLines"))
         config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))

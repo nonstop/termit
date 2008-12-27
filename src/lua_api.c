@@ -120,6 +120,13 @@ static int termit_lua_bindMouse(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_toggleMenubar(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_toggle_menubar();
+    return 0;
+}
+
 static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
@@ -342,6 +349,7 @@ void termit_init_lua_api()
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
     lua_register(L, "setTabName", termit_lua_setTabName);
+    lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
 }
 
