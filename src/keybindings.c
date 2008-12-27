@@ -231,7 +231,7 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->state))
+        if (kb && (event->state & kb->state) == kb->state)
             if (event->hardware_keycode == kb->keycode) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
@@ -245,7 +245,7 @@ static gboolean termit_key_press_use_keysym(GdkEventKey *event)
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->state))
+        if (kb && (event->state & kb->state) == kb->state)
             if (gdk_keyval_to_lower(event->keyval) == kb->keyval) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
