@@ -61,6 +61,24 @@ static void config_getboolean(gboolean* opt, lua_State* ls, int index)
         *opt = lua_toboolean(ls, index);
 }
 
+static void config_getcolor(GdkColor** opt, lua_State* ls, int index)
+{
+    gchar* color_str = NULL;
+    config_getstring(&color_str, ls, index);
+    TRACE("color_str=%s", color_str);
+    if (color_str) {
+        //struct GdkColor color;
+        GdkColor* p_color = g_malloc0(sizeof(GdkColor));
+        if (gdk_color_parse(color_str, p_color) == TRUE) {
+            *opt = p_color;
+        } else {
+            *opt = 0;
+            g_free(p_color);
+        }
+    }
+    g_free(color_str);
+}
+
 void termit_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
@@ -74,20 +92,11 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getstring(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
         config_getstring(&(p_cfg->default_font), ls, index);
-    else if (!strcmp(name, "foreground_color")) {
-        gchar* color_str = NULL;
-        config_getstring(&color_str, ls, index);
-        TRACE("color_str=%s", color_str);
-        if (color_str) {
-            //struct GdkColor color;
-            GdkColor color;
-            if (gdk_color_parse(color_str, &color) == TRUE) {
-                configs.default_foreground_color = (GdkColor*)g_malloc0(sizeof(color));
-                *configs.default_foreground_color = color;
-            }
-        }
-        g_free(color_str);
-    } else if (!strcmp(name, "showScrollbar"))
+    else if (!strcmp(name, "foregroundColor")) 
+        config_getcolor(&(p_cfg->default_foreground_color), ls, index);
+    else if (!strcmp(name, "backgroundColor")) 
+        config_getcolor(&(p_cfg->default_background_color), ls, index);
+    else if (!strcmp(name, "showScrollbar"))
         config_getboolean(&(p_cfg->show_scrollbar), ls, index);
     else if (!strcmp(name, "transparentBackground"))
         config_getboolean(&(p_cfg->transparent_background), ls, index);

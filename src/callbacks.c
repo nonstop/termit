@@ -179,8 +179,7 @@ void termit_on_select_tab_foreground_color()
     GtkColorSelection* p_color_sel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG(dlg)->colorsel));
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    if (pTab->foreground_color)
-        gtk_color_selection_set_current_color(p_color_sel, pTab->foreground_color);
+    gtk_color_selection_set_current_color(p_color_sel, &pTab->foreground_color);
 
     if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg))) {
         GdkColor color;

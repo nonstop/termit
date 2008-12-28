@@ -92,6 +92,10 @@ void termit_deinit_config()
     g_free(configs.default_font);
     if (configs.default_foreground_color)
         g_free(configs.default_foreground_color);
+    configs.default_foreground_color = NULL;
+    if (configs.default_background_color)
+        g_free(configs.default_background_color);
+    configs.default_background_color = NULL;
     g_free(configs.default_command);
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);

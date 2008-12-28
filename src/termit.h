@@ -36,7 +36,8 @@ struct TermitTab
     gchar *encoding;
     gchar *command;
     gchar *title;
-    GdkColor* foreground_color;
+    GdkColor foreground_color;
+    GdkColor background_color;
     pid_t pid;
     gulong sig_wtc;
 };

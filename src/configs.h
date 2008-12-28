@@ -13,6 +13,7 @@ struct Configs
     gchar* default_tab_name;
     gchar* default_font;
     GdkColor* default_foreground_color;
+    GdkColor* default_background_color;
     gchar* default_command;
     gchar* default_encoding;
     gchar* default_word_chars;
