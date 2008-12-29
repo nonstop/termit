@@ -311,6 +311,11 @@ static int termit_lua_activateTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_changeTab(lua_State* ls)
+{
+    return 0;
+}
+
 static int termit_lua_setTabName(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -325,6 +330,33 @@ static int termit_lua_setTabName(lua_State* ls)
     termit_set_tab_name(page, val);
     return 0;
 }
+
+static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const GdkColor*))
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no color defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("color is not string: skipping");
+        return 0;
+    }
+    const gchar* val =  lua_tostring(ls, 1);
+    GdkColor color;
+    if (gdk_color_parse(val, &color) == TRUE)
+        callback(-1, &color);
+    return 0;
+}
+
+static int termit_lua_setTabForegroundColor(lua_State* ls)
+{
+    return termit_lua_setTabColor__(ls, &termit_set_tab_foreground_color);
+}
+
+static int termit_lua_setTabBackgroundColor(lua_State* ls)
+{
+    return termit_lua_setTabColor__(ls, &termit_set_tab_background_color);
+}
+
 static int termit_lua_reconfigure(lua_State* ls)
 {
     termit_reconfigure();
@@ -342,6 +374,7 @@ void termit_init_lua_api()
     lua_register(L, "nextTab", termit_lua_nextTab);
     lua_register(L, "prevTab", termit_lua_prevTab);
     lua_register(L, "activateTab", termit_lua_activateTab);
+    lua_register(L, "changeTab", termit_lua_changeTab);
     lua_register(L, "closeTab", termit_lua_closeTab);
     lua_register(L, "copy", termit_lua_copy);
     lua_register(L, "paste", termit_lua_paste);
@@ -349,6 +382,8 @@ void termit_init_lua_api()
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
     lua_register(L, "setTabName", termit_lua_setTabName);
+    lua_register(L, "setTabForegroundColor", termit_lua_setTabForegroundColor);
+    lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);
     lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
 }

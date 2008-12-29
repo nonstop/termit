@@ -313,26 +313,28 @@ void termit_set_default_colors()
     }
 }
 
-void termit_set_tab_foreground_color(gint tab_index, const GdkColor* p_color)
+static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*callback)(struct TermitTab*, const GdkColor*))
 {
     TRACE("%s: tab_index=%d color=%p", __FUNCTION__, tab_index, p_color);
     if (!p_color) {
         TRACE_MSG("p_color is NULL");
         return;
     }
+    if (tab_index < 0) {
+        tab_index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    }
     TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
-    termit_set_tab_foreground_color__(pTab, p_color);
+    callback(pTab, p_color);
+}
+
+void termit_set_tab_foreground_color(gint tab_index, const GdkColor* p_color)
+{
+    termit_set_color__(tab_index, p_color, termit_set_tab_foreground_color__);
 }
 
 void termit_set_tab_background_color(gint tab_index, const GdkColor* p_color)
 {
-    TRACE("%s: tab_index=%d color=%p", __FUNCTION__, tab_index, p_color);
-    if (!p_color) {
-        TRACE_MSG("p_color is NULL");
-        return;
-    }
-    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
-    termit_set_tab_background_color__(pTab, p_color);
+    termit_set_color__(tab_index, p_color, termit_set_tab_background_color__);
 }
 
 void termit_set_font(const gchar* font_name)
