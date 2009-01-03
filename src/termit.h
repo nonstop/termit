@@ -33,6 +33,7 @@ struct TermitTab
     GtkWidget *vte;
     GtkWidget *scrollbar;
     gboolean scrollbar_is_shown;
+    gboolean custom_tab_name;
     gchar *encoding;
     gchar *command;
     gchar *title;

@@ -43,12 +43,25 @@ void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data)
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
 
-    const char* title = vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte));
-    TRACE("old title: %s, new title: %s", pTab->title, title);
-    if (pTab->title)
-        g_free(pTab->title);
-    pTab->title = g_strdup(title);
-    termit_set_window_title(pTab->title);
+    char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
+    if (configs.tab_equals_title) {
+        if (!pTab->custom_tab_name)
+            gtk_label_set_text(GTK_LABEL(pTab->tab_name), title);
+        else {
+            g_free(title);
+            title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        }
+    }
+            
+    if (configs.allow_changing_title) {
+        TRACE("tab %d, new title: %s", page, title);
+        if (pTab->title)
+            g_free(pTab->title);
+        pTab->title = title;
+        termit_set_window_title(pTab->title);
+    }
+    else
+        g_free(title);
 }
 
 void termit_on_toggle_scrollbar()

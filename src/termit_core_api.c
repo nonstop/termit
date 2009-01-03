@@ -141,13 +141,17 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     TRACE("%s", __FUNCTION__);
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));
 
-    if (ti->name)
+    if (ti->name) {
         pTab->tab_name = gtk_label_new(ti->name);
-    else
-    {
-        gchar *label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
+        pTab->custom_tab_name = TRUE;
+    } else {
+        gchar* label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
         pTab->tab_name = gtk_label_new(label_text);
         g_free(label_text);
+        if (configs.tab_equals_title)
+            pTab->custom_tab_name = FALSE;
+        else
+            pTab->custom_tab_name = TRUE;
     }
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
 
@@ -167,27 +171,21 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     pTab->command = (ti->command) ? g_strdup(ti->command) : g_strdup(configs.default_command);
     TRACE("command=%s", pTab->command);
-    if (!g_shell_parse_argv(pTab->command, NULL, &cmd_argv, &cmd_err))
-    {
+    if (!g_shell_parse_argv(pTab->command, NULL, &cmd_argv, &cmd_err)) {
         ERROR(_("Cannot parse command. Creating tab with shell"));
         g_error_free(cmd_err);
-    }
-    else
-    {
+    } else {
         cmd_path = g_find_program_in_path(cmd_argv[0]);
         cmd_file = g_path_get_basename(cmd_argv[0]);
     }
 
-    if (cmd_path && cmd_file)
-    {
+    if (cmd_path && cmd_file) {
         g_free(cmd_argv[0]);
         cmd_argv[0] = g_strdup(cmd_file);
 
         pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
                 cmd_path, cmd_argv, NULL, ti->working_dir, TRUE, TRUE, TRUE);
-    }
-    else
-    {
+    } else {
         /* default tab */
         pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
                 configs.default_command, NULL, NULL, ti->working_dir, TRUE, TRUE, TRUE);
@@ -197,12 +195,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
-    if (configs.allow_changing_title)
-    {
-        TRACE("allow_changing_title");
-        pTab->sig_wtc = g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
-    }
-    else
+    pTab->sig_wtc = g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
+    if (!configs.allow_changing_title)
         termit_set_window_title(configs.default_window_title);
 
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
@@ -211,28 +205,27 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
-    if (configs.transparent_background)
-    {
+    if (configs.transparent_background) {
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), configs.transparent_saturation);
     }
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
-    if (index == -1)
-    {
+    if (index == -1) {
         ERROR(_("Cannot create a new tab"));
         return;
     }
     TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+//    if (configs.expand_tab)
+//        gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
     
     pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
 
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->scrollbar, FALSE, FALSE, 0);
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
-    if (!tabWidget)
-    {
+    if (!tabWidget) {
         ERROR("tabWidget is NULL");
         return;
     }
@@ -301,6 +294,8 @@ void termit_set_tab_name(guint tab_index, const gchar* name)
 {
     TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
+    pTab->custom_tab_name = TRUE;
+    termit_on_window_title_changed(VTE_TERMINAL(pTab->vte), NULL);
 }
 
 void termit_set_default_colors()

@@ -20,7 +20,7 @@ void trace_configs()
                 configs.default_foreground_color->red,
                 configs.default_foreground_color->green,
                 configs.default_foreground_color->blue);
-        } else
+    } else
         TRACE("     default_foreground_color= %p", configs.default_foreground_color);
     TRACE("     show_scrollbar          = %d", configs.show_scrollbar);
     TRACE("     hide_menubar            = %d", configs.hide_menubar);
@@ -28,6 +28,7 @@ void trace_configs()
     TRACE("     transparent_saturation  = %f", configs.transparent_saturation);
     TRACE("     hide_single_tab         = %d", configs.hide_single_tab);
     TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
+    TRACE("     tab_equals_title        = %d", configs.tab_equals_title);
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
     TRACE_MSG("");
@@ -66,6 +67,7 @@ void termit_set_default_options()
     configs.show_scrollbar = TRUE;
     configs.hide_menubar = FALSE;
     configs.allow_changing_title = FALSE;
+    configs.tab_equals_title = FALSE;
     configs.kb_policy = TermitKbUseKeysym;
 }
 

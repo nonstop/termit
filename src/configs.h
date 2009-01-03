@@ -31,6 +31,7 @@ struct Configs
     gboolean show_scrollbar;
     gboolean hide_menubar;
     gboolean allow_changing_title;
+    gboolean tab_equals_title;
     enum TermitKbPolicy kb_policy;
 };
 
