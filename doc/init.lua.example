@@ -13,6 +13,7 @@ defaults.transparentBackground = false
 defaults.transparentSaturation = 0.5
 defaults.hideSingleTab = false
 defaults.hideMenubar = false
+defaults.fillTabbar = false
 defaults.scrollbackLines = 4096
 defaults.geometry = '80x24'
 setOptions(defaults)

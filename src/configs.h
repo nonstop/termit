@@ -30,6 +30,7 @@ struct Configs
     gboolean hide_single_tab;
     gboolean show_scrollbar;
     gboolean hide_menubar;
+    gboolean fill_tabbar;
     gboolean allow_changing_title;
     gboolean tab_equals_title;
     enum TermitKbPolicy kb_policy;

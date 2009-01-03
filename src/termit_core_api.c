@@ -29,18 +29,13 @@ void termit_reconfigure()
     // for all tabs change event on-change-title
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
-    for (; i<page_num; ++i)
-    {
+    for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (configs.allow_changing_title)
-        {
+        if (configs.allow_changing_title) {
             if (!pTab->sig_wtc)
                 pTab->sig_wtc = g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
-        }
-        else
-        {
-            if (pTab->sig_wtc)
-            {
+        } else {
+            if (pTab->sig_wtc) {
                 g_signal_handler_disconnect(pTab->vte, pTab->sig_wtc);
                 pTab->sig_wtc = 0;
             }
@@ -217,8 +212,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         return;
     }
     TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
-//    if (configs.expand_tab)
-//        gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
+    if (configs.fill_tabbar)
+        gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
     
     pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
 

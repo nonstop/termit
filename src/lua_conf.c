@@ -102,6 +102,8 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getboolean(&(p_cfg->transparent_background), ls, index);
     else if (!strcmp(name, "transparentSaturation"))
         config_getdouble(&(p_cfg->transparent_saturation), ls, index);
+    else if (!strcmp(name, "fillTabbar"))
+        config_getboolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
         config_getboolean(&(p_cfg->hide_single_tab), ls, index);
     else if (!strcmp(name, "hideMenubar"))
