@@ -33,6 +33,7 @@ void termit_set_encoding(const gchar* encoding);
 void termit_set_tab_name(guint tab_index, const gchar* name);
 void termit_set_statusbar_encoding(gint page);
 
+int termit_get_current_tab_index();
 struct TermitTab* termit_get_tab_by_index(gint index);
 
 /**

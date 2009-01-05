@@ -403,6 +403,11 @@ void termit_quit()
     gtk_main_quit();
 }
 
+int termit_get_current_tab_index()
+{
+    return gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+}
+
 void termit_set_kb_policy(enum TermitKbPolicy kbp)
 {
     configs.kb_policy = kbp;

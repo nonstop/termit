@@ -336,6 +336,12 @@ static int termit_lua_activateTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_currentTabIndex(lua_State* ls)
+{
+    lua_pushinteger(ls, termit_get_current_tab_index() + 1);
+    return 1;
+}
+
 static int termit_lua_changeTab(lua_State* ls)
 {
     return 0;
@@ -419,6 +425,7 @@ void termit_init_lua_api()
     lua_register(L, "paste", termit_lua_paste);
     lua_register(L, "addMenu", termit_lua_addMenu);
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
+    lua_register(L, "currentTabIndex", termit_lua_currentTabIndex);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
     lua_register(L, "setTabName", termit_lua_setTabName);
     lua_register(L, "setWindowTitle", termit_lua_setWindowTitle);
