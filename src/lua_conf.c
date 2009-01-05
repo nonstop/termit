@@ -60,7 +60,15 @@ static void config_getboolean(gboolean* opt, lua_State* ls, int index)
     if (!lua_isnil(ls, index) && lua_isboolean(ls, index))
         *opt = lua_toboolean(ls, index);
 }
-
+static void config_getfunction(int* opt, lua_State* ls, int index)
+{
+    if (!lua_isnil(ls, index) && lua_isfunction(ls, index)) {
+        *opt = luaL_ref(ls, LUA_REGISTRYINDEX);
+        // dirty hack - luaL_ref pops value by itself
+        // TODO - fix table loader
+        lua_pushinteger(ls, 0);
+    }
+}
 static void config_getcolor(GdkColor** opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
@@ -112,8 +120,8 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))
         config_getboolean(&(p_cfg->allow_changing_title), ls, index);
-    else if (!strcmp(name, "tabEqualsTitle"))
-        config_getboolean(&(p_cfg->tab_equals_title), ls, index);
+    else if (!strcmp(name, "changeTitle"))
+        config_getfunction(&(p_cfg->change_title_callback), ls, index);
     else if (!strcmp(name, "geometry")) {
         gchar* geometry_str = NULL;
         config_getstring(&geometry_str, ls, index);
@@ -150,11 +158,11 @@ static void load_init(const gchar* initFile)
     }
     
     int s = luaL_loadfile(L, fullPath);
-    termit_report_lua_error(s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
     g_free(fullPath);
 
     s = lua_pcall(L, 0, LUA_MULTRET, 0);
-    termit_report_lua_error(s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
 }
 
 static const gchar* termit_init_file = NULL;

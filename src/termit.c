@@ -267,6 +267,9 @@ static void termit_init(const gchar* initFile, const gchar* command)
     termit_create_popup_menu();
 
     termit_set_font(configs.default_font);
+    
+    if (!configs.allow_changing_title)
+        termit_set_window_title(configs.default_window_title);
 }
 
 static void termit_print_usage()

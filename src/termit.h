@@ -40,7 +40,6 @@ struct TermitTab
     GdkColor foreground_color;
     GdkColor background_color;
     pid_t pid;
-    gulong sig_wtc;
 };
 
 struct TabInfo

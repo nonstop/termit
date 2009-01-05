@@ -40,28 +40,31 @@ void termit_on_destroy(GtkWidget *widget, gpointer data)
 
 void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data)
 {
+    if (!configs.allow_changing_title)
+        return;
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    
+    if (pTab->custom_tab_name)
+        return;
 
     char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
-    if (configs.tab_equals_title) {
-        if (!pTab->custom_tab_name)
-            gtk_label_set_text(GTK_LABEL(pTab->tab_name), title);
-        else {
+
+    if (configs.change_title_callback) {
+        gchar* luaTitle = termit_lua_changeTitleCallback(configs.change_title_callback, title);
+        if (!luaTitle) {
+            ERROR("termit_lua_changeTitleCallback(%s) failed", title);
             g_free(title);
-            title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+            return;
         }
-    }
-            
-    if (configs.allow_changing_title) {
-        TRACE("tab %d, new title: %s", page, title);
-        if (pTab->title)
-            g_free(pTab->title);
-        pTab->title = title;
-        termit_set_window_title(pTab->title);
-    }
-    else
         g_free(title);
+        title = luaTitle;
+    }
+    if (pTab->title)
+        g_free(pTab->title);
+    pTab->title = title;
+    TRACE("tab %d, new title: %s", page, pTab->title);
+    gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
 }
 
 void termit_on_toggle_scrollbar()

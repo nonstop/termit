@@ -77,8 +77,8 @@ opts - table with new options:
     backgroundColor
     showScrollbar
     fillTabbar - expand tabs' titles to fill whole tabbar
-    allowChangingTitle
-    tabEqualsTitle
+    allowChangingTitle - auto change title (similar to xterm)
+    changeTitle - lua function to generate new title
     transparentBackground - use transparency
     transparentSaturation - level of saturation [0,1]
     hideSingleTab
@@ -206,6 +206,15 @@ encoding - string with encoding name.
 Changes name for active tab.
 .RS
 tabName - string with tab name.
+.RE
+.P
+.B setWindowTitle
+(
+.I title
+)
+Changes termit window title.
+.RS
+title - string with new title.
 .RE
 .P
 .B setTabForegroundColor

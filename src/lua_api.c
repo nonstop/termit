@@ -45,15 +45,15 @@ void termit_lua_execute(const gchar* cmd)
 {
     TRACE("executing script: %s", cmd);
     int s = luaL_dostring(L, cmd);
-    termit_report_lua_error(s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
 }
 
-void termit_report_lua_error(int status)
+void termit_report_lua_error(const char* file, int line, int status)
 {
     if (status == 0)
         return;
     TRACE_MSG("lua error:");
-    g_fprintf(stderr, "%s\n", lua_tostring(L, -1));
+    g_fprintf(stderr, "%s:%d %s\n", file, line, lua_tostring(L, -1));
     lua_pop(L, 1);
 }
 
@@ -78,6 +78,31 @@ int termit_lua_dofunction(int f)
         return 1;
     }
     return 0;
+}
+
+void termit_lua_unref(int* lua_callback)
+{
+    if (*lua_callback) {
+        luaL_unref(L, LUA_REGISTRYINDEX, *lua_callback);
+        *lua_callback = 0;
+    }
+}
+
+gchar* termit_lua_changeTitleCallback(int f, const gchar* title)
+{
+    lua_State* ls = L;
+    if(f != LUA_REFNIL) {
+        lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
+        lua_pushstring(ls, title);
+        if (lua_pcall(ls, 1, 1, 0)) {
+            TRACE("error running function: %s", lua_tostring(ls, -1));
+            lua_pop(ls, 1);
+            return NULL;
+        }
+        if (lua_isstring(ls, 0))
+            return g_strdup(lua_tostring(ls, 0));
+    }
+    return NULL;
 }
 
 static int termit_lua_bindKey(lua_State* ls)
@@ -331,6 +356,20 @@ static int termit_lua_setTabName(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_setWindowTitle(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no title defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("title is not string: skipping");
+        return 0;
+    }
+    const gchar* val =  lua_tostring(ls, 1);
+    termit_set_window_title(val);
+    return 0;
+}
+
 static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const GdkColor*))
 {
     if (lua_isnil(ls, 1)) {
@@ -382,6 +421,7 @@ void termit_init_lua_api()
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
     lua_register(L, "setTabName", termit_lua_setTabName);
+    lua_register(L, "setWindowTitle", termit_lua_setWindowTitle);
     lua_register(L, "setTabForegroundColor", termit_lua_setTabForegroundColor);
     lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);
     lua_register(L, "toggleMenu", termit_lua_toggleMenubar);

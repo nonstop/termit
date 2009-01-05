@@ -26,23 +26,6 @@ void termit_reconfigure()
     termit_set_default_keybindings();
     termit_load_lua_config();
     
-    // for all tabs change event on-change-title
-    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    gint i=0;
-    for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (configs.allow_changing_title) {
-            if (!pTab->sig_wtc)
-                pTab->sig_wtc = g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
-        } else {
-            if (pTab->sig_wtc) {
-                g_signal_handler_disconnect(pTab->vte, pTab->sig_wtc);
-                pTab->sig_wtc = 0;
-            }
-        }
-    }
-    
-
     termit_create_popup_menu();
     termit_create_menubar();
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
@@ -143,10 +126,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         gchar* label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
         pTab->tab_name = gtk_label_new(label_text);
         g_free(label_text);
-        if (configs.tab_equals_title)
-            pTab->custom_tab_name = FALSE;
-        else
-            pTab->custom_tab_name = TRUE;
+        pTab->custom_tab_name = FALSE;
     }
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
 
@@ -190,9 +170,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
-    pTab->sig_wtc = g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
-    if (!configs.allow_changing_title)
-        termit_set_window_title(configs.default_window_title);
+    g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
 
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
 //    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);

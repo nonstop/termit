@@ -147,6 +147,7 @@ void termit_unbind_key(const gchar* keybinding)
         return;
     }
     struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, kb_index);
+    termit_lua_unref(&kb->lua_callback);
     g_free(kb->name);
     g_array_remove_index(configs.key_bindings, kb_index);
 }
@@ -185,7 +186,7 @@ void termit_bind_key(const gchar* keybinding, int lua_callback)
         kb->state = tmp_state;
         kb->keyval = gdk_keyval_to_lower(tmp_keyval);
         kb->keycode = XKeysymToKeycode(disp, kb->keyval);
-        luaL_unref(L, LUA_REGISTRYINDEX, kb->lua_callback);
+        termit_lua_unref(&kb->lua_callback);
         kb->lua_callback = lua_callback;
     }
 }
@@ -206,7 +207,7 @@ void termit_bind_mouse(const gchar* mouse_event, int lua_callback)
     } else {
         struct MouseBinding* mb = &g_array_index(configs.mouse_bindings, struct MouseBinding, mb_index);
         mb->type = type;
-        luaL_unref(L, LUA_REGISTRYINDEX, mb->lua_callback);
+        termit_lua_unref(&mb->lua_callback);
         mb->lua_callback = lua_callback;
     }
 }
@@ -223,6 +224,8 @@ void termit_unbind_mouse(const gchar* mouse_event)
         TRACE("mouse event [%d] not found - skipping", type);
         return;
     }
+    struct MouseBinding* mb = &g_array_index(configs.mouse_bindings, struct MouseBinding, mb_index);
+    termit_lua_unref(&mb->lua_callback);
     g_array_remove_index(configs.mouse_bindings, mb_index);
 }
 

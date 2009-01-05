@@ -88,7 +88,7 @@ void termit_load_session(const gchar* sessionFile)
 {
     TRACE("loading sesions from %s", sessionFile);
     int s = luaL_dofile(L, sessionFile);
-    termit_report_lua_error(s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
 }
 
 /**

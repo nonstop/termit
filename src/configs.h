@@ -32,7 +32,7 @@ struct Configs
     gboolean hide_menubar;
     gboolean fill_tabbar;
     gboolean allow_changing_title;
-    gboolean tab_equals_title;
+    int change_title_callback;
     enum TermitKbPolicy kb_policy;
 };
 

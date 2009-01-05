@@ -3,6 +3,7 @@
 #include "termit.h"
 #include "keybindings.h"
 #include "configs.h"
+#include "lua_api.h"
 
 struct Configs configs = {0};
 
@@ -28,10 +29,10 @@ void trace_configs()
     TRACE("     transparent_background  = %d", configs.transparent_background);
     TRACE("     transparent_saturation  = %f", configs.transparent_saturation);
     TRACE("     hide_single_tab         = %d", configs.hide_single_tab);
-    TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
-    TRACE("     tab_equals_title        = %d", configs.tab_equals_title);
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
+    TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
+    TRACE("     change_title_callback   = %d", configs.change_title_callback);
     TRACE_MSG("");
 #endif 
 }
@@ -69,7 +70,7 @@ void termit_set_default_options()
     configs.fill_tabbar = FALSE;
     configs.hide_menubar = FALSE;
     configs.allow_changing_title = FALSE;
-    configs.tab_equals_title = FALSE;
+    configs.change_title_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;
 }
 
@@ -115,7 +116,10 @@ void termit_deinit_config()
     g_array_free(configs.user_popup_menus, TRUE);
 
     // name and default_binding are static (e.g. can be in readonly mempage)
+    // TODO luaL_unref all callbacks
     g_array_free(configs.key_bindings, TRUE);
     g_array_free(configs.mouse_bindings, TRUE);
+    
+    termit_lua_unref(&configs.change_title_callback);
 }
 
