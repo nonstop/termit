@@ -99,8 +99,8 @@ gchar* termit_lua_changeTitleCallback(int f, const gchar* title)
             lua_pop(ls, 1);
             return NULL;
         }
-        if (lua_isstring(ls, 0))
-            return g_strdup(lua_tostring(ls, 0));
+        if (lua_isstring(ls, -1))
+            return g_strdup(lua_tostring(ls, -1));
     }
     return NULL;
 }
