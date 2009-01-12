@@ -170,7 +170,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
-    g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_window_title_changed), NULL);
+    g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
 
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
 //    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
@@ -268,7 +268,7 @@ void termit_set_tab_name(guint tab_index, const gchar* name)
     TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
     pTab->custom_tab_name = TRUE;
-    termit_on_window_title_changed(VTE_TERMINAL(pTab->vte), NULL);
+    termit_on_tab_title_changed(VTE_TERMINAL(pTab->vte), NULL);
 }
 
 void termit_set_default_colors()
@@ -417,6 +417,8 @@ void termit_set_window_title(const gchar* title)
 {
     if (!title)
         return;
-    gtk_window_set_title(GTK_WINDOW(termit.main_window), title);
+    gchar* window_title = g_strdup_printf("%s: %s", configs.default_window_title, title);
+    gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
+    g_free(window_title);
 }
 

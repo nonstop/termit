@@ -38,7 +38,7 @@ void termit_on_destroy(GtkWidget *widget, gpointer data)
     termit_quit();
 }
 
-void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data)
+void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
 {
     if (!configs.allow_changing_title)
         return;
@@ -65,6 +65,7 @@ void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data)
     pTab->title = title;
     TRACE("tab %d, new title: %s", page, pTab->title);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
+    termit_set_window_title(pTab->title);
 }
 
 void termit_on_toggle_scrollbar()

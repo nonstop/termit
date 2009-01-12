@@ -26,7 +26,7 @@ void termit_on_del_tab();
 gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data);
 void termit_on_save_session();
 void termit_on_load_session();
-void termit_on_window_title_changed(VteTerminal *vte, gpointer user_data);
+void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data);
 
 /*
 void termit_hide_scrollbars();

@@ -18,7 +18,6 @@ defaults.allowChangingTitle = false
 --defaults.changeTitle = function (title)
 --    print('title='..title)
 --    newTitle = 'Termit: '..title
---    setWindowTitle(newTitle)
 --    return newTitle
 --end
 setOptions(defaults)
