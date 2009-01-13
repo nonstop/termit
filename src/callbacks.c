@@ -50,10 +50,10 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
 
     char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 
-    if (configs.change_title_callback) {
-        gchar* luaTitle = termit_lua_changeTitleCallback(configs.change_title_callback, title);
+    if (configs.get_tab_title_callback) {
+        gchar* luaTitle = termit_lua_getTitleCallback(configs.get_tab_title_callback, title);
         if (!luaTitle) {
-            ERROR("termit_lua_changeTitleCallback(%s) failed", title);
+            ERROR("termit_lua_getTitleCallback(%s) failed", title);
             g_free(title);
             return;
         }

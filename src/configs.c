@@ -32,7 +32,8 @@ void trace_configs()
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
     TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
-    TRACE("     change_title_callback   = %d", configs.change_title_callback);
+    TRACE("     get_window_title_callback= %d", configs.get_window_title_callback);
+    TRACE("     get_tab_title_callback  = %d", configs.get_tab_title_callback);
     TRACE_MSG("");
 #endif 
 }
@@ -70,13 +71,14 @@ void termit_set_default_options()
     configs.fill_tabbar = FALSE;
     configs.hide_menubar = FALSE;
     configs.allow_changing_title = FALSE;
-    configs.change_title_callback = 0;
+    configs.get_window_title_callback = 0;
+    configs.get_tab_title_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;
 }
 
 static void free_menu(GArray* menus)
 {
-    gint i=0;
+    gint i = 0;
     for (; i<menus->len; ++i) {
         struct UserMenu* um = &g_array_index(menus, struct UserMenu, i);
         gint j = 0;
@@ -105,7 +107,7 @@ void termit_deinit_config()
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);
 
-    gint i=0;
+    gint i = 0;
     for (; i<configs.encodings->len; ++i)
         g_free(g_array_index(configs.encodings, gchar*, i));
     g_array_free(configs.encodings, TRUE);
@@ -120,6 +122,7 @@ void termit_deinit_config()
     g_array_free(configs.key_bindings, TRUE);
     g_array_free(configs.mouse_bindings, TRUE);
     
-    termit_lua_unref(&configs.change_title_callback);
+    termit_lua_unref(&configs.get_window_title_callback);
+    termit_lua_unref(&configs.get_tab_title_callback);
 }
 

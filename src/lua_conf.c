@@ -120,8 +120,10 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))
         config_getboolean(&(p_cfg->allow_changing_title), ls, index);
-    else if (!strcmp(name, "changeTitle"))
-        config_getfunction(&(p_cfg->change_title_callback), ls, index);
+    else if (!strcmp(name, "getWindowTitle"))
+        config_getfunction(&(p_cfg->get_window_title_callback), ls, index);
+    else if (!strcmp(name, "getTabTitle"))
+        config_getfunction(&(p_cfg->get_tab_title_callback), ls, index);
     else if (!strcmp(name, "geometry")) {
         gchar* geometry_str = NULL;
         config_getstring(&geometry_str, ls, index);

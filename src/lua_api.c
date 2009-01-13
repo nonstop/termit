@@ -88,7 +88,7 @@ void termit_lua_unref(int* lua_callback)
     }
 }
 
-gchar* termit_lua_changeTitleCallback(int f, const gchar* title)
+gchar* termit_lua_getTitleCallback(int f, const gchar* title)
 {
     lua_State* ls = L;
     if(f != LUA_REFNIL) {

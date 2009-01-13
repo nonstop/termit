@@ -11,7 +11,7 @@ void termit_load_lua_config();
 void termit_lua_execute(const gchar* cmd);
 int termit_lua_dofunction(int f);
 void termit_lua_unref(int* lua_callback);
-gchar* termit_lua_changeTitleCallback(int f, const gchar* title);
+gchar* termit_lua_getTitleCallback(int f, const gchar* title);
 /**
  * Loaders
  * */

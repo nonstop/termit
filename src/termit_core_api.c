@@ -417,8 +417,18 @@ void termit_set_window_title(const gchar* title)
 {
     if (!title)
         return;
-    gchar* window_title = g_strdup_printf("%s: %s", configs.default_window_title, title);
-    gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
-    g_free(window_title);
+    if (!configs.get_window_title_callback) {
+        gchar* window_title = g_strdup_printf("%s: %s", configs.default_window_title, title);
+        gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
+        g_free(window_title);
+    } else {
+        gchar* window_title = termit_lua_getTitleCallback(configs.get_window_title_callback, title);
+        if (!window_title) {
+            ERROR("termit_lua_getTitleCallback(%s) failed", title);
+            return;
+        }
+        gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
+        g_free(window_title);
+    }
 }
 
