@@ -182,7 +182,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), configs.transparent_saturation);
     }
-    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);    
+    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
     if (index == -1) {
@@ -263,12 +263,27 @@ void termit_set_encoding(const gchar* encoding)
     termit_set_statusbar_encoding(-1);
 }
 
-void termit_set_tab_name(guint tab_index, const gchar* name)
+void termit_set_tab_title(guint tab_index, const gchar* title)
 {
     TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
-    gtk_label_set_text(GTK_LABEL(pTab->tab_name), name);
-    pTab->custom_tab_name = TRUE;
-    termit_on_tab_title_changed(VTE_TERMINAL(pTab->vte), NULL);
+    
+    gchar* tmp_title = g_strdup(title);
+    if (configs.get_tab_title_callback) {
+        gchar* lua_title = termit_lua_getTitleCallback(configs.get_tab_title_callback, title);
+        if (!lua_title) {
+            ERROR("termit_lua_getTitleCallback(%s) failed", title);
+            g_free(tmp_title);
+            return;
+        }
+        g_free(tmp_title);
+        tmp_title = lua_title;
+    }
+    if (pTab->title)
+        g_free(pTab->title);
+    pTab->title = tmp_title;
+    TRACE("tab %d, new title: %s", tab_index, pTab->title);
+    gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
+    termit_set_window_title(pTab->title);
 }
 
 void termit_set_default_colors()

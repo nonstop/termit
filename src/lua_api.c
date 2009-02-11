@@ -347,7 +347,7 @@ static int termit_lua_changeTab(lua_State* ls)
     return 0;
 }
 
-static int termit_lua_setTabName(lua_State* ls)
+static int termit_lua_setTabTitle(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
         TRACE_MSG("no tabName defined: skipping");
@@ -358,7 +358,9 @@ static int termit_lua_setTabName(lua_State* ls)
     }
     const gchar* val =  lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    termit_set_tab_name(page, val);
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_set_tab_title(page, val);
+    pTab->custom_tab_name = TRUE;
     return 0;
 }
 
@@ -427,7 +429,7 @@ void termit_init_lua_api()
     lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
     lua_register(L, "currentTabIndex", termit_lua_currentTabIndex);
     lua_register(L, "setEncoding", termit_lua_setEncoding);
-    lua_register(L, "setTabName", termit_lua_setTabName);
+    lua_register(L, "setTabTitle", termit_lua_setTabTitle);
     lua_register(L, "setWindowTitle", termit_lua_setWindowTitle);
     lua_register(L, "setTabForegroundColor", termit_lua_setTabForegroundColor);
     lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);

@@ -47,25 +47,10 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     
     if (pTab->custom_tab_name)
         return;
-
+    
     char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
-
-    if (configs.get_tab_title_callback) {
-        gchar* luaTitle = termit_lua_getTitleCallback(configs.get_tab_title_callback, title);
-        if (!luaTitle) {
-            ERROR("termit_lua_getTitleCallback(%s) failed", title);
-            g_free(title);
-            return;
-        }
-        g_free(title);
-        title = luaTitle;
-    }
-    if (pTab->title)
-        g_free(pTab->title);
-    pTab->title = title;
-    TRACE("tab %d, new title: %s", page, pTab->title);
-    gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
-    termit_set_window_title(pTab->title);
+    termit_set_tab_title(page, title);
+    g_free(title);
 }
 
 void termit_on_toggle_scrollbar()
@@ -184,8 +169,10 @@ void termit_on_set_tab_name()
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dlg)->vbox), hbox, FALSE, FALSE, 10);
     gtk_widget_show_all(dlg);
     
-    if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg)))
-        termit_set_tab_name(page, gtk_entry_get_text(GTK_ENTRY(entry)));
+    if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
+        termit_set_tab_title(page, gtk_entry_get_text(GTK_ENTRY(entry)));
+        pTab->custom_tab_name = TRUE;
+    }
     
     gtk_widget_destroy(dlg);
 }

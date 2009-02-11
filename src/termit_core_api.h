@@ -20,7 +20,6 @@ void termit_close_tab();
 
 void termit_quit();
 
-void termit_set_window_title(const gchar* title);
 void termit_set_font(const gchar* font_name);
 void termit_set_default_colors();
 void termit_set_tab_foreground_color(gint tab_index, const GdkColor*);
@@ -30,7 +29,8 @@ void termit_hide_scrollbars();
 void termit_hide_tab_scrollbar();
 void termit_toggle_menubar();
 void termit_set_encoding(const gchar* encoding);
-void termit_set_tab_name(guint tab_index, const gchar* name);
+void termit_set_window_title(const gchar* title);
+void termit_set_tab_title(guint tab_index, const gchar* title);
 void termit_set_statusbar_encoding(gint page);
 
 int termit_get_current_tab_index();
