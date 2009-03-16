@@ -1,3 +1,12 @@
+version 2.2.0
+	mixed modifiers (e.g. AltCtrl, AltShift, etc.)
+	new Lua functions
+		setTabForegroundColor,	setTabBackgroundColor, bindMouse,
+		toggleMenubar, setWindowTitle, currentTabIndex, getTabTitle,
+		getWindowTitle
+	new options
+		per-tab foreground/background colors, fillTabbar, hideMenubar,
+		changeTitle
 version 2.1.1
 	fixed typo in docs, init foreground color with "gray", proper Lua-includes
 	when building from source
