@@ -11,54 +11,58 @@ msgstr ""
 "X-Poedit-Language: Korean\n"
 "X-Poedit-Country: KOREA, REPUBLIC OF\n"
 
-#: /home/nonstop/coding/termit/src/termit_core_api.c:165
+#: /home/evgeny/coding/termit/src/termit_core_api.c:189
 msgid "Cannot create a new tab"
 msgstr "새 탭을 만들 수 없습니다"
 
-#: /home/nonstop/coding/termit/src/termit_core_api.c:134
+#: /home/evgeny/coding/termit/src/termit_core_api.c:150
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
-#: /home/nonstop/coding/termit/src/termit.c:104
+#: /home/evgeny/coding/termit/src/termit.c:102
 msgid "Edit"
 msgstr "편집"
 
-#: /home/nonstop/coding/termit/src/termit.c:133
-#: /home/nonstop/coding/termit/src/termit.c:222
+#: /home/evgeny/coding/termit/src/termit.c:131
+#: /home/evgeny/coding/termit/src/termit.c:216
 msgid "Encoding"
 msgstr "문자집합"
 
-#: /home/nonstop/coding/termit/src/termit.c:82
+#: /home/evgeny/coding/termit/src/termit.c:78
 msgid "File"
 msgstr "파일"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:274
+#: /home/evgeny/coding/termit/src/callbacks.c:288
 msgid "Open session"
 msgstr "세션 열기"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:243
+#: /home/evgeny/coding/termit/src/callbacks.c:258
 msgid "Save session"
 msgstr "세션 저장"
 
-#: /home/nonstop/coding/termit/src/termit.c:194
+#: /home/evgeny/coding/termit/src/termit.c:187
 msgid "Scrollbar"
 msgstr "스크롤 바"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:181
+#: /home/evgeny/coding/termit/src/callbacks.c:199
 msgid "Select font"
 msgstr "글꼴 바꾸기"
 
-#: /home/nonstop/coding/termit/src/termit.c:121
+#: /home/evgeny/coding/termit/src/callbacks.c:182
+msgid "Select foreground color"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit.c:120
 msgid "Sessions"
 msgstr "세션"
 
 #. Edit menu
-#: /home/nonstop/coding/termit/src/termit.c:93
-#: /home/nonstop/coding/termit/src/termit.c:187
+#: /home/evgeny/coding/termit/src/termit.c:89
+#: /home/evgeny/coding/termit/src/termit.c:179
 msgid "Set tab name..."
 msgstr "탭 이름 바꾸기"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:22
+#: /home/evgeny/coding/termit/src/callbacks.c:22
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -66,12 +70,12 @@ msgstr ""
 "다른 탭들이 아직 열려 있습니다.\n"
 "전부 닫고 종료할까요 ?"
 
-#: /home/nonstop/coding/termit/src/callbacks.c:149
-#: /home/nonstop/coding/termit/src/callbacks.c:158
+#: /home/evgeny/coding/termit/src/callbacks.c:148
+#: /home/evgeny/coding/termit/src/callbacks.c:157
 msgid "Tab name"
 msgstr "탭 이름"
 
-#: /home/nonstop/coding/termit/src/sessions.c:86
+#: /home/evgeny/coding/termit/src/sessions.c:83
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "디렉토리를 만들 수 없습니다 '%s': %s"
