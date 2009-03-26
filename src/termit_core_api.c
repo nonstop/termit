@@ -283,7 +283,7 @@ void termit_set_tab_title(guint tab_index, const gchar* title)
     pTab->title = tmp_title;
     TRACE("tab %d, new title: %s", tab_index, pTab->title);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
-    termit_set_window_title(pTab->title);
+    termit_set_window_title(title);
 }
 
 void termit_set_default_colors()
