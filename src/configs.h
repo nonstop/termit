@@ -32,6 +32,8 @@ struct Configs
     gboolean hide_menubar;
     gboolean fill_tabbar;
     gboolean allow_changing_title;
+    gboolean audible_bell;
+    gboolean visible_bell;
     int get_window_title_callback;
     int get_tab_title_callback;
     enum TermitKbPolicy kb_policy;

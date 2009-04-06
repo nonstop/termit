@@ -32,6 +32,8 @@ void trace_configs()
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
     TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
+    TRACE("     audible_bell            = %d", configs.audible_bell);
+    TRACE("     visible_bell            = %d", configs.visible_bell);
     TRACE("     get_window_title_callback= %d", configs.get_window_title_callback);
     TRACE("     get_tab_title_callback  = %d", configs.get_tab_title_callback);
     TRACE_MSG("");
@@ -71,6 +73,8 @@ void termit_set_default_options()
     configs.fill_tabbar = FALSE;
     configs.hide_menubar = FALSE;
     configs.allow_changing_title = FALSE;
+    configs.visible_bell = FALSE;
+    configs.audible_bell = FALSE;
     configs.get_window_title_callback = 0;
     configs.get_tab_title_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;

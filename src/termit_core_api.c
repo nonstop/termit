@@ -192,7 +192,10 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
     if (configs.fill_tabbar)
         gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
-    
+
+    vte_terminal_set_audible_bell(VTE_TERMINAL(pTab->vte), configs.audible_bell);
+    vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), configs.visible_bell);
+
     pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));
 
     gtk_box_pack_start(GTK_BOX(pTab->hbox), pTab->vte, TRUE, TRUE, 0);
