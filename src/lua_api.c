@@ -225,6 +225,14 @@ static int termit_lua_closeTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_setMatches(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_load_lua_table(ls, termit_matches_loader, configs.matches);
+    trace_configs();
+    return 0;
+}
+
 static int termit_lua_setKbPolicy(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -415,6 +423,7 @@ void termit_init_lua_api()
     lua_register(L, "bindKey", termit_lua_bindKey);
     lua_register(L, "bindMouse", termit_lua_bindMouse);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
+    lua_register(L, "setMatches", termit_lua_setMatches);
     lua_register(L, "openTab", termit_lua_openTab);
     lua_register(L, "nextTab", termit_lua_nextTab);
     lua_register(L, "prevTab", termit_lua_prevTab);

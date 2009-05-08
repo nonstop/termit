@@ -87,6 +87,20 @@ static void config_getcolor(GdkColor** opt, lua_State* ls, int index)
     g_free(color_str);
 }
 
+void termit_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
+{
+    TRACE("pattern=%s index=%d data=%p", pattern, index, data);
+    if (!lua_isfunction(ls, index)) {
+        ERROR("match [%s] without function: skipping", pattern);
+        return;
+    }
+    GArray* matches = (GArray*)data;
+    struct Match match = {0};
+    match.pattern = g_strdup(pattern);
+    config_getfunction(&match.lua_callback, ls, index);
+    g_array_append_val(matches, match);
+}
+
 void termit_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;

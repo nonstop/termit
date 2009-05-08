@@ -23,10 +23,11 @@ struct Configs
     guint cols;
     guint rows;
     GArray* encodings;
-    GArray* user_menus;
-    GArray* user_popup_menus;
-    GArray* key_bindings;
-    GArray* mouse_bindings;
+    GArray* user_menus;         // UserMenu
+    GArray* user_popup_menus;   // UserMenu
+    GArray* key_bindings;       // KeyBinding
+    GArray* mouse_bindings;     // MouseBinding
+    GArray* matches;            // Match
     gboolean hide_single_tab;
     gboolean show_scrollbar;
     gboolean hide_menubar;
@@ -39,6 +40,12 @@ struct Configs
     enum TermitKbPolicy kb_policy;
 };
 
+struct Match
+{
+    gchar* pattern;
+    int tag;
+    int lua_callback;
+};
 struct UserMenuItem
 {
     gchar* name;
@@ -47,7 +54,7 @@ struct UserMenuItem
 struct UserMenu
 {
     gchar* name;
-    GArray* items;
+    GArray* items; // UserMenuItem
 };
 
 extern struct Configs configs;

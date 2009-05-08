@@ -21,6 +21,7 @@ TermitLuaTableLoaderResult termit_load_lua_table(struct lua_State* ls, TermitLua
  * */
 void termit_options_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_kb_loader(const gchar* name, struct lua_State* ls, int index, void* data);
+void termit_matches_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 
 #endif /* TERMIT_LUA_API_H */
 

@@ -21,8 +21,9 @@ void trace_configs()
                 configs.default_foreground_color->red,
                 configs.default_foreground_color->green,
                 configs.default_foreground_color->blue);
-    } else
+    } else {
         TRACE("     default_foreground_color= %p", configs.default_foreground_color);
+    }
     TRACE("     show_scrollbar          = %d", configs.show_scrollbar);
     TRACE("     hide_menubar            = %d", configs.hide_menubar);
     TRACE("     fill_tabbar             = %d", configs.fill_tabbar);
@@ -67,6 +68,7 @@ void termit_set_default_options()
     configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBinding));
     configs.mouse_bindings = g_array_new(FALSE, TRUE, sizeof(struct MouseBinding));
     configs.encodings = g_array_new(FALSE, TRUE, sizeof(gchar*));
+    configs.matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
 
     configs.hide_single_tab = FALSE;
     configs.show_scrollbar = TRUE;
@@ -125,6 +127,10 @@ void termit_deinit_config()
     // TODO luaL_unref all callbacks
     g_array_free(configs.key_bindings, TRUE);
     g_array_free(configs.mouse_bindings, TRUE);
+    i = 0;
+    for (; i<configs.matches->len; ++i)
+        g_free(g_array_index(configs.matches, struct Match, i).pattern);
+    g_array_free(configs.matches, TRUE);
     
     termit_lua_unref(&configs.get_window_title_callback);
     termit_lua_unref(&configs.get_tab_title_callback);

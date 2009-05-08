@@ -39,6 +39,7 @@ struct TermitTab
     gchar *title;
     GdkColor foreground_color;
     GdkColor background_color;
+    GArray* matches;
     pid_t pid;
 };
 

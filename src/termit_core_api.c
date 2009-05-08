@@ -59,6 +59,7 @@ static void termit_del_tab()
             
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
+    g_array_free(pTab->matches, TRUE);
     g_free(pTab->encoding);
     g_free(pTab->command);
     g_free(pTab->title);
@@ -111,6 +112,19 @@ void termit_set_colors()
             termit_set_tab_foreground_color__(pTab, configs.default_foreground_color);
         if (configs.default_background_color)
             termit_set_tab_background_color__(pTab, configs.default_background_color);
+    }
+}
+
+static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
+{
+    gint i = 0;
+    for (; i<matches->len; ++i) {
+        struct Match* match = &g_array_index(matches, struct Match, i);
+        struct Match tabMatch = {0};
+        tabMatch.lua_callback = match->lua_callback;
+        tabMatch.pattern = match->pattern;
+        tabMatch.tag = vte_terminal_match_add(VTE_TERMINAL(pTab->vte), tabMatch.pattern);
+        g_array_append_val(pTab->matches, tabMatch);
     }
 }
 
@@ -177,6 +191,9 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
     
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
+
+    pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
+    termit_tab_add_matches(pTab, configs.matches);
 
     if (configs.transparent_background) {
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);

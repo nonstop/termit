@@ -80,18 +80,53 @@ void termit_on_child_exited()
     termit_close_tab();
 }
 
+static int termit_cursor_under_match(GdkEventButton* ev)
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, -1);
+
+    glong column = ((glong) (ev->x) / vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)));
+    glong row = ((glong) (ev->y) / vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)));
+    int tag = -1;
+    char* current_match = vte_terminal_match_check(VTE_TERMINAL(pTab->vte), column, row, &tag);
+    TRACE("column=%ld row=%ld current_match=%p tag=%d", column, row, current_match, tag);
+    return tag;
+}
+
+static struct Match* get_match_by_tag(GArray* matches, int tag)
+{
+    if (tag < 0)
+        return NULL;
+    gint i = 0;
+    for (; i<matches->len; ++i) {
+        struct Match* match = &g_array_index(matches, struct Match, i);
+        if (match->tag == tag)
+            return match;
+    }
+    return NULL;
+}
+
 gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
 {
-    GtkMenu *menu = GTK_MENU(termit.menu);
-    GdkEventButton *event_button;
+    if (event->type != GDK_BUTTON_PRESS)
+        return FALSE;
 
-    if (event->type == GDK_BUTTON_PRESS) {
-        event_button = (GdkEventButton *) event;
-        if (event_button->button == 3) {
-            gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
-                              event_button->button, event_button->time);
-            return TRUE;
-        }
+    GdkEventButton *event_button = (GdkEventButton *) event;
+    if (event_button->button == 3) {
+        GtkMenu *menu = GTK_MENU(termit.menu);
+        gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
+                          event_button->button, event_button->time);
+        return TRUE;
+    } else if (event_button->button == 1) {
+        gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+        TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
+        
+        int matchTag = termit_cursor_under_match(event_button);
+        struct Match* match = get_match_by_tag(pTab->matches, matchTag);
+        if (!match)
+            return FALSE;
+        TRACE("tag=%d match=[%s]", matchTag, match->pattern);
+        termit_lua_dofunction(match->lua_callback);
     }
 
     return FALSE;
