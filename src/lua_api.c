@@ -11,22 +11,20 @@
 
 extern lua_State* L;
 
-typedef enum {LOADER_OK, LOADER_FAILED} LoaderResult;
-typedef void (*LoaderFunc)(const gchar*, lua_State*, int, void*);
-static LoaderResult load_lua_table(lua_State* ls, LoaderFunc func, void* data)
+TermitLuaTableLoaderResult termit_load_lua_table(lua_State* ls, TermitLuaTableLoaderFunc func, void* data)
 {
     if (!data) {
         TRACE_MSG("data is NULL: skipping");
-        return LOADER_FAILED;
+        return TERMIT_LUA_TABLE_LOADER_FAILED;
     }
     if (lua_isnil(ls, 1)) {
         TRACE_MSG("tabInfo not defined: skipping");
-        return LOADER_FAILED;
+        return TERMIT_LUA_TABLE_LOADER_FAILED;
     }
     if (!lua_istable(ls, 1)) {
         TRACE_MSG("tabInfo is not table: skipping");
         lua_pop(ls, 1);
-        return LOADER_FAILED;
+        return TERMIT_LUA_TABLE_LOADER_FAILED;
     }
     lua_pushnil(ls);
     while (lua_next(ls, 1) != 0) {
@@ -37,7 +35,7 @@ static LoaderResult load_lua_table(lua_State* ls, LoaderFunc func, void* data)
         lua_pop(ls, 1);
     }
     lua_pop(ls, 1);
-    return LOADER_OK;
+    return TERMIT_LUA_TABLE_LOADER_OK;
 }
 
 
@@ -60,7 +58,7 @@ void termit_report_lua_error(const char* file, int line, int status)
 static int termit_lua_setOptions(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    load_lua_table(ls, termit_options_loader, &configs);
+    termit_load_lua_table(ls, termit_options_loader, &configs);
     trace_configs();
     return 0;
 }
@@ -207,7 +205,7 @@ static int termit_lua_openTab(lua_State* ls)
     TRACE_MSG(__FUNCTION__);
     if (lua_istable(ls, 1)) {
         struct TabInfo ti = {0};
-        if (load_lua_table(ls, tabLoader, &ti) != LOADER_OK)
+        if (termit_load_lua_table(ls, tabLoader, &ti) != TERMIT_LUA_TABLE_LOADER_OK)
             return 0;
         termit_append_tab_with_details(&ti);
         g_free(ti.name);
