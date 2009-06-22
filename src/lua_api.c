@@ -410,6 +410,21 @@ static int termit_lua_setTabBackgroundColor(lua_State* ls)
     return termit_lua_setTabColor__(ls, &termit_set_tab_background_color);
 }
 
+static int termit_lua_spawn(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no command defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("command is not string: skipping");
+        return 0;
+    }
+    GError *err = NULL;
+    const gchar* val =  lua_tostring(ls, 1);
+    g_spawn_command_line_async(val, &err);
+    return 0;
+}
+
 static int termit_lua_reconfigure(lua_State* ls)
 {
     termit_reconfigure();
@@ -442,5 +457,6 @@ void termit_init_lua_api()
     lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);
     lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
+    lua_register(L, "spawn", termit_lua_spawn);
 }
 
