@@ -212,7 +212,7 @@ void termit_on_set_tab_name()
     gtk_widget_destroy(dlg);
 }
 
-void termit_on_edit_style()
+void termit_on_edit_preferences()
 {
     GtkWidget* dlg = gtk_message_dialog_new(termit.main_window, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "not ready yet");
     gtk_dialog_run(GTK_DIALOG(dlg));

@@ -13,7 +13,7 @@ void termit_on_next_tab();
 void termit_on_close_tab();
 void termit_on_paste();
 void termit_on_copy();
-void termit_on_edit_style();
+void termit_on_edit_preferences();
 void termit_on_set_tab_name();
 void termit_on_toggle_scrollbar();
 void termit_on_child_exited();
