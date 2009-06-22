@@ -5,12 +5,93 @@
 #include "lua_api.h"
 #include "keybindings.h"
 #include "termit_core_api.h"
+#include "termit_style.h"
 
 void termit_create_popup_menu();
 void termit_create_menubar();
 
+static void termit_hide_scrollbars()
+{
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    gint i=0;
+    for (; i<page_num; ++i) {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        if (!pTab->scrollbar_is_shown)
+            gtk_widget_hide(pTab->scrollbar);
+    }
+}
+
+static void termit_set_tab_foreground_color__(struct TermitTab* pTab, const GdkColor* p_color)
+{
+    pTab->style.foreground_color = *p_color;
+    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &pTab->style.foreground_color);
+}
+
+static void termit_set_tab_background_color__(struct TermitTab* pTab, const GdkColor* p_color)
+{
+    pTab->style.background_color = *p_color;
+    vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), &pTab->style.background_color);
+}
+
+static void termit_set_colors()
+{
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    gint i=0;
+    for (; i<page_num; ++i) {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        termit_set_tab_foreground_color__(pTab, &configs.style.foreground_color);
+        termit_set_tab_background_color__(pTab, &configs.style.background_color);
+    }
+}
+
+static void termit_set_fonts()
+{
+    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    gint minWidth = 0, minHeight = 0;
+    gint i=0;
+    for (; i<page_num; ++i) {
+        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
+        gint xpad = 0, ypad = 0;
+        vte_terminal_get_padding(VTE_TERMINAL(pTab->vte), &xpad, &ypad);
+        gint w = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)) * configs.cols + xpad;
+        if (w > minWidth)
+            minWidth = w;
+        gint h = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)) * configs.rows + ypad;
+        if (h > minHeight)
+            minHeight = h;
+    }
+    gint oldWidth, oldHeight;
+    gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);
+    
+    gint width = (minWidth > oldWidth) ? minWidth : oldWidth;
+    gint height = (minHeight > oldHeight) ? minHeight : oldHeight;
+    gtk_window_resize(GTK_WINDOW(termit.main_window), width, height);
+
+    GdkGeometry geom;
+    geom.min_width = minWidth;
+    geom.min_height = minHeight;
+    gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
+}
+
+void termit_toggle_menubar()
+{
+    static int menubar_visible = TRUE;
+    static int first_run = TRUE;
+    if (first_run) {
+        menubar_visible = !configs.hide_menubar;
+        first_run = FALSE;
+    }
+    if (menubar_visible)
+        gtk_widget_show(GTK_WIDGET(termit.hbox));
+    else
+        gtk_widget_hide(GTK_WIDGET(termit.hbox));
+    menubar_visible = !menubar_visible;
+}
+
 void termit_after_show_all()
 {
+    termit_set_fonts();
     termit_hide_scrollbars();
     termit_set_colors();
     termit_toggle_menubar();
@@ -63,56 +144,11 @@ static void termit_del_tab()
     g_free(pTab->encoding);
     g_free(pTab->command);
     g_free(pTab->title);
+    termit_style_free(&pTab->style);
     g_free(pTab);
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
-    
+
     termit_check_single_tab();
-}
-
-void termit_hide_scrollbars()
-{
-    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    gint i=0;
-    for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (!pTab->scrollbar_is_shown)
-            gtk_widget_hide(pTab->scrollbar);
-    }
-}
-
-static void termit_set_tab_foreground_color__(struct TermitTab* pTab, const GdkColor* p_color)
-{
-    pTab->foreground_color = *p_color;
-    {
-        gchar* color_str = gdk_color_to_string(p_color);
-        TRACE("color: [%s]", color_str);
-        g_free(color_str);
-    }
-    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &pTab->foreground_color);
-}
-
-static void termit_set_tab_background_color__(struct TermitTab* pTab, const GdkColor* p_color)
-{
-    pTab->background_color = *p_color;
-    {
-        gchar* color_str = gdk_color_to_string(p_color);
-        TRACE("color: [%s]", color_str);
-        g_free(color_str);
-    }
-    vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), &pTab->background_color);
-}
-
-void termit_set_colors()
-{
-    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    gint i=0;
-    for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (configs.default_foreground_color)
-            termit_set_tab_foreground_color__(pTab, configs.default_foreground_color);
-        if (configs.default_background_color)
-            termit_set_tab_background_color__(pTab, configs.default_background_color);
-    }
 }
 
 static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
@@ -132,7 +168,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));
-
+    termit_style_copy(&pTab->style, &configs.style);
     if (ti->name) {
         pTab->tab_name = gtk_label_new(ti->name);
         pTab->custom_tab_name = TRUE;
@@ -194,12 +230,11 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
     termit_tab_add_matches(pTab, configs.matches);
-
-    if (configs.transparent_background) {
+    if (pTab->style.transparency) {
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
-        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), configs.transparent_saturation);
+        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
     }
-    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);
+    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
     if (index == -1) {
@@ -227,10 +262,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
-    if (configs.default_foreground_color)
-        termit_set_tab_foreground_color__(pTab, configs.default_foreground_color);
-    if (configs.default_background_color)
-        termit_set_tab_background_color__(pTab, configs.default_background_color);
+    termit_set_tab_foreground_color__(pTab, &pTab->style.foreground_color);
+    termit_set_tab_background_color__(pTab, &pTab->style.background_color);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
 #if GTK_CHECK_VERSION(2,10,0)
@@ -255,21 +288,6 @@ void termit_append_tab_with_command(const gchar* command)
 void termit_append_tab()
 {
     termit_append_tab_with_command(configs.default_command);
-}
-
-void termit_toggle_menubar()
-{
-    static int menubar_visible = TRUE;
-    static int first_run = TRUE;
-    if (first_run) {
-        menubar_visible = !configs.hide_menubar;
-        first_run = FALSE;
-    }
-    if (menubar_visible)
-        gtk_widget_show(GTK_WIDGET(termit.hbox));
-    else
-        gtk_widget_hide(GTK_WIDGET(termit.hbox));
-    menubar_visible = !menubar_visible;
 }
 
 void termit_set_encoding(const gchar* encoding)
@@ -340,43 +358,6 @@ void termit_set_tab_background_color(gint tab_index, const GdkColor* p_color)
     termit_set_color__(tab_index, p_color, termit_set_tab_background_color__);
 }
 
-void termit_set_font(const gchar* font_name)
-{
-    TRACE("%s: font_name=%s", __FUNCTION__, font_name);
-
-    pango_font_description_free(termit.font);
-    termit.font = pango_font_description_from_string(font_name);
-
-    gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
-    gint minWidth = 0, minHeight = 0;
-    /* Set the font for all tabs */
-    gint i=0;
-    for (; i<page_num; ++i)
-    {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        vte_terminal_set_font(VTE_TERMINAL(pTab->vte), termit.font);
-        gint xpad = 0, ypad = 0;
-        vte_terminal_get_padding(VTE_TERMINAL(pTab->vte), &xpad, &ypad);
-        gint w = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)) * configs.cols + xpad;
-        if (w > minWidth)
-            minWidth = w;
-        gint h = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)) * configs.rows + ypad;
-        if (h > minHeight)
-            minHeight = h;
-    }
-    gint oldWidth, oldHeight;
-    gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);
-    
-    gint width = (minWidth > oldWidth) ? minWidth : oldWidth;
-    gint height = (minHeight > oldHeight) ? minHeight : oldHeight;
-    gtk_window_resize(GTK_WINDOW(termit.main_window), width, height);
-
-    GdkGeometry geom;
-    geom.min_width = minWidth;
-    geom.min_height = minHeight;
-    gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
-}
-
 void termit_paste()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
@@ -433,8 +414,6 @@ void termit_quit()
     while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
         termit_del_tab();
     
-    pango_font_description_free(termit.font);
-
     gtk_main_quit();
 }
 

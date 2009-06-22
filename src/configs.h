@@ -4,6 +4,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 
+#include "termit_style.h"
+
 enum TermitKbPolicy {TermitKbUseKeycode = 1, TermitKbUseKeysym = 2};
 
 
@@ -11,15 +13,10 @@ struct Configs
 {
     gchar* default_window_title;
     gchar* default_tab_name;
-    gchar* default_font;
-    GdkColor* default_foreground_color;
-    GdkColor* default_background_color;
     gchar* default_command;
     gchar* default_encoding;
     gchar* default_word_chars;
     guint scrollback_lines;
-    gint transparent_background;
-    gdouble transparent_saturation;
     guint cols;
     guint rows;
     GArray* encodings;
@@ -38,6 +35,7 @@ struct Configs
     int get_window_title_callback;
     int get_tab_title_callback;
     enum TermitKbPolicy kb_policy;
+    struct TermitStyle style;
 };
 
 struct Match

@@ -69,19 +69,16 @@ static void config_getfunction(int* opt, lua_State* ls, int index)
         lua_pushinteger(ls, 0);
     }
 }
-static void config_getcolor(GdkColor** opt, lua_State* ls, int index)
+static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
     config_getstring(&color_str, ls, index);
     TRACE("color_str=%s", color_str);
     if (color_str) {
         //struct GdkColor color;
-        GdkColor* p_color = g_malloc0(sizeof(GdkColor));
-        if (gdk_color_parse(color_str, p_color) == TRUE) {
-            *opt = p_color;
-        } else {
-            *opt = 0;
-            g_free(p_color);
+        GdkColor color = {0};
+        if (gdk_color_parse(color_str, &color) == TRUE) {
+            *opt = color;
         }
     }
     g_free(color_str);
@@ -113,17 +110,15 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
     else if (!strcmp(name, "wordChars"))
         config_getstring(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
-        config_getstring(&(p_cfg->default_font), ls, index);
+        config_getstring(&(p_cfg->style.font_name), ls, index);
     else if (!strcmp(name, "foregroundColor")) 
-        config_getcolor(&(p_cfg->default_foreground_color), ls, index);
+        config_getcolor(&(p_cfg->style.foreground_color), ls, index);
     else if (!strcmp(name, "backgroundColor")) 
-        config_getcolor(&(p_cfg->default_background_color), ls, index);
+        config_getcolor(&(p_cfg->style.background_color), ls, index);
     else if (!strcmp(name, "showScrollbar"))
         config_getboolean(&(p_cfg->show_scrollbar), ls, index);
-    else if (!strcmp(name, "transparentBackground"))
-        config_getboolean(&(p_cfg->transparent_background), ls, index);
-    else if (!strcmp(name, "transparentSaturation"))
-        config_getdouble(&(p_cfg->transparent_saturation), ls, index);
+    else if (!strcmp(name, "transparency"))
+        config_getdouble(&(p_cfg->style.transparency), ls, index);
     else if (!strcmp(name, "fillTabbar"))
         config_getboolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))

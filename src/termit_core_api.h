@@ -1,6 +1,7 @@
 #ifndef TERMIT_CORE_API_H
 #define TERMIT_CORE_API_H
 
+#include "termit.h"
 #include "configs.h"
 
 void termit_reconfigure();
@@ -8,7 +9,6 @@ void termit_after_show_all();
 
 void termit_append_tab();
 void termit_append_tab_with_command(const gchar* command);
-struct TabInfo;
 void termit_append_tab_with_details(const struct TabInfo*);
 
 void termit_activate_tab(gint tab_index);
@@ -20,13 +20,9 @@ void termit_close_tab();
 
 void termit_quit();
 
-void termit_set_font(const gchar* font_name);
-void termit_set_default_colors();
+void termit_set_tab_style(gint tab_index, const struct TermitStyle*);
 void termit_set_tab_foreground_color(gint tab_index, const GdkColor*);
 void termit_set_tab_background_color(gint tab_index, const GdkColor*);
-void termit_set_colors();
-void termit_hide_scrollbars();
-void termit_hide_tab_scrollbar();
 void termit_toggle_menubar();
 void termit_set_encoding(const gchar* encoding);
 void termit_set_window_title(const gchar* title);
