@@ -291,9 +291,7 @@ static int loadMenu(lua_State* ls, GArray* menus)
         }
         g_array_append_val(menus, um);
     }
-    TRACE_MSG(__FUNCTION__);
     lua_pop(ls, 1);
-    TRACE_MSG(__FUNCTION__);
 
     return res;
 }

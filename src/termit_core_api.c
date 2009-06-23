@@ -71,6 +71,8 @@ static void termit_set_fonts()
     GdkGeometry geom;
     geom.min_width = minWidth;
     geom.min_height = minHeight;
+    TRACE("width=%d height=%d", width, height);
+    TRACE("minWidth=%d minHeight=%d", minWidth, minHeight);
     gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
 }
 

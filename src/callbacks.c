@@ -6,6 +6,7 @@
 #include "configs.h"
 #include "sessions.h"
 #include "termit_core_api.h"
+#include "termit_style.h"
 #include "lua_api.h"
 #include "keybindings.h"
 #include "callbacks.h"
@@ -212,41 +213,17 @@ void termit_on_set_tab_name()
     gtk_widget_destroy(dlg);
 }
 
+gint termit_style_dialog (struct TermitStyle *style);
 void termit_on_edit_preferences()
 {
-    GtkWidget* dlg = gtk_message_dialog_new(termit.main_window, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "not ready yet");
-    gtk_dialog_run(GTK_DIALOG(dlg));
-    gtk_widget_destroy(dlg);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    struct TermitStyle style = {0};
+    termit_style_copy(&style, &pTab->style);
+    if (GTK_RESPONSE_OK == termit_style_dialog(&style)) {
+        TRACE("OK after termit_style_dialog");
+    }
 }
-/*void termit_on_select_tab_foreground_color()*/
-/*{*/
-    /*GtkWidget *dlg = gtk_color_selection_dialog_new(_("Select foreground color"));*/
-    /*GtkColorSelection* p_color_sel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG(dlg)->colorsel));*/
-    /*gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));*/
-    /*TERMIT_GET_TAB_BY_INDEX(pTab, page);*/
-    /*gtk_color_selection_set_current_color(p_color_sel, &pTab->style.foreground_color);*/
-
-    /*if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg))) {*/
-        /*GdkColor color;*/
-        /*gtk_color_selection_get_current_color(p_color_sel, &color);*/
-        /*termit_set_tab_foreground_color(page, &color);*/
-    /*}*/
-
-    /*gtk_widget_destroy(dlg);*/
-/*}*/
-
-/*void termit_on_select_font()*/
-/*{*/
-    /*GtkWidget *dlg = gtk_font_selection_dialog_new(_("Select font"));*/
-    /*gtk_font_selection_dialog_set_font_name(GTK_FONT_SELECTION_DIALOG(dlg), */
-                                            /*pango_font_description_to_string(termit.font));*/
-
-    /*if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg)))*/
-        /*termit_set_font(gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG(dlg)));*/
-
-    /*gtk_widget_destroy(dlg);*/
-/*}*/
-
 void termit_on_new_tab()
 {
     termit_append_tab();
