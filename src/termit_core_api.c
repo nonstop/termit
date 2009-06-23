@@ -161,7 +161,7 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
         struct Match tabMatch = {0};
         tabMatch.lua_callback = match->lua_callback;
         tabMatch.pattern = match->pattern;
-        tabMatch.tag = vte_terminal_match_add(VTE_TERMINAL(pTab->vte), tabMatch.pattern);
+        tabMatch.tag = vte_terminal_match_add_gregex(VTE_TERMINAL(pTab->vte), match->regex, match->flags);
         g_array_append_val(pTab->matches, tabMatch);
     }
 }

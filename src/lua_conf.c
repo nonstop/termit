@@ -93,6 +93,13 @@ void termit_matches_loader(const gchar* pattern, struct lua_State* ls, int index
     }
     GArray* matches = (GArray*)data;
     struct Match match = {0};
+    GError* err = NULL;
+    match.regex = g_regex_new(pattern, 0, 0, &err);
+    if (err) {
+        TRACE("failed to compile regex [%s]: skipping", pattern);
+        return;
+    }
+    match.flags = 0;
     match.pattern = g_strdup(pattern);
     config_getfunction(&match.lua_callback, ls, index);
     g_array_append_val(matches, match);

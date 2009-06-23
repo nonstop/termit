@@ -112,8 +112,11 @@ void termit_deinit_config()
     g_array_free(configs.key_bindings, TRUE);
     g_array_free(configs.mouse_bindings, TRUE);
     i = 0;
-    for (; i<configs.matches->len; ++i)
-        g_free(g_array_index(configs.matches, struct Match, i).pattern);
+    for (; i<configs.matches->len; ++i) {
+        struct Match* match = &g_array_index(configs.matches, struct Match, i);
+        g_regex_unref(match->regex);
+        g_free(match->pattern);
+    }
     g_array_free(configs.matches, TRUE);
     
     termit_lua_unref(&configs.get_window_title_callback);
