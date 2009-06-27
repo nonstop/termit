@@ -5,6 +5,7 @@
 #include "termit_style.h"
 #include "termit_core_api.h"
 
+#if 0
 struct {
   GtkWidget *fgcolorsel;
   GtkWidget *bgcolorsel;
@@ -56,7 +57,6 @@ void hack_fontsel(GtkWidget *fontsel)
     child = children->data;
     gtk_widget_hide(child->widget);
 }
-#if 0
 gint termit_preferences_dialog (struct TermitStyle *style)
 {
     GtkWidget *dialog, *fontsel;

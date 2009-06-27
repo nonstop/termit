@@ -178,6 +178,23 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
     return TRUE;
 }
 
+void termit_on_beep(VteTerminal *vte, gpointer user_data)
+{
+    // TODO: mark tab with beep - may be bold label or smth similar
+    if (!gtk_window_has_toplevel_focus(GTK_WINDOW(termit.main_window))) {
+        if (configs.urgency_on_bell)
+            gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), TRUE);
+    }
+}
+
+gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data)
+{
+    if (gtk_window_get_urgency_hint(GTK_WINDOW(termit.main_window))) {
+        gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
+    }
+    return FALSE;
+}
+
 void termit_on_activate_default(GtkWindow* wnd, gpointer user_data)
 {
     TRACE(__FUNCTION__);
