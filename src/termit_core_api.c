@@ -167,6 +167,23 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
     }
 }
 
+static void termit_on_beep(VteTerminal *vte, gpointer user_data)
+{
+    // TODO: mark tab with beep - may be bold label or smth similar
+    if (!gtk_window_has_toplevel_focus(GTK_WINDOW(termit.main_window))) {
+        if (configs.urgency_on_bell)
+            gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), TRUE);
+    }
+}
+
+gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data)
+{
+    if (gtk_window_get_urgency_hint(GTK_WINDOW(termit.main_window))) {
+        gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
+    }
+    return FALSE;
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
@@ -223,6 +240,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
+    g_signal_connect(G_OBJECT(pTab->vte), "beep", G_CALLBACK(termit_on_beep), NULL);
+    g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), NULL);
     g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
 
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);

@@ -29,6 +29,7 @@ struct Configs
     gboolean show_scrollbar;
     gboolean hide_menubar;
     gboolean fill_tabbar;
+    gboolean urgency_on_bell;
     gboolean allow_changing_title;
     gboolean audible_bell;
     gboolean visible_bell;

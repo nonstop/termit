@@ -6,6 +6,7 @@ gboolean termit_on_delete_event(GtkWidget *widget, GdkEvent *event, gpointer dat
 void termit_on_destroy(GtkWidget *widget, gpointer data);
 gboolean termit_on_popup(GtkWidget *, GdkEvent *);
 gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
+void termit_on_activate_default(GtkWindow* wnd, gpointer user_data);
 void termit_on_set_encoding(GtkWidget *, void *);
 void termit_on_new_tab();
 void termit_on_prev_tab();

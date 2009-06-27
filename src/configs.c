@@ -67,6 +67,7 @@ void termit_set_default_options()
     configs.allow_changing_title = FALSE;
     configs.visible_bell = FALSE;
     configs.audible_bell = FALSE;
+    configs.urgency_on_bell = FALSE;
     configs.get_window_title_callback = 0;
     configs.get_tab_title_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;

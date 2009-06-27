@@ -140,6 +140,8 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         config_getboolean(&(p_cfg->audible_bell), ls, index);
     else if (!strcmp(name, "visibleBell"))
         config_getboolean(&(p_cfg->visible_bell), ls, index);
+    else if (!strcmp(name, "urgencyOnBell"))
+        config_getboolean(&(p_cfg->urgency_on_bell), ls, index);
     else if (!strcmp(name, "getWindowTitle"))
         config_getfunction(&(p_cfg->get_window_title_callback), ls, index);
     else if (!strcmp(name, "getTabTitle"))

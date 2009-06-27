@@ -178,6 +178,12 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
     return TRUE;
 }
 
+void termit_on_activate_default(GtkWindow* wnd, gpointer user_data)
+{
+    TRACE(__FUNCTION__);
+    gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
+}
+
 void termit_on_set_tab_name()
 {
     GtkWidget *dlg = gtk_dialog_new_with_buttons(
