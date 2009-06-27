@@ -1,3 +1,4 @@
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <config.h>
@@ -166,8 +167,14 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
     termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
 }
 
-gint termit_preferences_dialog(struct TermitTab *pTab)
+void termit_preferences_dialog(struct TermitTab *pTab)
 {
+    // store font_name, foreground, background
+    gchar* tab_title = (pTab->title) ? g_strdup(pTab->title) : NULL;
+    gchar* font_name = g_strdup(pTab->style.font_name);
+    GdkColor foreground_color = pTab->style.foreground_color;
+    GdkColor background_color = pTab->style.background_color;
+
     GtkStockItem item = {0};
     gtk_stock_lookup(GTK_STOCK_PREFERENCES, &item); // may be memory leak inside
     GtkWidget* dialog = gtk_dialog_new_with_buttons(item.label,
@@ -179,9 +186,12 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
     GtkWidget* dlg_content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    
+    GtkWidget* entry_title = gtk_entry_new();
     { // tab title
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-        GtkWidget* entry_title = gtk_entry_new();
+        gtk_entry_set_text(GTK_ENTRY(entry_title),
+                (pTab->title) ? tab_title : gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Title")));
         gtk_container_add(GTK_CONTAINER(hbox), entry_title);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
@@ -226,7 +236,22 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     // TODO: save style - choose from saved (murphy, delek, etc.)
     
     gtk_widget_show_all(dialog);
-    gint res = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_OK) {
+        if (pTab->title)
+            termit_set_tab_title(pTab, tab_title);
+        termit_set_tab_font(pTab, font_name);
+        termit_set_tab_color_foreground(pTab, &foreground_color);
+        termit_set_tab_color_background(pTab, &background_color);
+    } else {
+        // insane title flag
+        if (pTab->title ||
+                (!pTab->title &&
+                 strcmp(gtk_label_get_text(GTK_LABEL(pTab->tab_name)),
+                     gtk_entry_get_text(GTK_ENTRY(entry_title))) != 0)) {
+            termit_set_tab_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry_title)));
+        }
+    }
+    g_free(tab_title);
+    g_free(font_name);
     gtk_widget_destroy(dialog);
-    return res;
 }

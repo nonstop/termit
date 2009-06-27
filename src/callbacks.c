@@ -49,9 +49,7 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     if (pTab->custom_tab_name)
         return;
     
-    char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
-    termit_set_tab_title(page, title);
-    g_free(title);
+    termit_set_tab_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
 
 void termit_on_toggle_scrollbar()
@@ -223,23 +221,19 @@ void termit_on_set_tab_name()
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
-        termit_set_tab_title(page, gtk_entry_get_text(GTK_ENTRY(entry)));
+        termit_set_tab_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
         pTab->custom_tab_name = TRUE;
     }
     
     gtk_widget_destroy(dlg);
 }
 
-gint termit_preferences_dialog(struct TermitTab *style);
+void termit_preferences_dialog(struct TermitTab *style);
 void termit_on_edit_preferences()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    /*TermitTab tmpTab = {0};*/
-    /*termit_tab_copy(&style, pTab);*/
-    if (GTK_RESPONSE_OK == termit_preferences_dialog(pTab)) {
-        TRACE("OK after termit_preferences_dialog");
-    }
+    termit_preferences_dialog(pTab);
 }
 void termit_on_new_tab()
 {

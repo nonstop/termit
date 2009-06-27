@@ -306,10 +306,8 @@ void termit_set_encoding(const gchar* encoding)
     termit_set_statusbar_encoding(-1);
 }
 
-void termit_set_tab_title(guint tab_index, const gchar* title)
+void termit_set_tab_title(struct TermitTab* pTab, const gchar* title)
 {
-    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
-    
     gchar* tmp_title = g_strdup(title);
     if (configs.get_tab_title_callback) {
         gchar* lua_title = termit_lua_getTitleCallback(configs.get_tab_title_callback, title);
@@ -324,7 +322,6 @@ void termit_set_tab_title(guint tab_index, const gchar* title)
     if (pTab->title)
         g_free(pTab->title);
     pTab->title = tmp_title;
-    TRACE("tab %d, new title: %s", tab_index, pTab->title);
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
     termit_set_window_title(title);
 }
@@ -341,6 +338,11 @@ void termit_set_default_colors()
 
 void termit_set_tab_font(struct TermitTab* pTab, const gchar* font_name)
 {
+    if (pTab->style.font_name) {
+        g_free(pTab->style.font_name);
+    }
+    pTab->style.font_name = g_strdup(font_name);
+
     if (pTab->style.font) {
         pango_font_description_free(pTab->style.font);
     }

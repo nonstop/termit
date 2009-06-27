@@ -29,7 +29,7 @@ void termit_set_tab_color_background_by_index(gint tab_index, const GdkColor*);
 void termit_toggle_menubar();
 void termit_set_encoding(const gchar* encoding);
 void termit_set_window_title(const gchar* title);
-void termit_set_tab_title(guint tab_index, const gchar* title);
+void termit_set_tab_title(struct TermitTab* pTab, const gchar* title);
 void termit_set_statusbar_encoding(gint page);
 
 int termit_get_current_tab_index();

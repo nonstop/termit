@@ -363,7 +363,7 @@ static int termit_lua_setTabTitle(lua_State* ls)
     const gchar* val =  lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
-    termit_set_tab_title(page, val);
+    termit_set_tab_title(pTab, val);
     pTab->custom_tab_name = TRUE;
     return 0;
 }
