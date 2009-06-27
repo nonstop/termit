@@ -21,13 +21,13 @@ static void termit_hide_scrollbars()
     }
 }
 
-static void termit_set_tab_foreground_color__(struct TermitTab* pTab, const GdkColor* p_color)
+void termit_set_tab_color_foreground(struct TermitTab* pTab, const GdkColor* p_color)
 {
     pTab->style.foreground_color = *p_color;
     vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &pTab->style.foreground_color);
 }
 
-static void termit_set_tab_background_color__(struct TermitTab* pTab, const GdkColor* p_color)
+void termit_set_tab_color_background(struct TermitTab* pTab, const GdkColor* p_color)
 {
     pTab->style.background_color = *p_color;
     vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), &pTab->style.background_color);
@@ -39,8 +39,8 @@ static void termit_set_colors()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        termit_set_tab_foreground_color__(pTab, &configs.style.foreground_color);
-        termit_set_tab_background_color__(pTab, &configs.style.background_color);
+        termit_set_tab_color_foreground(pTab, &configs.style.foreground_color);
+        termit_set_tab_color_background(pTab, &configs.style.background_color);
     }
 }
 
@@ -265,8 +265,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
-    termit_set_tab_foreground_color__(pTab, &pTab->style.foreground_color);
-    termit_set_tab_background_color__(pTab, &pTab->style.background_color);
+    termit_set_tab_color_foreground(pTab, &pTab->style.foreground_color);
+    termit_set_tab_color_background(pTab, &pTab->style.background_color);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
 #if GTK_CHECK_VERSION(2,10,0)
@@ -337,6 +337,15 @@ void termit_set_default_colors()
     }
 }
 
+void termit_set_tab_font(struct TermitTab* pTab, const gchar* font_name)
+{
+    if (pTab->style.font) {
+        pango_font_description_free(pTab->style.font);
+    }
+    pTab->style.font = pango_font_description_from_string(font_name);
+    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
+}
+
 static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*callback)(struct TermitTab*, const GdkColor*))
 {
     TRACE("%s: tab_index=%d color=%p", __FUNCTION__, tab_index, p_color);
@@ -351,14 +360,14 @@ static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*c
     callback(pTab, p_color);
 }
 
-void termit_set_tab_foreground_color(gint tab_index, const GdkColor* p_color)
+void termit_set_tab_color_foreground_by_index(gint tab_index, const GdkColor* p_color)
 {
-    termit_set_color__(tab_index, p_color, termit_set_tab_foreground_color__);
+    termit_set_color__(tab_index, p_color, termit_set_tab_color_foreground);
 }
 
-void termit_set_tab_background_color(gint tab_index, const GdkColor* p_color)
+void termit_set_tab_color_background_by_index(gint tab_index, const GdkColor* p_color)
 {
-    termit_set_color__(tab_index, p_color, termit_set_tab_background_color__);
+    termit_set_color__(tab_index, p_color, termit_set_tab_color_background);
 }
 
 void termit_paste()

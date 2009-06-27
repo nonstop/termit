@@ -400,12 +400,12 @@ static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const 
 
 static int termit_lua_setTabForegroundColor(lua_State* ls)
 {
-    return termit_lua_setTabColor__(ls, &termit_set_tab_foreground_color);
+    return termit_lua_setTabColor__(ls, &termit_set_tab_color_foreground_by_index);
 }
 
 static int termit_lua_setTabBackgroundColor(lua_State* ls)
 {
-    return termit_lua_setTabColor__(ls, &termit_set_tab_background_color);
+    return termit_lua_setTabColor__(ls, &termit_set_tab_color_background_by_index);
 }
 
 static int termit_lua_spawn(lua_State* ls)

@@ -20,9 +20,12 @@ void termit_close_tab();
 
 void termit_quit();
 
+void termit_set_tab_font(struct TermitTab* pTab, const gchar* font_name);
 void termit_set_tab_style(gint tab_index, const struct TermitStyle*);
-void termit_set_tab_foreground_color(gint tab_index, const GdkColor*);
-void termit_set_tab_background_color(gint tab_index, const GdkColor*);
+void termit_set_tab_color_foreground(struct TermitTab* pTab, const GdkColor* p_color);
+void termit_set_tab_color_background(struct TermitTab* pTab, const GdkColor* p_color);
+void termit_set_tab_color_foreground_by_index(gint tab_index, const GdkColor*);
+void termit_set_tab_color_background_by_index(gint tab_index, const GdkColor*);
 void termit_toggle_menubar();
 void termit_set_encoding(const gchar* encoding);
 void termit_set_window_title(const gchar* title);

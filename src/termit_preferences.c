@@ -3,7 +3,7 @@
 #include <config.h>
 #include "termit.h"
 #include "termit_style.h"
-
+#include "termit_core_api.h"
 
 struct {
   GtkWidget *fgcolorsel;
@@ -137,6 +137,35 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
     return TRUE;
 }
 
+static void dlg_set_tab_color__(GtkColorButton *widget, gpointer user_data, void (*callback)(struct TermitTab*, const GdkColor*))
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    GdkColor color = {0};
+    gtk_color_button_get_color(widget, &color);
+    callback(pTab, &color);
+}
+static void dlg_set_foreground(GtkColorButton *widget, gpointer user_data)
+{
+    return dlg_set_tab_color__(widget, user_data, termit_set_tab_color_foreground);
+}
+static void dlg_set_background(GtkColorButton *widget, gpointer user_data)
+{
+    return dlg_set_tab_color__(widget, user_data, termit_set_tab_color_background);
+}
+static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
+}
+
 gint termit_preferences_dialog(struct TermitTab *pTab)
 {
     GtkStockItem item = {0};
@@ -150,7 +179,6 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
     GtkWidget* dlg_content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-
     { // tab title
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
         GtkWidget* entry_title = gtk_entry_new();
@@ -161,6 +189,8 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     
     { // font selection
         GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
+        g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
+
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Font")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_font);
@@ -169,6 +199,8 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     
     { // foreground
         GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
+        g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
+
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Foreground")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_foreground);
@@ -177,6 +209,8 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
     
     { // background
         GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
+        g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
+        
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Background")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_background);
