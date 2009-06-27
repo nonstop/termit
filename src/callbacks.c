@@ -213,15 +213,15 @@ void termit_on_set_tab_name()
     gtk_widget_destroy(dlg);
 }
 
-gint termit_style_dialog (struct TermitStyle *style);
+gint termit_preferences_dialog(struct TermitTab *style);
 void termit_on_edit_preferences()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    struct TermitStyle style = {0};
-    termit_style_copy(&style, &pTab->style);
-    if (GTK_RESPONSE_OK == termit_style_dialog(&style)) {
-        TRACE("OK after termit_style_dialog");
+    /*TermitTab tmpTab = {0};*/
+    /*termit_tab_copy(&style, pTab);*/
+    if (GTK_RESPONSE_OK == termit_preferences_dialog(pTab)) {
+        TRACE("OK after termit_preferences_dialog");
     }
 }
 void termit_on_new_tab()

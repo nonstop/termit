@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <config.h>
+#include "termit.h"
 #include "termit_style.h"
 
 
@@ -54,8 +56,8 @@ void hack_fontsel(GtkWidget *fontsel)
     child = children->data;
     gtk_widget_hide(child->widget);
 }
-
-gint termit_style_dialog (struct TermitStyle *style)
+#if 0
+gint termit_preferences_dialog (struct TermitStyle *style)
 {
     GtkWidget *dialog, *fontsel;
     GtkWidget *notebook;
@@ -118,4 +120,77 @@ gint termit_style_dialog (struct TermitStyle *style)
     }
     gtk_widget_destroy (dialog);
     return (result);
+}
+#endif
+static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+    switch (event->keyval) {
+    case GDK_Return:
+        g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_OK, NULL);
+        break;
+    case GDK_Escape:
+        g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_NONE, NULL);
+        break;
+    default:
+        return FALSE;
+    }
+    return TRUE;
+}
+
+gint termit_preferences_dialog(struct TermitTab *pTab)
+{
+    GtkStockItem item = {0};
+    gtk_stock_lookup(GTK_STOCK_PREFERENCES, &item); // may be memory leak inside
+    GtkWidget* dialog = gtk_dialog_new_with_buttons(item.label,
+            GTK_WINDOW_TOPLEVEL,
+            GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+            GTK_STOCK_CANCEL, GTK_RESPONSE_NONE,
+            GTK_STOCK_OK, GTK_RESPONSE_OK,
+            NULL);
+    gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
+    g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
+    GtkWidget* dlg_content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+
+    { // tab title
+        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
+        GtkWidget* entry_title = gtk_entry_new();
+        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Title")));
+        gtk_container_add(GTK_CONTAINER(hbox), entry_title);
+        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+    }
+    
+    { // font selection
+        GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
+        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Font")));
+        gtk_container_add(GTK_CONTAINER(hbox), btn_font);
+        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+    }
+    
+    { // foreground
+        GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
+        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Foreground")));
+        gtk_container_add(GTK_CONTAINER(hbox), btn_foreground);
+        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+    }
+    
+    { // background
+        GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
+        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Background")));
+        gtk_container_add(GTK_CONTAINER(hbox), btn_background);
+        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+    }
+    // TODO: check grid layout - table
+    // TODO: alpha
+    // TODO: audible_bell
+    // TODO: visible_bell
+    // TODO: color palette
+    // TODO: save style - choose from saved (murphy, delek, etc.)
+    
+    gtk_widget_show_all(dialog);
+    gint res = gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+    return res;
 }
