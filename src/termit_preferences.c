@@ -216,6 +216,8 @@ gint termit_preferences_dialog(struct TermitTab *pTab)
         gtk_container_add(GTK_CONTAINER(hbox), btn_background);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
     }
+    // TODO: restore default
+    // TODO: apply to all tabs
     // TODO: check grid layout - table
     // TODO: alpha
     // TODO: audible_bell
