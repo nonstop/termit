@@ -167,13 +167,61 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
     termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
 }
 
+struct TermitDlgHelper
+{
+    gchar* tab_title;
+    gboolean handmade_tab_title;
+    gchar* font_name;
+    GdkColor foreground_color;
+    GdkColor background_color;
+    // widgets with values
+    GtkWidget* dialog;
+    GtkWidget* entry_title;
+    GtkWidget* btn_font;
+    GtkWidget* btn_foreground;
+    GtkWidget* btn_background;
+};
+
+static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
+{
+    struct TermitDlgHelper* hlp = g_malloc0(sizeof(struct TermitDlgHelper));
+    if (pTab->title) {
+        hlp->handmade_tab_title = TRUE;
+        hlp->tab_title = g_strdup(pTab->title);
+    } else {
+        hlp->tab_title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+    }
+    hlp->font_name = g_strdup(pTab->style.font_name);
+    hlp->foreground_color = pTab->style.foreground_color;
+    hlp->background_color = pTab->style.background_color;
+    return hlp;
+}
+
+static void termit_dlg_helper_free(struct TermitDlgHelper* hlp)
+{
+    g_free(hlp->tab_title);
+    g_free(hlp->font_name);
+    g_free(hlp);
+}
+
+static void dlg_set_default_values(struct TermitDlgHelper* hlp)
+{
+    gtk_entry_set_text(GTK_ENTRY(hlp->entry_title), hlp->tab_title);
+    gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->font_name);
+    gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
+    gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
+}
+
+static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
+{
+    struct TermitDlgHelper* hlp = (struct TermitDlgHelper*)user_data;
+    dlg_set_default_values(hlp);
+}
+
 void termit_preferences_dialog(struct TermitTab *pTab)
 {
     // store font_name, foreground, background
-    gchar* tab_title = (pTab->title) ? g_strdup(pTab->title) : NULL;
-    gchar* font_name = g_strdup(pTab->style.font_name);
-    GdkColor foreground_color = pTab->style.foreground_color;
-    GdkColor background_color = pTab->style.background_color;
+    struct TermitDlgHelper* hlp = termit_dlg_helper_new(pTab);
 
     GtkStockItem item = {0};
     gtk_stock_lookup(GTK_STOCK_PREFERENCES, &item); // may be memory leak inside
@@ -185,16 +233,17 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             NULL);
     gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
+    /*GtkWidget* dlg_actions = gtk_dialog_get_action_area(GTK_DIALOG(dialog));*/
     GtkWidget* dlg_content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     
     GtkWidget* entry_title = gtk_entry_new();
     { // tab title
         GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-        gtk_entry_set_text(GTK_ENTRY(entry_title),
-                (pTab->title) ? tab_title : gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        gtk_entry_set_text(GTK_ENTRY(entry_title), hlp->tab_title);
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Title")));
         gtk_container_add(GTK_CONTAINER(hbox), entry_title);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        hlp->entry_title = entry_title;
     }
     
     { // font selection
@@ -205,6 +254,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Font")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_font);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        hlp->btn_font = btn_font;
     }
     
     { // foreground
@@ -215,6 +265,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Foreground")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_foreground);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        hlp->btn_foreground = btn_foreground;
     }
     
     { // background
@@ -225,7 +276,15 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Background")));
         gtk_container_add(GTK_CONTAINER(hbox), btn_background);
         gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        hlp->btn_background = btn_background;
     }
+    
+    {
+        GtkWidget* btn_restore = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
+        g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
+        gtk_container_add(GTK_CONTAINER(dlg_content), btn_restore);
+    }
+
     // TODO: apply to all tabs
     // TODO: check grid layout - table
     // TODO: alpha
@@ -236,11 +295,11 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     
     gtk_widget_show_all(dialog);
     if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_OK) {
-        if (pTab->title)
-            termit_set_tab_title(pTab, tab_title);
-        termit_set_tab_font(pTab, font_name);
-        termit_set_tab_color_foreground(pTab, &foreground_color);
-        termit_set_tab_color_background(pTab, &background_color);
+        if (hlp->tab_title)
+            termit_set_tab_title(pTab, hlp->tab_title);
+        termit_set_tab_font(pTab, hlp->font_name);
+        termit_set_tab_color_foreground(pTab, &hlp->foreground_color);
+        termit_set_tab_color_background(pTab, &hlp->background_color);
     } else {
         // insane title flag
         if (pTab->title ||
@@ -250,7 +309,6 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             termit_set_tab_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry_title)));
         }
     }
-    g_free(tab_title);
-    g_free(font_name);
+    termit_dlg_helper_free(hlp);
     gtk_widget_destroy(dialog);
 }
