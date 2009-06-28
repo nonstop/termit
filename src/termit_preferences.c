@@ -234,45 +234,42 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
     GtkWidget* dlg_table = gtk_table_new(5, 2, FALSE);
-    
+
+#define TERMIT_PREFERENCE_ROW(pref_name, widget) \
+    gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_(pref_name)), 0, 1, row, row + 1, 0, 0, 0, 0); \
+    gtk_table_attach_defaults(GTK_TABLE(dlg_table), widget, 1, 2, row, row + 1); \
+    row++;
+
     GtkWidget* entry_title = gtk_entry_new();
     guint row = 0;
     { // tab title
         gtk_entry_set_text(GTK_ENTRY(entry_title), hlp->tab_title);
-        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Title")), 0, 1, row, row + 1, 0, 0, 0, 0);
-        gtk_table_attach_defaults(GTK_TABLE(dlg_table), entry_title, 1, 2, row, row + 1);
         hlp->entry_title = entry_title;
-        row++;
+        TERMIT_PREFERENCE_ROW("Title", entry_title);
     }
     
     { // font selection
         GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
         g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
 
-        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Font")), 0, 1, row, row + 1, 0, 0, 0, 0);
-        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_font, 1, 2, row, row + 1);
+        TERMIT_PREFERENCE_ROW("Font", btn_font);
         hlp->btn_font = btn_font;
-        row++;
     }
     
     { // foreground
         GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
         g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
-
-        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Foreground")), 0, 1, row, row + 1, 0, 0, 0, 0);
-        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_foreground, 1, 2, row, row + 1);
+    
+        TERMIT_PREFERENCE_ROW("Foreground", btn_foreground);
         hlp->btn_foreground = btn_foreground;
-        row++;
     }
     
     { // background
         GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
         g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
         
-        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Background")), 0, 1, row, row + 1, 0, 0, 0, 0);
-        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_background, 1, 2, row, row + 1);
+        TERMIT_PREFERENCE_ROW("Background", btn_background);
         hlp->btn_background = btn_background;
-        row++;
     }
     
     {
@@ -283,7 +280,6 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dlg_table);
 
     // TODO: apply to all tabs
-    // TODO: check grid layout - table
     // TODO: alpha
     // TODO: audible_bell
     // TODO: visible_bell
