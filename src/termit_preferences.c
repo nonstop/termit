@@ -233,57 +233,54 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             NULL);
     gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
-    /*GtkWidget* dlg_actions = gtk_dialog_get_action_area(GTK_DIALOG(dialog));*/
-    GtkWidget* dlg_content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    GtkWidget* dlg_table = gtk_table_new(5, 2, FALSE);
     
     GtkWidget* entry_title = gtk_entry_new();
+    guint row = 0;
     { // tab title
-        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
         gtk_entry_set_text(GTK_ENTRY(entry_title), hlp->tab_title);
-        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Title")));
-        gtk_container_add(GTK_CONTAINER(hbox), entry_title);
-        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Title")), 0, 1, row, row + 1, 0, 0, 0, 0);
+        gtk_table_attach_defaults(GTK_TABLE(dlg_table), entry_title, 1, 2, row, row + 1);
         hlp->entry_title = entry_title;
+        row++;
     }
     
     { // font selection
         GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
         g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
 
-        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Font")));
-        gtk_container_add(GTK_CONTAINER(hbox), btn_font);
-        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Font")), 0, 1, row, row + 1, 0, 0, 0, 0);
+        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_font, 1, 2, row, row + 1);
         hlp->btn_font = btn_font;
+        row++;
     }
     
     { // foreground
         GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
         g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
 
-        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Foreground")));
-        gtk_container_add(GTK_CONTAINER(hbox), btn_foreground);
-        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Foreground")), 0, 1, row, row + 1, 0, 0, 0, 0);
+        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_foreground, 1, 2, row, row + 1);
         hlp->btn_foreground = btn_foreground;
+        row++;
     }
     
     { // background
         GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
         g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
         
-        GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-        gtk_container_add(GTK_CONTAINER(hbox), gtk_label_new(_("Background")));
-        gtk_container_add(GTK_CONTAINER(hbox), btn_background);
-        gtk_container_add(GTK_CONTAINER(dlg_content), hbox);
+        gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_("Background")), 0, 1, row, row + 1, 0, 0, 0, 0);
+        gtk_table_attach_defaults(GTK_TABLE(dlg_table), btn_background, 1, 2, row, row + 1);
         hlp->btn_background = btn_background;
+        row++;
     }
     
     {
         GtkWidget* btn_restore = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
         g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
-        gtk_container_add(GTK_CONTAINER(dlg_content), btn_restore);
+        gtk_table_attach(GTK_TABLE(dlg_table), btn_restore, 1, 2, row, row + 1, 0, 0, 0, 0);
     }
+    gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dlg_table);
 
     // TODO: apply to all tabs
     // TODO: check grid layout - table
