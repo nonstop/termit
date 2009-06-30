@@ -164,23 +164,28 @@ void termit_options_loader(const gchar* name, lua_State* ls, int index, void* da
         /*config_get(&(p_cfg->), ls, index);*/
 
 }
+
+
 static void load_init(const gchar* initFile)
 {
-    TRACE_FUNC;
     gchar* fullPath = NULL;
     if (initFile) {
         fullPath = g_strdup(initFile);
     } else {
-        const gchar *configFile = "init.lua";
         const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
+        gchar* path = NULL;
         if (configHome)
-            fullPath = g_strdup_printf("%s/termit/%s", configHome, configFile);
+            path = g_strdup_printf("%s/termit", configHome);
         else
-        {
-            fullPath = g_strdup_printf("%s/.config/termit/%s", g_getenv("HOME"), configFile);
+            path = g_strdup_printf("%s/.config/termit", g_getenv("HOME"));
+        fullPath = g_strdup_printf("%s/rc.lua", path);
+        if (g_file_test(fullPath, G_FILE_TEST_EXISTS) == FALSE) {
+            g_free(fullPath);
+            fullPath = g_strdup_printf("%s/init.lua", path);
         }
+        g_free(path);
     }
-    
+    TRACE("config: %s", fullPath);
     int s = luaL_loadfile(L, fullPath);
     termit_report_lua_error(__FILE__, __LINE__, s);
     g_free(fullPath);
