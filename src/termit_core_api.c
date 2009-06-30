@@ -223,8 +223,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_free(cmd_path);
     g_free(cmd_file);
 
-    g_signal_connect(G_OBJECT(pTab->vte), "beep", G_CALLBACK(termit_on_beep), NULL);
-    g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), NULL);
+    g_signal_connect(G_OBJECT(pTab->vte), "beep", G_CALLBACK(termit_on_beep), pTab);
+    g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
 
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);

@@ -178,17 +178,32 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
 
 void termit_on_beep(VteTerminal *vte, gpointer user_data)
 {
-    // TODO: mark tab with beep - may be bold label or smth similar
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    if (!pTab) {
+        ERROR("pTab is NULL");
+        return;
+    }
     if (!gtk_window_has_toplevel_focus(GTK_WINDOW(termit.main_window))) {
-        if (configs.urgency_on_bell)
+        if (configs.urgency_on_bell) {
             gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), TRUE);
+            gchar* marked_title = g_strdup_printf("<b>%s</b>", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+            gtk_label_set_markup(GTK_LABEL(pTab->tab_name), marked_title);
+            g_free(marked_title);
+        }
     }
 }
 
 gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data)
 {
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    if (!pTab) {
+        ERROR("pTab is NULL");
+        return FALSE;
+    }
     if (gtk_window_get_urgency_hint(GTK_WINDOW(termit.main_window))) {
         gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
+        gtk_label_set_markup(GTK_LABEL(pTab->tab_name), gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        gtk_label_set_use_markup(GTK_LABEL(pTab->tab_name), FALSE);
     }
     return FALSE;
 }
