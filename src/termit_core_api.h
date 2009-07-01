@@ -21,6 +21,7 @@ void termit_close_tab();
 void termit_quit();
 
 void termit_set_tab_font(struct TermitTab* pTab, const gchar* font_name);
+void termit_set_tab_transparency(struct TermitTab* pTab, gdouble transparency);
 void termit_set_tab_style(gint tab_index, const struct TermitStyle*);
 void termit_set_tab_color_foreground(struct TermitTab* pTab, const GdkColor* p_color);
 void termit_set_tab_color_background(struct TermitTab* pTab, const GdkColor* p_color);

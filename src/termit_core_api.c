@@ -167,6 +167,18 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
     }
 }
 
+void termit_set_tab_transparency(struct TermitTab* pTab, gdouble transparency)
+{
+    pTab->style.transparency = transparency;
+    if (transparency) {
+        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
+    } else {
+        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
+        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), FALSE);
+    }
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
@@ -235,10 +247,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
     termit_tab_add_matches(pTab, configs.matches);
-    if (pTab->style.transparency) {
-        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
-        vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
-    }
+    termit_set_tab_transparency(pTab, pTab->style.transparency);
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);

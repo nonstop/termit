@@ -166,11 +166,21 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
     struct TermitTab* pTab = (struct TermitTab*)user_data;
     termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
 }
+static void dlg_set_transparency(GtkScaleButton *button, gdouble value, gpointer user_data)
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    termit_set_tab_transparency(pTab, value);
+}
 
 struct TermitDlgHelper
 {
     gchar* tab_title;
     gboolean handmade_tab_title;
+    gdouble transparency;
     gchar* font_name;
     GdkColor foreground_color;
     GdkColor background_color;
@@ -180,6 +190,7 @@ struct TermitDlgHelper
     GtkWidget* btn_font;
     GtkWidget* btn_foreground;
     GtkWidget* btn_background;
+    GtkWidget* btn_transparency;
 };
 
 static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
@@ -194,6 +205,7 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
     hlp->font_name = g_strdup(pTab->style.font_name);
     hlp->foreground_color = pTab->style.foreground_color;
     hlp->background_color = pTab->style.background_color;
+    hlp->transparency = pTab->style.transparency;
     return hlp;
 }
 
@@ -210,6 +222,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->font_name);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(hlp->btn_transparency), hlp->transparency);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -272,6 +285,16 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         hlp->btn_background = btn_background;
     }
     
+    { // transparency
+        GtkWidget* btn_transparency = gtk_scale_button_new(GTK_ICON_SIZE_BUTTON, 0, 1, 0.05, NULL);
+        gtk_scale_button_set_value(GTK_SCALE_BUTTON(btn_transparency), pTab->style.transparency);
+        gtk_scale_button_set_orientation(GTK_SCALE_BUTTON(btn_transparency), GTK_ORIENTATION_HORIZONTAL);
+        g_signal_connect(btn_transparency, "value-changed", G_CALLBACK(dlg_set_transparency), pTab);
+
+        TERMIT_PREFERENCE_ROW("Background", btn_transparency);
+        hlp->btn_transparency = btn_transparency;
+    }
+
     {
         GtkWidget* btn_restore = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
         g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
@@ -280,7 +303,6 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dlg_table);
 
     // TODO: apply to all tabs
-    // TODO: alpha
     // TODO: audible_bell
     // TODO: visible_bell
     // TODO: color palette
