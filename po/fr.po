@@ -11,58 +11,50 @@ msgstr ""
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
 
-#: /home/evgeny/coding/termit/src/termit_core_api.c:189
+#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:246
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
 
-#: /home/evgeny/coding/termit/src/termit_core_api.c:150
+#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:203
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit.c:102
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:100
 msgid "Edit"
 msgstr "Éditer"
 
-#: /home/evgeny/coding/termit/src/termit.c:131
-#: /home/evgeny/coding/termit/src/termit.c:216
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:128
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:210
 msgid "Encoding"
 msgstr "Encodage"
 
-#: /home/evgeny/coding/termit/src/termit.c:78
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:78
 msgid "File"
 msgstr "Fichier"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:288
+#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:332
 msgid "Open session"
 msgstr "Ouvrir une session"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:258
+#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:302
 msgid "Save session"
 msgstr "Enregistrer la session"
 
-#: /home/evgeny/coding/termit/src/termit.c:187
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:183
 msgid "Scrollbar"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:199
-msgid "Select font"
-msgstr "Définir la police"
-
-#: /home/evgeny/coding/termit/src/callbacks.c:182
-msgid "Select foreground color"
-msgstr ""
-
-#: /home/evgeny/coding/termit/src/termit.c:120
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:117
 msgid "Sessions"
 msgstr "Sessions"
 
 #. Edit menu
-#: /home/evgeny/coding/termit/src/termit.c:89
-#: /home/evgeny/coding/termit/src/termit.c:179
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:89
+#: /home/nonstop/coding/termit-git/trunk/src/termit.c:176
 msgid "Set tab name..."
 msgstr "Définir le nom de l'onglet..."
 
-#: /home/evgeny/coding/termit/src/callbacks.c:22
+#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:23
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -70,15 +62,18 @@ msgstr ""
 "Vous êtes sur le point de fermer plusieurs onglets.\n"
 "Voulez-vous vraiment continuer ?"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:148
-#: /home/evgeny/coding/termit/src/callbacks.c:157
+#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:214
+#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:223
 msgid "Tab name"
 msgstr "Nom de l'onglet"
 
-#: /home/evgeny/coding/termit/src/sessions.c:83
+#: /home/nonstop/coding/termit-git/trunk/src/sessions.c:83
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Impossible de créer le dossier '%s': %s"
 
 #~ msgid "Bookmarks"
 #~ msgstr "Marques-page"
+
+#~ msgid "Select font"
+#~ msgstr "Définir la police"
