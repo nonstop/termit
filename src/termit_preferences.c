@@ -166,14 +166,15 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
     struct TermitTab* pTab = (struct TermitTab*)user_data;
     termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
 }
-static void dlg_set_transparency(GtkScaleButton *button, gdouble value, gpointer user_data)
+static gboolean dlg_set_transparency(GtkRange *range, GtkScrollType scrolltype, gdouble value, gpointer user_data)
 {
     if (!user_data) {
         ERROR("user_data is NULL");
-        return;
+        return FALSE;
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
     termit_set_tab_transparency(pTab, value);
+    return FALSE;
 }
 
 struct TermitDlgHelper
@@ -222,7 +223,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->font_name);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
-    gtk_scale_button_set_value(GTK_SCALE_BUTTON(hlp->btn_transparency), hlp->transparency);
+    gtk_range_set_value(GTK_RANGE(hlp->btn_transparency), hlp->transparency);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -286,10 +287,9 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     }
     
     { // transparency
-        GtkWidget* btn_transparency = gtk_scale_button_new(GTK_ICON_SIZE_BUTTON, 0, 1, 0.05, NULL);
-        gtk_scale_button_set_value(GTK_SCALE_BUTTON(btn_transparency), pTab->style.transparency);
-        gtk_scale_button_set_orientation(GTK_SCALE_BUTTON(btn_transparency), GTK_ORIENTATION_HORIZONTAL);
-        g_signal_connect(btn_transparency, "value-changed", G_CALLBACK(dlg_set_transparency), pTab);
+        GtkWidget* btn_transparency = gtk_hscale_new_with_range(0, 1, 0.05);
+        gtk_range_set_value(GTK_RANGE(btn_transparency), pTab->style.transparency);
+        g_signal_connect(btn_transparency, "change-value", G_CALLBACK(dlg_set_transparency), pTab);
 
         TERMIT_PREFERENCE_ROW("Background", btn_transparency);
         hlp->btn_transparency = btn_transparency;
@@ -315,6 +315,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         termit_set_tab_font(pTab, hlp->font_name);
         termit_set_tab_color_foreground(pTab, &hlp->foreground_color);
         termit_set_tab_color_background(pTab, &hlp->background_color);
+        termit_set_tab_transparency(pTab, hlp->transparency);
     } else {
         // insane title flag
         if (pTab->title ||
