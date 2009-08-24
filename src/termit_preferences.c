@@ -71,6 +71,17 @@ static gboolean dlg_set_audible_bell(GtkToggleButton *btn, gpointer user_data)
     termit_tab_set_audible_bell(pTab, value);
     return FALSE;
 }
+static gboolean dlg_set_visible_bell(GtkToggleButton *btn, gpointer user_data)
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return FALSE;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    gboolean value = gtk_toggle_button_get_active(btn);
+    termit_tab_set_visible_bell(pTab, value);
+    return FALSE;
+}
 
 struct TermitDlgHelper
 {
@@ -82,6 +93,7 @@ struct TermitDlgHelper
     GdkColor foreground_color;
     GdkColor background_color;
     gboolean au_bell;
+    gboolean vi_bell;
     // widgets with values
     GtkWidget* dialog;
     GtkWidget* entry_title;
@@ -90,6 +102,7 @@ struct TermitDlgHelper
     GtkWidget* btn_background;
     GtkWidget* scale_transparency;
     GtkWidget* audible_bell;
+    GtkWidget* visible_bell;
 };
 
 static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
@@ -107,6 +120,7 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
     hlp->background_color = pTab->style.background_color;
     hlp->transparency = pTab->style.transparency;
     hlp->au_bell = pTab->audible_bell;
+    hlp->vi_bell = pTab->visible_bell;
     return hlp;
 }
 
@@ -125,6 +139,8 @@ static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgH
     termit_tab_set_color_foreground(pTab, &hlp->foreground_color);
     termit_tab_set_color_background(pTab, &hlp->background_color);
     termit_tab_set_transparency(pTab, hlp->transparency);
+    termit_tab_set_audible_bell(pTab, hlp->au_bell);
+    termit_tab_set_visible_bell(pTab, hlp->vi_bell);
 }
 
 static void dlg_set_default_values(struct TermitDlgHelper* hlp)
@@ -135,6 +151,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->transparency);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->audible_bell), hlp->au_bell);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->visible_bell), hlp->vi_bell);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -205,11 +222,20 @@ void termit_preferences_dialog(struct TermitTab *pTab)
 
     { // audible_bell
         GtkWidget* audible_bell = gtk_check_button_new();
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(audible_bell), configs.audible_bell);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(audible_bell), pTab->audible_bell);
         g_signal_connect(audible_bell, "toggled", G_CALLBACK(dlg_set_audible_bell), pTab);
 
         TERMIT_PREFERENCE_ROW(_("Audible bell"), audible_bell);
     }
+
+    { // visible_bell
+        GtkWidget* visible_bell = gtk_check_button_new();
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(visible_bell), pTab->visible_bell);
+        g_signal_connect(visible_bell, "toggled", G_CALLBACK(dlg_set_visible_bell), pTab);
+
+        TERMIT_PREFERENCE_ROW(_("Visible bell"), visible_bell);
+    }
+
     {
         GtkWidget* btn_restore = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
         g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
@@ -218,7 +244,6 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dlg_table);
 
     // TODO: apply to all tabs
-    // TODO: visible_bell
     // TODO: color palette
     // TODO: save style - choose from saved (murphy, delek, etc.)
     
