@@ -179,6 +179,12 @@ void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
     }
 }
 
+void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell)
+{
+    pTab->audible_bell = audible_bell;
+    vte_terminal_set_audible_bell(VTE_TERMINAL(pTab->vte), audible_bell);
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
@@ -259,7 +265,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     if (configs.fill_tabbar)
         gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
 
-    vte_terminal_set_audible_bell(VTE_TERMINAL(pTab->vte), configs.audible_bell);
+    termit_tab_set_audible_bell(pTab, configs.audible_bell);
     vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), configs.visible_bell);
 
     pTab->scrollbar = gtk_vscrollbar_new(vte_terminal_get_adjustment(VTE_TERMINAL(pTab->vte)));

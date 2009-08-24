@@ -31,6 +31,7 @@ void termit_tab_set_color_background(struct TermitTab* pTab, const GdkColor* p_c
 void termit_tab_set_color_foreground_by_index(gint tab_index, const GdkColor*);
 void termit_tab_set_color_background_by_index(gint tab_index, const GdkColor*);
 void termit_tab_set_title(struct TermitTab* pTab, const gchar* title);
+void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell);
 
 int termit_get_current_tab_index();
 

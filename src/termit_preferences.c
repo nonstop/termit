@@ -60,6 +60,17 @@ static gboolean dlg_set_transparency(GtkSpinButton *btn, gpointer user_data)
     termit_tab_set_transparency(pTab, value);
     return FALSE;
 }
+static gboolean dlg_set_audible_bell(GtkToggleButton *btn, gpointer user_data)
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return FALSE;
+    }
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    gboolean value = gtk_toggle_button_get_active(btn);
+    termit_tab_set_audible_bell(pTab, value);
+    return FALSE;
+}
 
 struct TermitDlgHelper
 {
@@ -70,6 +81,7 @@ struct TermitDlgHelper
     gchar* font_name;
     GdkColor foreground_color;
     GdkColor background_color;
+    gboolean au_bell;
     // widgets with values
     GtkWidget* dialog;
     GtkWidget* entry_title;
@@ -77,6 +89,7 @@ struct TermitDlgHelper
     GtkWidget* btn_foreground;
     GtkWidget* btn_background;
     GtkWidget* scale_transparency;
+    GtkWidget* audible_bell;
 };
 
 static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
@@ -93,6 +106,7 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
     hlp->foreground_color = pTab->style.foreground_color;
     hlp->background_color = pTab->style.background_color;
     hlp->transparency = pTab->style.transparency;
+    hlp->au_bell = pTab->audible_bell;
     return hlp;
 }
 
@@ -120,6 +134,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->transparency);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->audible_bell), hlp->au_bell);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -147,7 +162,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     GtkWidget* dlg_table = gtk_table_new(5, 2, FALSE);
 
 #define TERMIT_PREFERENCE_ROW(pref_name, widget) \
-    gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(_(pref_name)), 0, 1, row, row + 1, 0, 0, 0, 0); \
+    gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(pref_name), 0, 1, row, row + 1, 0, 0, 0, 0); \
     gtk_table_attach_defaults(GTK_TABLE(dlg_table), widget, 1, 2, row, row + 1); \
     hlp->widget = widget; \
     row++;
@@ -156,28 +171,28 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     guint row = 0;
     { // tab title
         gtk_entry_set_text(GTK_ENTRY(entry_title), hlp->tab_title);
-        TERMIT_PREFERENCE_ROW("Title", entry_title);
+        TERMIT_PREFERENCE_ROW(_("Title"), entry_title);
     }
     
     { // font selection
         GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
         g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
 
-        TERMIT_PREFERENCE_ROW("Font", btn_font);
+        TERMIT_PREFERENCE_ROW(_("Font"), btn_font);
     }
     
     { // foreground
         GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
         g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
     
-        TERMIT_PREFERENCE_ROW("Foreground", btn_foreground);
+        TERMIT_PREFERENCE_ROW(_("Foreground"), btn_foreground);
     }
     
     { // background
         GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
         g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
         
-        TERMIT_PREFERENCE_ROW("Background", btn_background);
+        TERMIT_PREFERENCE_ROW(_("Background"), btn_background);
     }
     
     { // transparency
@@ -185,9 +200,16 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         gtk_spin_button_set_value(GTK_SPIN_BUTTON(scale_transparency), pTab->style.transparency);
         g_signal_connect(scale_transparency, "value-changed", G_CALLBACK(dlg_set_transparency), pTab);
 
-        TERMIT_PREFERENCE_ROW("Background", scale_transparency);
+        TERMIT_PREFERENCE_ROW(_("Transparency"), scale_transparency);
     }
 
+    { // audible_bell
+        GtkWidget* audible_bell = gtk_check_button_new();
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(audible_bell), configs.audible_bell);
+        g_signal_connect(audible_bell, "toggled", G_CALLBACK(dlg_set_audible_bell), pTab);
+
+        TERMIT_PREFERENCE_ROW(_("Audible bell"), audible_bell);
+    }
     {
         GtkWidget* btn_restore = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
         g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
@@ -196,7 +218,6 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dlg_table);
 
     // TODO: apply to all tabs
-    // TODO: audible_bell
     // TODO: visible_bell
     // TODO: color palette
     // TODO: save style - choose from saved (murphy, delek, etc.)
