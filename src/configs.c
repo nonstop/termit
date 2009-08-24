@@ -109,9 +109,20 @@ void termit_deinit_config()
     g_array_free(configs.user_popup_menus, TRUE);
 
     // name and default_binding are static (e.g. can be in readonly mempage)
-    // TODO luaL_unref all callbacks
+    i = 0;
+    for (; i<configs.key_bindings->len; ++i) {
+        struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
+        termit_lua_unref(&kb->lua_callback);
+    }
     g_array_free(configs.key_bindings, TRUE);
+
+    i = 0;
+    for (; i<configs.mouse_bindings->len; ++i) {
+        struct MouseBinding* mb = &g_array_index(configs.mouse_bindings, struct MouseBinding, i);
+        termit_lua_unref(&mb->lua_callback);
+    }
     g_array_free(configs.mouse_bindings, TRUE);
+
     i = 0;
     for (; i<configs.matches->len; ++i) {
         struct Match* match = &g_array_index(configs.matches, struct Match, i);
