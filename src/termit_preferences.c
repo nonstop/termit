@@ -49,13 +49,14 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
     struct TermitTab* pTab = (struct TermitTab*)user_data;
     termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
 }
-static gboolean dlg_set_transparency(GtkRange *range, GtkScrollType scrolltype, gdouble value, gpointer user_data)
+static gboolean dlg_set_transparency(GtkSpinButton *btn, gpointer user_data)
 {
     if (!user_data) {
         ERROR("user_data is NULL");
         return FALSE;
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
+    gdouble value = gtk_spin_button_get_value(btn);
     termit_set_tab_transparency(pTab, value);
     return FALSE;
 }
@@ -118,7 +119,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->font_name);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
     gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
-    gtk_range_set_value(GTK_RANGE(hlp->scale_transparency), hlp->transparency);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->transparency);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -180,9 +181,9 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     }
     
     { // transparency
-        GtkWidget* scale_transparency = gtk_hscale_new_with_range(0, 1, 0.05);
-        gtk_range_set_value(GTK_RANGE(scale_transparency), pTab->style.transparency);
-        g_signal_connect(scale_transparency, "change-value", G_CALLBACK(dlg_set_transparency), pTab);
+        GtkWidget* scale_transparency = gtk_spin_button_new_with_range(0, 1, 0.05);
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(scale_transparency), pTab->style.transparency);
+        g_signal_connect(scale_transparency, "value-changed", G_CALLBACK(dlg_set_transparency), pTab);
 
         TERMIT_PREFERENCE_ROW("Background", scale_transparency);
     }
