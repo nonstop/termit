@@ -84,7 +84,7 @@ static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
     g_free(color_str);
 }
 
-void termit_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
+void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
 {
     TRACE("pattern=%s index=%d data=%p", pattern, index, data);
     if (!lua_isfunction(ls, index)) {
@@ -105,7 +105,7 @@ void termit_matches_loader(const gchar* pattern, struct lua_State* ls, int index
     g_array_append_val(matches, match);
 }
 
-void termit_options_loader(const gchar* name, lua_State* ls, int index, void* data)
+void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
     if (!strcmp(name, "tabName"))
@@ -187,16 +187,16 @@ static void load_init(const gchar* initFile)
     }
     TRACE("config: %s", fullPath);
     int s = luaL_loadfile(L, fullPath);
-    termit_report_lua_error(__FILE__, __LINE__, s);
+    termit_lua_report_error(__FILE__, __LINE__, s);
     g_free(fullPath);
 
     s = lua_pcall(L, 0, LUA_MULTRET, 0);
-    termit_report_lua_error(__FILE__, __LINE__, s);
+    termit_lua_report_error(__FILE__, __LINE__, s);
 }
 
 static const gchar* termit_init_file = NULL;
 
-void termit_load_lua_config()
+void termit_lua_load_config()
 {
     load_init(termit_init_file);
 
@@ -212,8 +212,8 @@ void termit_lua_init(const gchar* initFile)
 
     if (!termit_init_file)
         termit_init_file = g_strdup(initFile);
-    termit_init_lua_api();
-    termit_set_default_keybindings();
-    termit_load_lua_config();
+    termit_lua_init_api();
+    termit_keys_set_defaults();
+    termit_lua_load_config();
 }
 

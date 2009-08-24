@@ -21,13 +21,13 @@ static void termit_hide_scrollbars()
     }
 }
 
-void termit_set_tab_color_foreground(struct TermitTab* pTab, const GdkColor* p_color)
+void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkColor* p_color)
 {
     pTab->style.foreground_color = *p_color;
     vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &pTab->style.foreground_color);
 }
 
-void termit_set_tab_color_background(struct TermitTab* pTab, const GdkColor* p_color)
+void termit_tab_set_color_background(struct TermitTab* pTab, const GdkColor* p_color)
 {
     pTab->style.background_color = *p_color;
     vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), &pTab->style.background_color);
@@ -39,8 +39,8 @@ static void termit_set_colors()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        termit_set_tab_color_foreground(pTab, &configs.style.foreground_color);
-        termit_set_tab_color_background(pTab, &configs.style.background_color);
+        termit_tab_set_color_foreground(pTab, &configs.style.foreground_color);
+        termit_tab_set_color_background(pTab, &configs.style.background_color);
     }
 }
 
@@ -104,10 +104,10 @@ void termit_reconfigure()
     gtk_widget_destroy(termit.menu);
     gtk_container_remove(GTK_CONTAINER(termit.hbox), termit.menu_bar);
 
-    termit_deinit_config();
-    termit_set_default_options();
-    termit_set_default_keybindings();
-    termit_load_lua_config();
+    termit_config_deinit();
+    termit_configs_set_defaults();
+    termit_keys_set_defaults();
+    termit_lua_load_config();
     
     termit_create_popup_menu();
     termit_create_menubar();
@@ -167,7 +167,7 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
     }
 }
 
-void termit_set_tab_transparency(struct TermitTab* pTab, gdouble transparency)
+void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
 {
     pTab->style.transparency = transparency;
     if (transparency) {
@@ -247,7 +247,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
     termit_tab_add_matches(pTab, configs.matches);
-    termit_set_tab_transparency(pTab, pTab->style.transparency);
+    termit_tab_set_transparency(pTab, pTab->style.transparency);
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
@@ -276,8 +276,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
-    termit_set_tab_color_foreground(pTab, &pTab->style.foreground_color);
-    termit_set_tab_color_background(pTab, &pTab->style.background_color);
+    termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
+    termit_tab_set_color_background(pTab, &pTab->style.background_color);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
 #if GTK_CHECK_VERSION(2,10,0)
@@ -315,7 +315,7 @@ void termit_set_encoding(const gchar* encoding)
     termit_set_statusbar_encoding(-1);
 }
 
-void termit_set_tab_title(struct TermitTab* pTab, const gchar* title)
+void termit_tab_set_title(struct TermitTab* pTab, const gchar* title)
 {
     gchar* tmp_title = g_strdup(title);
     if (configs.get_tab_title_callback) {
@@ -345,7 +345,7 @@ void termit_set_default_colors()
     }
 }
 
-void termit_set_tab_font(struct TermitTab* pTab, const gchar* font_name)
+void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name)
 {
     if (pTab->style.font_name) {
         g_free(pTab->style.font_name);
@@ -373,14 +373,14 @@ static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*c
     callback(pTab, p_color);
 }
 
-void termit_set_tab_color_foreground_by_index(gint tab_index, const GdkColor* p_color)
+void termit_tab_set_color_foreground_by_index(gint tab_index, const GdkColor* p_color)
 {
-    termit_set_color__(tab_index, p_color, termit_set_tab_color_foreground);
+    termit_set_color__(tab_index, p_color, termit_tab_set_color_foreground);
 }
 
-void termit_set_tab_color_background_by_index(gint tab_index, const GdkColor* p_color)
+void termit_tab_set_color_background_by_index(gint tab_index, const GdkColor* p_color)
 {
-    termit_set_color__(tab_index, p_color, termit_set_tab_color_background);
+    termit_set_color__(tab_index, p_color, termit_tab_set_color_background);
 }
 
 void termit_paste()

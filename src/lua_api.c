@@ -11,7 +11,7 @@
 
 extern lua_State* L;
 
-TermitLuaTableLoaderResult termit_load_lua_table(lua_State* ls, TermitLuaTableLoaderFunc func, void* data)
+TermitLuaTableLoaderResult termit_lua_load_table(lua_State* ls, TermitLuaTableLoaderFunc func, void* data)
 {
     if (!data) {
         TRACE_MSG("data is NULL: skipping");
@@ -43,10 +43,10 @@ void termit_lua_execute(const gchar* cmd)
 {
     TRACE("executing script: %s", cmd);
     int s = luaL_dostring(L, cmd);
-    termit_report_lua_error(__FILE__, __LINE__, s);
+    termit_lua_report_error(__FILE__, __LINE__, s);
 }
 
-void termit_report_lua_error(const char* file, int line, int status)
+void termit_lua_report_error(const char* file, int line, int status)
 {
     if (status == 0)
         return;
@@ -58,8 +58,8 @@ void termit_report_lua_error(const char* file, int line, int status)
 static int termit_lua_setOptions(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    termit_load_lua_table(ls, termit_options_loader, &configs);
-    trace_configs();
+    termit_lua_load_table(ls, termit_lua_options_loader, &configs);
+    termit_config_trace();
     return 0;
 }
 
@@ -112,12 +112,12 @@ static int termit_lua_bindKey(lua_State* ls)
         TRACE_MSG("bad args: skipping");
     } else if (lua_isnil(ls, 2)) {
         const char* keybinding = lua_tostring(ls, 1);
-        termit_unbind_key(keybinding);
+        termit_keys_unbind(keybinding);
         TRACE("unbindKey: %s", keybinding);
     } else if (lua_isfunction(ls, 2)) {
         const char* keybinding = lua_tostring(ls, 1);
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
-        termit_bind_key(keybinding, func);
+        termit_keys_bind(keybinding, func);
         TRACE("bindKey: %s - %d", keybinding, func);
     }
     return 0;
@@ -132,12 +132,12 @@ static int termit_lua_bindMouse(lua_State* ls)
         TRACE_MSG("bad args: skipping");
     } else if (lua_isnil(ls, 2)) {
         const char* mousebinding = lua_tostring(ls, 1);
-        termit_unbind_mouse(mousebinding);
+        termit_mouse_unbind(mousebinding);
         TRACE("unbindMouse: %s", mousebinding);
     } else if (lua_isfunction(ls, 2)) {
         const char* mousebinding = lua_tostring(ls, 1);
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
-        termit_bind_mouse(mousebinding, func);
+        termit_mouse_bind(mousebinding, func);
         TRACE("bindMouse: %s - %d", mousebinding, func);
     }
     return 0;
@@ -205,7 +205,7 @@ static int termit_lua_openTab(lua_State* ls)
     TRACE_MSG(__FUNCTION__);
     if (lua_istable(ls, 1)) {
         struct TabInfo ti = {0};
-        if (termit_load_lua_table(ls, tabLoader, &ti) != TERMIT_LUA_TABLE_LOADER_OK)
+        if (termit_lua_load_table(ls, tabLoader, &ti) != TERMIT_LUA_TABLE_LOADER_OK)
             return 0;
         termit_append_tab_with_details(&ti);
         g_free(ti.name);
@@ -228,8 +228,8 @@ static int termit_lua_closeTab(lua_State* ls)
 static int termit_lua_setMatches(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    termit_load_lua_table(ls, termit_matches_loader, configs.matches);
-    trace_configs();
+    termit_lua_load_table(ls, termit_lua_matches_loader, configs.matches);
+    termit_config_trace();
     return 0;
 }
 
@@ -363,7 +363,7 @@ static int termit_lua_setTabTitle(lua_State* ls)
     const gchar* val =  lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
-    termit_set_tab_title(pTab, val);
+    termit_tab_set_title(pTab, val);
     pTab->custom_tab_name = TRUE;
     return 0;
 }
@@ -400,12 +400,12 @@ static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const 
 
 static int termit_lua_setTabForegroundColor(lua_State* ls)
 {
-    return termit_lua_setTabColor__(ls, &termit_set_tab_color_foreground_by_index);
+    return termit_lua_setTabColor__(ls, &termit_tab_set_color_foreground_by_index);
 }
 
 static int termit_lua_setTabBackgroundColor(lua_State* ls)
 {
-    return termit_lua_setTabColor__(ls, &termit_set_tab_color_background_by_index);
+    return termit_lua_setTabColor__(ls, &termit_tab_set_color_background_by_index);
 }
 
 static int termit_lua_spawn(lua_State* ls)
@@ -429,7 +429,7 @@ static int termit_lua_reconfigure(lua_State* ls)
     return 0;
 }
 
-void termit_init_lua_api()
+void termit_lua_init_api()
 {
     TRACE_FUNC;
     lua_register(L, "setOptions", termit_lua_setOptions);

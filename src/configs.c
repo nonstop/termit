@@ -7,7 +7,7 @@
 
 struct Configs configs = {0};
 
-void trace_configs()
+void termit_config_trace()
 {
 #ifdef DEBUG
     TRACE_MSG("");
@@ -41,7 +41,7 @@ void trace_configs()
 #endif 
 }
 
-void termit_set_default_options()
+void termit_configs_set_defaults()
 {
     configs.default_window_title = g_strdup("Termit");
     configs.default_tab_name = g_strdup("Terminal");
@@ -89,7 +89,7 @@ static void free_menu(GArray* menus)
     }
 }
 
-void termit_deinit_config()
+void termit_config_deinit()
 {
     g_free(configs.default_window_title);
     g_free(configs.default_tab_name);

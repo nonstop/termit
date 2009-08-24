@@ -49,7 +49,7 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     if (pTab->custom_tab_name)
         return;
     
-    termit_set_tab_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
+    termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
 
 void termit_on_toggle_scrollbar()
@@ -236,7 +236,7 @@ void termit_on_set_tab_name()
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
-        termit_set_tab_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
+        termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
         pTab->custom_tab_name = TRUE;
     }
     

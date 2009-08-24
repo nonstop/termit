@@ -60,12 +60,12 @@ struct UserMenu
 
 extern struct Configs configs;
 
-void termit_deinit_config();
-void termit_set_default_options();
-void termit_load_config();
+void termit_config_deinit();
+void termit_configs_set_defaults();
+void termit_config_load();
 
-void trace_configs();
-void trace_keybindings();
+void termit_config_trace();
+void termit_keys_trace();
 
 
 #endif /* CONFIGS_H */

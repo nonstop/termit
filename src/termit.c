@@ -249,7 +249,7 @@ void termit_create_popup_menu()
 static void termit_init(const gchar* initFile, const gchar* command)
 {
     termit_init_sessions();
-    termit_set_default_options();
+    termit_configs_set_defaults();
 
     termit.tab_max_number = 1;
     create_main_widgets(command);
@@ -354,7 +354,7 @@ int main(int argc, char **argv)
     termit_after_show_all();
   
     gtk_main();
-    termit_deinit_config();
+    termit_config_deinit();
     termit_lua_close();
     return 0;
 }

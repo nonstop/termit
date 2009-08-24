@@ -34,11 +34,11 @@ static void dlg_set_tab_color__(GtkColorButton *widget, gpointer user_data, void
 }
 static void dlg_set_foreground(GtkColorButton *widget, gpointer user_data)
 {
-    return dlg_set_tab_color__(widget, user_data, termit_set_tab_color_foreground);
+    return dlg_set_tab_color__(widget, user_data, termit_tab_set_color_foreground);
 }
 static void dlg_set_background(GtkColorButton *widget, gpointer user_data)
 {
-    return dlg_set_tab_color__(widget, user_data, termit_set_tab_color_background);
+    return dlg_set_tab_color__(widget, user_data, termit_tab_set_color_background);
 }
 static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
 {
@@ -47,7 +47,7 @@ static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
         return;
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
-    termit_set_tab_font(pTab, gtk_font_button_get_font_name(widget));
+    termit_tab_set_font(pTab, gtk_font_button_get_font_name(widget));
 }
 static gboolean dlg_set_transparency(GtkSpinButton *btn, gpointer user_data)
 {
@@ -57,7 +57,7 @@ static gboolean dlg_set_transparency(GtkSpinButton *btn, gpointer user_data)
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
     gdouble value = gtk_spin_button_get_value(btn);
-    termit_set_tab_transparency(pTab, value);
+    termit_tab_set_transparency(pTab, value);
     return FALSE;
 }
 
@@ -106,11 +106,11 @@ static void termit_dlg_helper_free(struct TermitDlgHelper* hlp)
 static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgHelper* hlp)
 {
     if (hlp->tab_title)
-        termit_set_tab_title(pTab, hlp->tab_title);
-    termit_set_tab_font(pTab, hlp->font_name);
-    termit_set_tab_color_foreground(pTab, &hlp->foreground_color);
-    termit_set_tab_color_background(pTab, &hlp->background_color);
-    termit_set_tab_transparency(pTab, hlp->transparency);
+        termit_tab_set_title(pTab, hlp->tab_title);
+    termit_tab_set_font(pTab, hlp->font_name);
+    termit_tab_set_color_foreground(pTab, &hlp->foreground_color);
+    termit_tab_set_color_background(pTab, &hlp->background_color);
+    termit_tab_set_transparency(pTab, hlp->transparency);
 }
 
 static void dlg_set_default_values(struct TermitDlgHelper* hlp)
@@ -210,7 +210,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
                 (!pTab->title &&
                  strcmp(gtk_label_get_text(GTK_LABEL(pTab->tab_name)),
                      gtk_entry_get_text(GTK_ENTRY(entry_title))) != 0)) {
-            termit_set_tab_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry_title)));
+            termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry_title)));
         }
     }
     termit_dlg_helper_free(hlp);

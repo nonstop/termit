@@ -17,7 +17,7 @@ extern lua_State* L;
 
 static Display* disp;
 
-void trace_keybindings()
+void termit_keys_trace()
 {
 #ifdef DEBUG
     TRACE_MSG("");
@@ -34,16 +34,16 @@ void trace_keybindings()
 { \
 lua_getglobal(ls, lua_callback_); \
 int func = luaL_ref(ls, LUA_REGISTRYINDEX); \
-termit_bind_key(keybinding_, func); \
+termit_keys_bind(keybinding_, func); \
 }
 #define ADD_DEFAULT_MOUSEBINDING(mouse_event_, lua_callback_) \
 { \
 lua_getglobal(ls, lua_callback_); \
 int func = luaL_ref(ls, LUA_REGISTRYINDEX); \
-termit_bind_mouse(mouse_event_, func); \
+termit_mouse_bind(mouse_event_, func); \
 }
 
-void termit_set_default_keybindings()
+void termit_keys_set_defaults()
 {
     lua_State* ls = L;
     disp = XOpenDisplay(NULL);
@@ -54,7 +54,7 @@ void termit_set_default_keybindings()
     ADD_DEFAULT_KEYBINDING("Ctrl-Insert", "copy");
     ADD_DEFAULT_KEYBINDING("Shift-Insert", "paste");
     // push func to stack, get ref
-    trace_keybindings();
+    termit_keys_trace();
 
     ADD_DEFAULT_MOUSEBINDING("DoubleClick", "openTab");
 }
@@ -139,7 +139,7 @@ static gint get_mb_index(GdkEventType type)
     return -1;
 }
 
-void termit_unbind_key(const gchar* keybinding)
+void termit_keys_unbind(const gchar* keybinding)
 {
     gint kb_index = get_kb_index(keybinding);
     if (kb_index < 0) {
@@ -152,7 +152,7 @@ void termit_unbind_key(const gchar* keybinding)
     g_array_remove_index(configs.key_bindings, kb_index);
 }
 
-void termit_bind_key(const gchar* keybinding, int lua_callback)
+void termit_keys_bind(const gchar* keybinding, int lua_callback)
 {
     gchar** tokens = g_strsplit(keybinding, "-", 2);
     // token[0] - modifier. Only Alt, Ctrl or Shift allowed.
@@ -191,7 +191,7 @@ void termit_bind_key(const gchar* keybinding, int lua_callback)
     }
 }
 
-void termit_bind_mouse(const gchar* mouse_event, int lua_callback)
+void termit_mouse_bind(const gchar* mouse_event, int lua_callback)
 {
     GdkEventType type = get_mouse_event_type(mouse_event);
     if (type == GDK_NOTHING) {
@@ -212,7 +212,7 @@ void termit_bind_mouse(const gchar* mouse_event, int lua_callback)
     }
 }
 
-void termit_unbind_mouse(const gchar* mouse_event)
+void termit_mouse_unbind(const gchar* mouse_event)
 {
     GdkEventType type = get_mouse_event_type(mouse_event);
     if (type == GDK_NOTHING) {
