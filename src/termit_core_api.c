@@ -280,9 +280,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     termit_tab_set_color_background(pTab, &pTab->style.background_color);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
-#if GTK_CHECK_VERSION(2,10,0)
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
-#endif
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
     termit_set_statusbar_encoding(-1);
