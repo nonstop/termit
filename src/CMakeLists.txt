@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(${TERMIT_SOURCE_DIR})
 INCLUDE (FindGTK)
 
 INCLUDE (FindPkgConfig)
-pkg_search_module(VTE REQUIRED libvte>=0.13 vte>=0.13)
+pkg_search_module(VTE REQUIRED libvte>=0.17.1 vte>=0.17.1)
 IF(NOT VTE_FOUND)
   message(FATAL_ERROR "vte library not found")
 ENDIF(NOT VTE_FOUND)
