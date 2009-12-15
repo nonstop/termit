@@ -191,6 +191,26 @@ void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell)
     vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), visible_bell);
 }
 
+// Tango Color Theme
+GdkColor colors[] = {
+    {0, 0x2e2e, 0x3434, 0x3636},
+    {0, 0xcccc, 0x0000, 0x0000},
+    {0, 0x4e4e, 0x9a9a, 0x0606},
+    {0, 0xc4c4, 0xa0a0, 0x0000},
+    {0, 0x3434, 0x6565, 0xa4a4},
+    {0, 0x7575, 0x5050, 0x7b7b},
+    {0, 0x0606, 0x9820, 0x9a9a},
+    {0, 0xd3d3, 0xd7d7, 0xcfcf},
+    {0, 0x5555, 0x5757, 0x5353},
+    {0, 0xefef, 0x2929, 0x2929},
+    {0, 0x8a8a, 0xe2e2, 0x3434},
+    {0, 0xfcfc, 0xe9e9, 0x4f4f},
+    {0, 0x7272, 0x9f9f, 0xcfcf},
+    {0, 0xadad, 0x7f7f, 0xa8a8},
+    {0, 0x3434, 0xe2e2, 0xe2e2},
+    {0, 0xeeee, 0xeeee, 0xecec}
+};
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
@@ -290,6 +310,9 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     
     termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
     termit_tab_set_color_background(pTab, &pTab->style.background_color);
+    if (configs.style.colormap) {
+        termit_tab_set_colormap(pTab, configs.style.colormap);
+    }
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
@@ -391,6 +414,11 @@ void termit_tab_set_color_foreground_by_index(gint tab_index, const GdkColor* p_
 void termit_tab_set_color_background_by_index(gint tab_index, const GdkColor* p_color)
 {
     termit_set_color__(tab_index, p_color, termit_tab_set_color_background);
+}
+
+void termit_tab_set_colormap(struct TermitTab* pTab, const GdkColormap* p_colormap)
+{
+    vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, p_colormap->colors, p_colormap->size);
 }
 
 void termit_paste()

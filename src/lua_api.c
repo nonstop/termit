@@ -59,7 +59,6 @@ static int termit_lua_setOptions(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
     termit_lua_load_table(ls, termit_lua_options_loader, &configs);
-    termit_config_trace();
     return 0;
 }
 
@@ -225,11 +224,51 @@ static int termit_lua_closeTab(lua_State* ls)
     return 0;
 }
 
+static void termit_load_colormap(lua_State* ls, GdkColormap* colormap)
+{
+    int size = lua_objlen(ls, 1);
+    if ((size != 8) || (size != 16) || (size != 24)) {
+        ERROR("bad colormap length: %d", size);
+        return;
+    }
+    colormap->size = size;
+    colormap->colors = g_malloc0(colormap->size * sizeof(GdkColor));
+    int i = 0;
+    lua_pushnil(ls);  /* first key */
+    while (lua_next(ls, 1) != 0) {
+        /* uses 'key' (at index -2) and 'value' (at index -1) */
+        const int valueIndex = -1;
+        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
+        if (!lua_isnil(ls, valueIndex) && lua_isstring(ls, valueIndex)) {
+            const gchar* colorStr = lua_tostring(ls, valueIndex);
+            TRACE("%d - %s", i, colorStr);
+            if (!gdk_color_parse(colorStr, &colormap->colors[i])) {
+                ERROR("failed to parse color: %d - %s", i, colorStr);
+            }
+        }
+        /* removes 'value'; keeps 'key' for next iteration */
+        lua_pop(ls, 1);
+        i++;
+    }
+}
+
+static int termit_lua_setColormap(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    
+    if (configs.style.colormap) {
+        g_free(configs.style.colormap->colors);
+    } else {
+        configs.style.colormap = g_malloc0(sizeof(GdkColormap));
+    }
+    termit_load_colormap(ls, configs.style.colormap);
+    return 0;
+}
+
 static int termit_lua_setMatches(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
     termit_lua_load_table(ls, termit_lua_matches_loader, configs.matches);
-    termit_config_trace();
     return 0;
 }
 
@@ -426,6 +465,7 @@ static int termit_lua_spawn(lua_State* ls)
 static int termit_lua_reconfigure(lua_State* ls)
 {
     termit_reconfigure();
+    termit_config_trace();
     return 0;
 }
 
@@ -437,6 +477,7 @@ void termit_lua_init_api()
     lua_register(L, "bindMouse", termit_lua_bindMouse);
     lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
     lua_register(L, "setMatches", termit_lua_setMatches);
+    lua_register(L, "setColormap", termit_lua_setColormap);
     lua_register(L, "openTab", termit_lua_openTab);
     lua_register(L, "nextTab", termit_lua_nextTab);
     lua_register(L, "prevTab", termit_lua_prevTab);

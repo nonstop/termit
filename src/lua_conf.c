@@ -199,10 +199,10 @@ static const gchar* termit_init_file = NULL;
 void termit_lua_load_config()
 {
     load_init(termit_init_file);
+    termit_config_trace();
 
     trace_menus(configs.user_menus);
     trace_menus(configs.user_popup_menus);
-    
 }
 
 void termit_lua_init(const gchar* initFile)
