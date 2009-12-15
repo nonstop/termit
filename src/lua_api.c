@@ -227,7 +227,7 @@ static int termit_lua_closeTab(lua_State* ls)
 static void termit_load_colormap(lua_State* ls, GdkColormap* colormap)
 {
     int size = lua_objlen(ls, 1);
-    if ((size != 8) || (size != 16) || (size != 24)) {
+    if ((size != 8) && (size != 16) && (size != 24)) {
         ERROR("bad colormap length: %d", size);
         return;
     }
