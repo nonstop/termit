@@ -39,8 +39,12 @@ static void termit_set_colors()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        termit_tab_set_color_foreground(pTab, &configs.style.foreground_color);
-        termit_tab_set_color_background(pTab, &configs.style.background_color);
+        if (configs.style.colormap) {
+            termit_tab_set_colormap(pTab, configs.style.colormap);
+        } else {
+            termit_tab_set_color_foreground(pTab, &configs.style.foreground_color);
+            termit_tab_set_color_background(pTab, &configs.style.background_color);
+        }
     }
 }
 
@@ -308,10 +312,11 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
-    termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
-    termit_tab_set_color_background(pTab, &pTab->style.background_color);
     if (configs.style.colormap) {
         termit_tab_set_colormap(pTab, configs.style.colormap);
+    } else {
+        termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
+        termit_tab_set_color_background(pTab, &pTab->style.background_color);
     }
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
