@@ -6,7 +6,6 @@
 #include "configs.h"
 #include "sessions.h"
 #include "termit_core_api.h"
-#include "termit_style.h"
 #include "lua_api.h"
 #include "keybindings.h"
 #include "callbacks.h"
@@ -49,7 +48,9 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     if (pTab->custom_tab_name)
         return;
     
-    termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
+    char* title = g_strdup(vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
+    termit_set_tab_title(page, title);
+    g_free(title);
 }
 
 void termit_on_toggle_scrollbar()
@@ -178,32 +179,17 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
 
 void termit_on_beep(VteTerminal *vte, gpointer user_data)
 {
-    struct TermitTab* pTab = (struct TermitTab*)user_data;
-    if (!pTab) {
-        ERROR("pTab is NULL");
-        return;
-    }
+    // TODO: mark tab with beep - may be bold label or smth similar
     if (!gtk_window_has_toplevel_focus(GTK_WINDOW(termit.main_window))) {
-        if (configs.urgency_on_bell) {
+        if (configs.urgency_on_bell)
             gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), TRUE);
-            gchar* marked_title = g_strdup_printf("<b>%s</b>", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-            gtk_label_set_markup(GTK_LABEL(pTab->tab_name), marked_title);
-            g_free(marked_title);
-        }
     }
 }
 
 gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data)
 {
-    struct TermitTab* pTab = (struct TermitTab*)user_data;
-    if (!pTab) {
-        ERROR("pTab is NULL");
-        return FALSE;
-    }
     if (gtk_window_get_urgency_hint(GTK_WINDOW(termit.main_window))) {
         gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
-        gtk_label_set_markup(GTK_LABEL(pTab->tab_name), gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-        gtk_label_set_use_markup(GTK_LABEL(pTab->tab_name), FALSE);
     }
     return FALSE;
 }
@@ -236,20 +222,42 @@ void termit_on_set_tab_name()
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
-        termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
+        termit_set_tab_title(page, gtk_entry_get_text(GTK_ENTRY(entry)));
         pTab->custom_tab_name = TRUE;
     }
     
     gtk_widget_destroy(dlg);
 }
 
-void termit_preferences_dialog(struct TermitTab *style);
-void termit_on_edit_preferences()
+void termit_on_select_tab_foreground_color()
 {
+    GtkWidget *dlg = gtk_color_selection_dialog_new(_("Select foreground color"));
+    GtkColorSelection* p_color_sel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG(dlg)->colorsel));
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    termit_preferences_dialog(pTab);
+    gtk_color_selection_set_current_color(p_color_sel, &pTab->foreground_color);
+
+    if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg))) {
+        GdkColor color;
+        gtk_color_selection_get_current_color(p_color_sel, &color);
+        termit_set_tab_foreground_color(page, &color);
+    }
+
+    gtk_widget_destroy(dlg);
 }
+
+void termit_on_select_font()
+{
+    GtkWidget *dlg = gtk_font_selection_dialog_new(_("Select font"));
+    gtk_font_selection_dialog_set_font_name(GTK_FONT_SELECTION_DIALOG(dlg), 
+                                            pango_font_description_to_string(termit.font));
+
+    if (GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dlg)))
+        termit_set_font(gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG(dlg)));
+
+    gtk_widget_destroy(dlg);
+}
+
 void termit_on_new_tab()
 {
     termit_append_tab();

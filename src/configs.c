@@ -7,7 +7,7 @@
 
 struct Configs configs = {0};
 
-void termit_config_trace()
+void trace_configs()
 {
 #ifdef DEBUG
     TRACE_MSG("");
@@ -15,9 +15,20 @@ void termit_config_trace()
     TRACE("     default_tab_name        = %s", configs.default_tab_name);
     TRACE("     default_encoding        = %s", configs.default_encoding);
     TRACE("     default_word_chars      = %s", configs.default_word_chars);
+    TRACE("     default_font            = %s", configs.default_font);
+    if (configs.default_foreground_color) {
+        TRACE("     default_foreground_color= (%d,%d,%d)", 
+                configs.default_foreground_color->red,
+                configs.default_foreground_color->green,
+                configs.default_foreground_color->blue);
+    } else {
+        TRACE("     default_foreground_color= %p", configs.default_foreground_color);
+    }
     TRACE("     show_scrollbar          = %d", configs.show_scrollbar);
     TRACE("     hide_menubar            = %d", configs.hide_menubar);
     TRACE("     fill_tabbar             = %d", configs.fill_tabbar);
+    TRACE("     transparent_background  = %d", configs.transparent_background);
+    TRACE("     transparent_saturation  = %f", configs.transparent_saturation);
     TRACE("     hide_single_tab         = %d", configs.hide_single_tab);
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
@@ -26,30 +37,29 @@ void termit_config_trace()
     TRACE("     visible_bell            = %d", configs.visible_bell);
     TRACE("     get_window_title_callback= %d", configs.get_window_title_callback);
     TRACE("     get_tab_title_callback  = %d", configs.get_tab_title_callback);
-    TRACE("     style:");
-    TRACE("       font_name             = %s", configs.style.font_name);
-    TRACE("       foreground_color      = (%d,%d,%d)", 
-                configs.style.foreground_color.red,
-                configs.style.foreground_color.green,
-                configs.style.foreground_color.blue);
-    TRACE("       background_color      = (%d,%d,%d)", 
-                configs.style.background_color.red,
-                configs.style.background_color.green,
-                configs.style.background_color.blue);
-    TRACE("       transparency          = %f", configs.style.transparency);
     TRACE_MSG("");
 #endif 
 }
 
-void termit_configs_set_defaults()
+void termit_set_default_options()
 {
     configs.default_window_title = g_strdup("Termit");
     configs.default_tab_name = g_strdup("Terminal");
-    termit_style_init(&configs.style);
+    configs.default_font = g_strdup("Monospace 10");
+    {
+        GdkColor color;
+        if (gdk_color_parse("gray", &color) == TRUE) {
+            configs.default_foreground_color = (GdkColor*)g_malloc0(sizeof(color));
+            *configs.default_foreground_color = color;
+        }
+    }
+    
     configs.default_command = g_strdup(g_getenv("SHELL"));
     configs.default_encoding = g_strdup("UTF-8");
     configs.default_word_chars = g_strdup("-A-Za-z0-9,./?%&#_~");
     configs.scrollback_lines = 4096;
+    configs.transparent_background = FALSE;
+    configs.transparent_saturation = 0.2;
     configs.cols = 80;
     configs.rows = 24;
 
@@ -89,11 +99,17 @@ static void free_menu(GArray* menus)
     }
 }
 
-void termit_config_deinit()
+void termit_deinit_config()
 {
     g_free(configs.default_window_title);
     g_free(configs.default_tab_name);
-    termit_style_free(&configs.style);
+    g_free(configs.default_font);
+    if (configs.default_foreground_color)
+        g_free(configs.default_foreground_color);
+    configs.default_foreground_color = NULL;
+    if (configs.default_background_color)
+        g_free(configs.default_background_color);
+    configs.default_background_color = NULL;
     g_free(configs.default_command);
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);

@@ -13,6 +13,9 @@ void termit_on_next_tab();
 void termit_on_close_tab();
 void termit_on_paste();
 void termit_on_copy();
+void termit_on_select_font();
+void termit_on_select_tab_foreground_color();
+void termit_on_select_background_color();
 gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data);
 void termit_on_beep(VteTerminal *vte, gpointer user_data);
 void termit_on_edit_preferences();
@@ -27,6 +30,13 @@ gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer f
 void termit_on_save_session();
 void termit_on_load_session();
 void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data);
+
+/*
+void termit_hide_scrollbars();
+
+void termit_lua_init();
+void termit_load_lua_config();
+*/
 
 #endif /* CALLBACKS_H */
 

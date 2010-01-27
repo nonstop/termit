@@ -69,22 +69,25 @@ static void config_getfunction(int* opt, lua_State* ls, int index)
         lua_pushinteger(ls, 0);
     }
 }
-static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
+static void config_getcolor(GdkColor** opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
     config_getstring(&color_str, ls, index);
     TRACE("color_str=%s", color_str);
     if (color_str) {
         //struct GdkColor color;
-        GdkColor color = {0};
-        if (gdk_color_parse(color_str, &color) == TRUE) {
-            *opt = color;
+        GdkColor* p_color = g_malloc0(sizeof(GdkColor));
+        if (gdk_color_parse(color_str, p_color) == TRUE) {
+            *opt = p_color;
+        } else {
+            *opt = 0;
+            g_free(p_color);
         }
     }
     g_free(color_str);
 }
 
-void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
+void termit_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
 {
     TRACE("pattern=%s index=%d data=%p", pattern, index, data);
     if (!lua_isfunction(ls, index)) {
@@ -105,7 +108,7 @@ void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int i
     g_array_append_val(matches, match);
 }
 
-void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
+void termit_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
     if (!strcmp(name, "tabName"))
@@ -117,15 +120,17 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     else if (!strcmp(name, "wordChars"))
         config_getstring(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
-        config_getstring(&(p_cfg->style.font_name), ls, index);
+        config_getstring(&(p_cfg->default_font), ls, index);
     else if (!strcmp(name, "foregroundColor")) 
-        config_getcolor(&(p_cfg->style.foreground_color), ls, index);
+        config_getcolor(&(p_cfg->default_foreground_color), ls, index);
     else if (!strcmp(name, "backgroundColor")) 
-        config_getcolor(&(p_cfg->style.background_color), ls, index);
+        config_getcolor(&(p_cfg->default_background_color), ls, index);
     else if (!strcmp(name, "showScrollbar"))
         config_getboolean(&(p_cfg->show_scrollbar), ls, index);
-    else if (!strcmp(name, "transparency"))
-        config_getdouble(&(p_cfg->style.transparency), ls, index);
+    else if (!strcmp(name, "transparentBackground"))
+        config_getboolean(&(p_cfg->transparent_background), ls, index);
+    else if (!strcmp(name, "transparentSaturation"))
+        config_getdouble(&(p_cfg->transparent_saturation), ls, index);
     else if (!strcmp(name, "fillTabbar"))
         config_getboolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
@@ -164,39 +169,34 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         /*config_get(&(p_cfg->), ls, index);*/
 
 }
-
-
 static void load_init(const gchar* initFile)
 {
+    TRACE_FUNC;
     gchar* fullPath = NULL;
     if (initFile) {
         fullPath = g_strdup(initFile);
     } else {
+        const gchar *configFile = "init.lua";
         const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
-        gchar* path = NULL;
         if (configHome)
-            path = g_strdup_printf("%s/termit", configHome);
+            fullPath = g_strdup_printf("%s/termit/%s", configHome, configFile);
         else
-            path = g_strdup_printf("%s/.config/termit", g_getenv("HOME"));
-        fullPath = g_strdup_printf("%s/rc.lua", path);
-        if (g_file_test(fullPath, G_FILE_TEST_EXISTS) == FALSE) {
-            g_free(fullPath);
-            fullPath = g_strdup_printf("%s/init.lua", path);
+        {
+            fullPath = g_strdup_printf("%s/.config/termit/%s", g_getenv("HOME"), configFile);
         }
-        g_free(path);
     }
-    TRACE("config: %s", fullPath);
+    
     int s = luaL_loadfile(L, fullPath);
-    termit_lua_report_error(__FILE__, __LINE__, s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
     g_free(fullPath);
 
     s = lua_pcall(L, 0, LUA_MULTRET, 0);
-    termit_lua_report_error(__FILE__, __LINE__, s);
+    termit_report_lua_error(__FILE__, __LINE__, s);
 }
 
 static const gchar* termit_init_file = NULL;
 
-void termit_lua_load_config()
+void termit_load_lua_config()
 {
     load_init(termit_init_file);
 
@@ -212,8 +212,8 @@ void termit_lua_init(const gchar* initFile)
 
     if (!termit_init_file)
         termit_init_file = g_strdup(initFile);
-    termit_lua_init_api();
-    termit_keys_set_defaults();
-    termit_lua_load_config();
+    termit_init_lua_api();
+    termit_set_default_keybindings();
+    termit_load_lua_config();
 }
 

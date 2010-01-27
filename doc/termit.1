@@ -80,6 +80,7 @@ opts - table with new options:
     allowChangingTitle - auto change title (similar to xterm)
     audibleBell - enables audible bell
     visibleBell - enables visible bell
+    urgencyOnBell - marks termit window with urgency hint when one of its tabs bells
     getWindowTitle - lua function to generate new window title
     getTabTitle - lua function to generate new tab title
     transparentBackground - use transparency
@@ -132,6 +133,19 @@ Sets keyuboard policy for shortcuts.
 kb_policy - string with one of those values:
     keycode - use hardware keyboard codes (XkbLayout-independent)
     keysym - use keysym values (XkbLayout-dependent)
+.RE
+.P
+.B setMatches
+(
+.I matchesTable
+)
+Sets different action for matching patterns.
+.RS
+matchesTable - table with special structure:
+    field name is regex pattern
+    field value is Lua function
+.P
+WARNING: setMatches is the experimental feature. Behaviour can change in next releases.
 .RE
 .P
 .B currentTabIndex

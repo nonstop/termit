@@ -11,8 +11,6 @@
 #include <libintl.h>
 #define _(String) gettext(String)
 
-#include "termit_style.h"
-
 struct TermitData
 {
     GtkWidget *main_window;
@@ -24,6 +22,7 @@ struct TermitData
     GtkWidget *hbox;
     GtkWidget *menu_bar;
     gint tab_max_number;
+    PangoFontDescription *font;
 };
 extern struct TermitData termit;
 
@@ -35,13 +34,12 @@ struct TermitTab
     GtkWidget *scrollbar;
     gboolean scrollbar_is_shown;
     gboolean custom_tab_name;
-    gboolean audible_bell;
-    gboolean visible_bell;
     gchar *encoding;
     gchar *command;
     gchar *title;
+    GdkColor foreground_color;
+    GdkColor background_color;
     GArray* matches;
-    struct TermitStyle style;
     pid_t pid;
 };
 
