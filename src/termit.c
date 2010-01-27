@@ -244,12 +244,18 @@ static void termit_init(const gchar* sessionFile, const gchar* command)
 static void termit_print_usage()
 {
     g_print(
-"termit - terminal emulator\n"
+"termit %s - terminal emulator\n"
+"\n"
+"This program comes with NO WARRANTY, to the extent permitted by law.\n"
+"You may redistribute copies of this program\n"
+"under the terms of the GNU General Public License.\n"
+"For more information about these matters, see the file named COPYING.\n"
+"\n"
 "Options:\n"
 "    --help                 - print this help message\n"
 "    --version              - print version number\n"
 "    --execute              - execute command\n"
-"    --session=session_file - start session using session_file\n");
+"    --session=session_file - start session using session_file\n", PACKAGE_VERSION);
 }
 
 int main(int argc, char **argv)

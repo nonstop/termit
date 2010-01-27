@@ -1,6 +1,7 @@
 SET(PO_FILES
   fr.po
   hu.po
+  ko.po
   ru.po
   zh_TW.po)
 

@@ -1,82 +1,82 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-25 09:19+0400\n"
-"PO-Revision-Date: 2008-08-20 12:46+0100\n"
-"Last-Translator: Peter Polonkai <polesz@nedudu.hu>\n"
-"Language-Team: hu\n"
+"Project-Id-Version: termit korean translate\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2008-09-02 05:26+0900\n"
+"Last-Translator: SeonKon Choi <bushi at mizi dot com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Korean\n"
+"X-Poedit-Country: KOREA, REPUBLIC OF\n"
 
 #: /home/nonstop/coding/termit/src/termit.c:88
 msgid "Bookmarks"
-msgstr "Könyvjelzők"
+msgstr "책갈피"
 
 #: /home/nonstop/coding/termit/src/utils.c:82
 msgid "Cannot create a new tab"
-msgstr "Nem sikerült új fület létrehozni"
+msgstr "새 탭을 만들 수 없습니다"
 
 #: /home/nonstop/coding/termit/src/utils.c:51
 msgid "Cannot parse command. Creating tab with shell"
-msgstr ""
-"Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
+msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
 #: /home/nonstop/coding/termit/src/termit.c:59
 msgid "Edit"
-msgstr "Szerkesztés"
+msgstr "편집"
 
 #. Encoding menu
 #: /home/nonstop/coding/termit/src/termit.c:108
 #: /home/nonstop/coding/termit/src/termit.c:212
 msgid "Encoding"
-msgstr "Kódolás"
+msgstr "문자집합"
 
 #: /home/nonstop/coding/termit/src/termit.c:37
 msgid "File"
-msgstr "Fájl"
+msgstr "파일"
 
 #: /home/nonstop/coding/termit/src/callbacks.c:370
 msgid "Open session"
-msgstr "Megnyitás"
+msgstr "세션 열기"
 
 #: /home/nonstop/coding/termit/src/callbacks.c:310
 msgid "Save session"
-msgstr "Mentés"
+msgstr "세션 저장"
 
 #: /home/nonstop/coding/termit/src/termit.c:184
 msgid "Scrollbar"
-msgstr "Gördítősáv"
+msgstr "스크롤 바"
 
 #: /home/nonstop/coding/termit/src/callbacks.c:228
 msgid "Select font"
-msgstr "Betkszlet"
+msgstr "글꼴 바꾸기"
 
 #: /home/nonstop/coding/termit/src/termit.c:76
 msgid "Sessions"
-msgstr "Munkamenetek"
+msgstr "세션"
 
 #. Edit menu
 #: /home/nonstop/coding/termit/src/termit.c:48
 #: /home/nonstop/coding/termit/src/termit.c:177
 msgid "Set tab name..."
-msgstr "Fül átnevezése..."
+msgstr "탭 이름 바꾸기"
 
 #: /home/nonstop/coding/termit/src/callbacks.c:27
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
-"Több fül is nyitva van.\n"
-"Bezárja mind?"
+"다른 탭들이 아직 열려 있습니다.\n"
+"전부 닫고 종료할까요 ?"
 
 #: /home/nonstop/coding/termit/src/callbacks.c:196
 #: /home/nonstop/coding/termit/src/callbacks.c:205
 msgid "Tab name"
-msgstr "Fül neve"
+msgstr "탭 이름"
 
 #: /home/nonstop/coding/termit/src/sessions.c:70
 #, c-format
 msgid "Unable to create directory '%s': %s"
-msgstr "A könyvtár létrehozása sikertelen '%s': %s"
+msgstr "디렉토리를 만들 수 없습니다 '%s': %s"

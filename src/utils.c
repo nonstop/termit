@@ -105,21 +105,8 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
     }
     g_object_set_data(G_OBJECT(tabWidget), "termit.tab", pTab);
 
-    if (configs.show_scrollbar)
-    {
-        pTab->scrollbar_is_shown = TRUE;
-        gtk_widget_show_all(termit.notebook);
-    }
-    else
-    {
-        TRACE(hide);
-        pTab->scrollbar_is_shown = FALSE;
-        gtk_widget_show(termit.notebook);
-        gtk_widget_hide(pTab->scrollbar);
-        gtk_widget_show(pTab->hbox);
-        gtk_widget_show(pTab->tab_name);
-        gtk_widget_show(pTab->vte);
-    }
+    pTab->scrollbar_is_shown = configs.show_scrollbar;
+    gtk_widget_show_all(termit.notebook);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
 #if GTK_CHECK_VERSION(2,10,0)
@@ -131,6 +118,7 @@ void termit_append_tab_with_details(const gchar* tab_name, const gchar* shell_cm
     termit_set_statusbar_encoding(-1);
 
     termit_check_single_tab();
+    termit_hide_scrollbars();
 }
 
 void termit_append_tab_with_command(const gchar* command)

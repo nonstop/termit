@@ -12,15 +12,6 @@ extern struct Configs configs;
 
 static Display* disp;
 
-#define ADD_DEFAULT_KEYBINDING(name_, state_, keyval_, callback_, default_binding_) \
-    kb.name = name_; \
-    kb.state = state_; \
-    kb.keyval = keyval_; \
-    kb.callback = callback_; \
-    kb.keycode = XKeysymToKeycode(disp, keyval_); \
-    kb.default_binding = default_binding_; \
-    g_array_append_val(configs.key_bindings, kb);
-
 static void trace_keybindings()
 {
 #ifdef DEBUG
@@ -38,6 +29,16 @@ static void trace_keybindings()
 
 void termit_set_default_keybindings()
 {
+    TRACE_MSG(__FUNCTION__);
+#define ADD_DEFAULT_KEYBINDING(name_, state_, keyval_, callback_, default_binding_) \
+    kb.name = name_; \
+    kb.state = state_; \
+    kb.keyval = keyval_; \
+    kb.callback = callback_; \
+    kb.keycode = XKeysymToKeycode(disp, keyval_); \
+    kb.default_binding = default_binding_; \
+    g_array_append_val(configs.key_bindings, kb);
+
     disp = XOpenDisplay(NULL);
 
     struct KeyBindging kb;
@@ -115,8 +116,6 @@ static gint get_kb_index(const gchar* name)
 
 void termit_load_keybindings(GKeyFile* keyfile)
 {
-    termit_set_default_keybindings();
-    
     const gchar* kb_group = "keybindings";
     GError * error = NULL;
     gsize len = 0;
@@ -135,6 +134,8 @@ void termit_load_keybindings(GKeyFile* keyfile)
     }
 
     g_strfreev(names);
+    TRACE_MSG("trace keybindings");
+    trace_keybindings();
 }
 
 static gboolean termit_key_press_use_keycode(GdkEventKey *event)
