@@ -13,67 +13,72 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:246
+#: /home/nonstop/coding/termit-git/src/termit_core_api.c:209
 msgid "Cannot create a new tab"
 msgstr "無法建立新分頁"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:203
+#: /home/nonstop/coding/termit-git/src/termit_core_api.c:165
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:100
+#: /home/nonstop/coding/termit-git/src/termit.c:102
 msgid "Edit"
 msgstr "編輯"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:128
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:210
+#: /home/nonstop/coding/termit-git/src/termit.c:131
+#: /home/nonstop/coding/termit-git/src/termit.c:216
 msgid "Encoding"
 msgstr "編碼"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:78
+#: /home/nonstop/coding/termit-git/src/termit.c:78
 msgid "File"
 msgstr "檔案"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:332
+#: /home/nonstop/coding/termit-git/src/callbacks.c:340
 msgid "Open session"
 msgstr "開啟作業階段"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:302
+#: /home/nonstop/coding/termit-git/src/callbacks.c:310
 msgid "Save session"
 msgstr "儲存作業階段"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:183
+#: /home/nonstop/coding/termit-git/src/termit.c:187
 msgid "Scrollbar"
 msgstr ""
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:117
+#: /home/nonstop/coding/termit-git/src/callbacks.c:251
+msgid "Select font"
+msgstr "選擇字型"
+
+#: /home/nonstop/coding/termit-git/src/callbacks.c:234
+msgid "Select foreground color"
+msgstr ""
+
+#: /home/nonstop/coding/termit-git/src/termit.c:120
 msgid "Sessions"
 msgstr "作業階段"
 
 #. Edit menu
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:89
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:176
+#: /home/nonstop/coding/termit-git/src/termit.c:89
+#: /home/nonstop/coding/termit-git/src/termit.c:179
 msgid "Set tab name..."
 msgstr "設定分頁名稱..."
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:23
+#: /home/nonstop/coding/termit-git/src/callbacks.c:22
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr "已開啟數個分頁。是否關閉？"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:214
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:223
+#: /home/nonstop/coding/termit-git/src/callbacks.c:200
+#: /home/nonstop/coding/termit-git/src/callbacks.c:209
 msgid "Tab name"
 msgstr "分頁名稱"
 
-#: /home/nonstop/coding/termit-git/trunk/src/sessions.c:83
+#: /home/nonstop/coding/termit-git/src/sessions.c:83
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "無法建立目錄 '%s': %s"
 
 #~ msgid "Bookmarks"
 #~ msgstr "書籤"
-
-#~ msgid "Select font"
-#~ msgstr "選擇字型"
