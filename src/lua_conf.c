@@ -162,9 +162,7 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     }
     /*else if (!strcmp(name, ""))*/
         /*config_get(&(p_cfg->), ls, index);*/
-
 }
-
 
 static void load_init(const gchar* initFile)
 {
@@ -182,6 +180,7 @@ static void load_init(const gchar* initFile)
         if (g_file_test(fullPath, G_FILE_TEST_EXISTS) == FALSE) {
             g_free(fullPath);
             fullPath = g_strdup_printf("%s/init.lua", path);
+            ERROR("%s", "[%s] is deprecated, use rc.lua instead");
         }
         g_free(path);
     }

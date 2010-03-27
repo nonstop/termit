@@ -248,7 +248,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->command = (ti->command) ? g_strdup(ti->command) : g_strdup(configs.default_command);
     TRACE("command=%s", pTab->command);
     if (!g_shell_parse_argv(pTab->command, NULL, &cmd_argv, &cmd_err)) {
-        ERROR(_("Cannot parse command. Creating tab with shell"));
+        ERROR("%s", _("Cannot parse command. Creating tab with shell"));
         g_error_free(cmd_err);
     } else {
         cmd_path = g_find_program_in_path(cmd_argv[0]);
@@ -288,7 +288,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
     if (index == -1) {
-        ERROR(_("Cannot create a new tab"));
+        ERROR("%s", _("Cannot create a new tab"));
         return;
     }
     TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
