@@ -80,6 +80,7 @@ opts - table with new options:
     allowChangingTitle - auto change title (similar to xterm)
     audibleBell - enables audible bell
     visibleBell - enables visible bell
+    urgencyOnBell - set WM-hint 'urgent' on termit window when bell
     getWindowTitle - lua function to generate new window title
     getTabTitle - lua function to generate new tab title
     transparentBackground - use transparency
@@ -248,6 +249,15 @@ color - string with new color.
 Changes background color for active tab.
 .RS
 color - string with new color.
+.RE
+.P
+.B setColormap
+(
+.I colormap
+)
+Sets new colormap.
+.RS
+colormap - array with 8 or 16 or 24 colors.
 .RE
 .P
 .B spawn

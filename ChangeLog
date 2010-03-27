@@ -1,3 +1,6 @@
+version 2.4.0
+	new Lua functions
+		setColormap
 version 2.3.0
 	read rc.lua instead of init.lua (init.lua is deprecated)
 	new Lua functions

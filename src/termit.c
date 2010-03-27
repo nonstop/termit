@@ -278,7 +278,7 @@ static void termit_print_usage()
 "    --help             - print this help message\n"
 "    --version          - print version number\n"
 "    --execute          - execute command\n"
-"    --init=init_file   - use init_file instead of standart init\n", PACKAGE_VERSION);
+"    --init=init_file   - use init_file instead of standart rc.lua\n", PACKAGE_VERSION);
 }
 
 int main(int argc, char **argv)
