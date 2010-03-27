@@ -1,0 +1,13 @@
+config.h
+CMakeFiles
+CMakeCache.txt
+tags
+Makefile
+termit
+termit.spec
+termit.SlackBuild
+termit-*.ebuild
+*~
+*.gmo
+cmake_install.cmake
+cmake_uninstall.cmake
