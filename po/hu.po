@@ -10,51 +10,67 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:246
+#: /home/evgeny/coding/termit/src/termit_preferences.c:228
+msgid "Audible bell"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:212
+msgid "Background"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_core_api.c:291
 msgid "Cannot create a new tab"
 msgstr "Nem sikerült új fület létrehozni"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:203
+#: /home/evgeny/coding/termit/src/termit_core_api.c:251
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:100
+#: /home/evgeny/coding/termit/src/termit.c:100
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:128
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:210
+#: /home/evgeny/coding/termit/src/termit.c:128
+#: /home/evgeny/coding/termit/src/termit.c:210
 msgid "Encoding"
 msgstr "Kódolás"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:78
+#: /home/evgeny/coding/termit/src/termit.c:78
 msgid "File"
 msgstr "Fájl"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:332
+#: /home/evgeny/coding/termit/src/termit_preferences.c:198
+msgid "Font"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:205
+msgid "Foreground"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/callbacks.c:332
 msgid "Open session"
 msgstr "Megnyitás"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:302
+#: /home/evgeny/coding/termit/src/callbacks.c:302
 msgid "Save session"
 msgstr "Mentés"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:183
+#: /home/evgeny/coding/termit/src/termit.c:183
 msgid "Scrollbar"
 msgstr "Gördítősáv"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:117
+#: /home/evgeny/coding/termit/src/termit.c:117
 msgid "Sessions"
 msgstr "Munkamenetek"
 
 #. Edit menu
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:89
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:176
+#: /home/evgeny/coding/termit/src/termit.c:89
+#: /home/evgeny/coding/termit/src/termit.c:176
 msgid "Set tab name..."
 msgstr "Fül átnevezése..."
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:23
+#: /home/evgeny/coding/termit/src/callbacks.c:23
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -62,15 +78,28 @@ msgstr ""
 "Több fül is nyitva van.\n"
 "Bezárja mind?"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:214
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:223
+#: /home/evgeny/coding/termit/src/callbacks.c:214
+#: /home/evgeny/coding/termit/src/callbacks.c:223
 msgid "Tab name"
 msgstr "Fül neve"
 
-#: /home/nonstop/coding/termit-git/trunk/src/sessions.c:83
+#: /home/evgeny/coding/termit/src/termit_preferences.c:191
+#, fuzzy
+msgid "Title"
+msgstr "Fájl"
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:220
+msgid "Transparency"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/sessions.c:83
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "A könyvtár létrehozása sikertelen '%s': %s"
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:236
+msgid "Visible bell"
+msgstr ""
 
 #~ msgid "Select font"
 #~ msgstr "Betkszlet"

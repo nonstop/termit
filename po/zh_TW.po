@@ -13,64 +13,93 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:246
+#: /home/evgeny/coding/termit/src/termit_preferences.c:228
+msgid "Audible bell"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:212
+msgid "Background"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_core_api.c:291
 msgid "Cannot create a new tab"
 msgstr "無法建立新分頁"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit_core_api.c:203
+#: /home/evgeny/coding/termit/src/termit_core_api.c:251
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:100
+#: /home/evgeny/coding/termit/src/termit.c:100
 msgid "Edit"
 msgstr "編輯"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:128
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:210
+#: /home/evgeny/coding/termit/src/termit.c:128
+#: /home/evgeny/coding/termit/src/termit.c:210
 msgid "Encoding"
 msgstr "編碼"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:78
+#: /home/evgeny/coding/termit/src/termit.c:78
 msgid "File"
 msgstr "檔案"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:332
+#: /home/evgeny/coding/termit/src/termit_preferences.c:198
+msgid "Font"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:205
+msgid "Foreground"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/callbacks.c:332
 msgid "Open session"
 msgstr "開啟作業階段"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:302
+#: /home/evgeny/coding/termit/src/callbacks.c:302
 msgid "Save session"
 msgstr "儲存作業階段"
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:183
+#: /home/evgeny/coding/termit/src/termit.c:183
 msgid "Scrollbar"
 msgstr ""
 
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:117
+#: /home/evgeny/coding/termit/src/termit.c:117
 msgid "Sessions"
 msgstr "作業階段"
 
 #. Edit menu
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:89
-#: /home/nonstop/coding/termit-git/trunk/src/termit.c:176
+#: /home/evgeny/coding/termit/src/termit.c:89
+#: /home/evgeny/coding/termit/src/termit.c:176
 msgid "Set tab name..."
 msgstr "設定分頁名稱..."
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:23
+#: /home/evgeny/coding/termit/src/callbacks.c:23
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr "已開啟數個分頁。是否關閉？"
 
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:214
-#: /home/nonstop/coding/termit-git/trunk/src/callbacks.c:223
+#: /home/evgeny/coding/termit/src/callbacks.c:214
+#: /home/evgeny/coding/termit/src/callbacks.c:223
 msgid "Tab name"
 msgstr "分頁名稱"
 
-#: /home/nonstop/coding/termit-git/trunk/src/sessions.c:83
+#: /home/evgeny/coding/termit/src/termit_preferences.c:191
+#, fuzzy
+msgid "Title"
+msgstr "檔案"
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:220
+msgid "Transparency"
+msgstr ""
+
+#: /home/evgeny/coding/termit/src/sessions.c:83
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "無法建立目錄 '%s': %s"
+
+#: /home/evgeny/coding/termit/src/termit_preferences.c:236
+msgid "Visible bell"
+msgstr ""
 
 #~ msgid "Bookmarks"
 #~ msgstr "書籤"
