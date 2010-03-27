@@ -1,3 +1,8 @@
+version 2.3.0
+	read rc.lua instead of init.lua (init.lua is deprecated)
+	new Lua functions
+	new options
+		audibleBell, visibleBell, setMatches, spawn, urgencyOnBell
 version 2.2.0
 	mixed modifiers (e.g. AltCtrl, AltShift, etc.)
 	new Lua functions
