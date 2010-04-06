@@ -50,6 +50,9 @@ end
 function onClose()
     closeTab()
 end
+function onSelection()
+    print(selection())
+end
 function onReconf()
     reconfigure()
 end
@@ -81,6 +84,11 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Reconfigure'
 mi.action = 'onReconf()'
+table.insert(userMenu, mi)
+
+mi = {}
+mi.name = 'Selection'
+mi.action = 'onSelection()'
 table.insert(userMenu, mi)
 
 function printTable(tbl, indent)

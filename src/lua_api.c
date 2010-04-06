@@ -475,6 +475,17 @@ static int termit_lua_spawn(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_selection(lua_State* ls)
+{
+    gchar* buff = termit_get_selection();
+    if (!buff)
+        return 0;
+    TRACE("buff=%s", buff);
+    lua_pushstring(ls, buff);
+    g_free(buff);
+    return 1;
+}
+
 static int termit_lua_reconfigure(lua_State* ls)
 {
     termit_reconfigure();
@@ -510,5 +521,6 @@ void termit_lua_init_api()
     lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
     lua_register(L, "spawn", termit_lua_spawn);
+    lua_register(L, "selection", termit_lua_selection);
 }
 

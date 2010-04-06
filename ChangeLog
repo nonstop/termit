@@ -1,3 +1,7 @@
+
+	GPLv2 license agreement in every source file
+	new Lua functions
+		selection
 version 2.4.0
 	new Lua functions
 		setColormap

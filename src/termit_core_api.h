@@ -29,6 +29,7 @@ void termit_prev_tab();
 void termit_next_tab();
 void termit_paste();
 void termit_copy();
+gchar* termit_get_selection();
 void termit_close_tab();
 void termit_toggle_menubar();
 void termit_set_window_title(const gchar* title);

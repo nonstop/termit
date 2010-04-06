@@ -452,6 +452,29 @@ void termit_copy()
     vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
+static void clipboard_received_text(GtkClipboard *clipboard, const gchar *text, gpointer data)
+{
+    if (text) {
+        gchar** d = (gchar**)data;
+        *d = g_strdup(text);
+    }
+}
+
+gchar* termit_get_selection()
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, NULL);
+    if (vte_terminal_get_has_selection(VTE_TERMINAL(pTab->vte)) == FALSE) {
+        return NULL;
+    }
+    GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_PRIMARY);
+    gchar* text = NULL;
+    gtk_clipboard_request_text(clip, clipboard_received_text, &text);
+    if (!text)
+        return NULL;
+    return text;
+}
+
 void termit_close_tab()
 {
     termit_del_tab();
