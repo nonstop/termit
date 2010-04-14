@@ -46,21 +46,21 @@ or
 .RS
 Use
 .I file
-instead of default init.lua
+instead of default rc.lua
 .P
 termit --init=session.lua
 .P
 .RE
 .SH FILES
-.I $HOME/.config/termit/init.lua
+.I $HOME/.config/termit/rc.lua
 .RS
 Per user configuration file. See section
 .BR "TERMIT LUA API"
 for further details.
 .RE
-.I /usr/share/doc/termit/init.lua.example
+.I /usr/share/doc/termit/rc.lua.example
 .RS
-Example init.lua file. Demonstrates usage of almost all available settings.
+Example rc.lua file. Demonstrates usage of almost all available settings.
 .SH "TERMIT LUA API"
 .B setOptions
 (
@@ -275,7 +275,7 @@ Returns selected text from current tab.
 .P
 .B reconfigure
 ()
-Sets all configurable variables to defaults and forces rereading init.lua.
+Sets all configurable variables to defaults and forces rereading rc.lua.
 .SH BUGS
 After start sometimes there is black screen. Resizing termit window helps.
 .SH AUTHOR
