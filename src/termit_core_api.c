@@ -95,11 +95,7 @@ static void termit_set_fonts()
 void termit_toggle_menubar()
 {
     static int menubar_visible = TRUE;
-    static int first_run = TRUE;
-    if (first_run) {
-        menubar_visible = !configs.hide_menubar;
-        first_run = FALSE;
-    }
+    menubar_visible = !configs.hide_menubar;
     if (menubar_visible)
         gtk_widget_show(GTK_WIDGET(termit.hbox));
     else
@@ -130,6 +126,7 @@ void termit_reconfigure()
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
     gtk_box_reorder_child(GTK_BOX(termit.hbox), termit.menu_bar, 0);
     gtk_widget_show_all(termit.main_window);
+    termit_after_show_all();
 }
 
 void termit_set_statusbar_encoding(gint page)
