@@ -460,6 +460,20 @@ static int termit_lua_setTabBackgroundColor(lua_State* ls)
     return termit_lua_setTabColor__(ls, &termit_tab_set_color_background_by_index);
 }
 
+static int termit_lua_setTabFont(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no font defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("font is not string: skipping");
+        return 0;
+    }
+    const gchar* val =  lua_tostring(ls, 1);
+    termit_tab_set_font_by_index(-1, val);
+    return 0;
+}
+
 static int termit_lua_spawn(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -518,6 +532,7 @@ void termit_lua_init_api()
     lua_register(L, "setWindowTitle", termit_lua_setWindowTitle);
     lua_register(L, "setTabForegroundColor", termit_lua_setTabForegroundColor);
     lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);
+    lua_register(L, "setTabFont", termit_lua_setTabFont);
     lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
     lua_register(L, "reconfigure", termit_lua_reconfigure);
     lua_register(L, "spawn", termit_lua_spawn);

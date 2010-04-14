@@ -38,6 +38,7 @@ void termit_set_encoding(const gchar* encoding);
 void termit_quit();
 
 void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name);
+void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name);
 void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency);
 void termit_tab_set_style(gint tab_index, const struct TermitStyle*);
 void termit_tab_set_colormap(struct TermitTab* pTab, const GdkColormap* p_colormap);

@@ -224,6 +224,11 @@ GdkColor colors[] = {
     {0, 0xeeee, 0xeeee, 0xecec}
 };
 
+static void termit_on_incr_font_sz(VteTerminal* term, gpointer data)
+{
+    TRACE("%s", __FUNCTION__);
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);
@@ -404,6 +409,16 @@ void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name)
     }
     pTab->style.font = pango_font_description_from_string(font_name);
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
+}
+
+void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name)
+{
+    TRACE("%s: tab_index=%d font=%s", __FUNCTION__, tab_index, font_name);
+    if (tab_index < 0) {
+        tab_index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    }
+    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
+    termit_tab_set_font(pTab, font_name);
 }
 
 static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*callback)(struct TermitTab*, const GdkColor*))
