@@ -50,8 +50,21 @@ end
 function onClose()
     closeTab()
 end
+function printTable(tbl, indent)
+    for p in pairs(tbl) do
+        if type(tbl[p]) == 'table' then
+            print(indent..p..':')
+            local_indent = indent..'  '
+            printTable(tbl[p], local_indent)
+        else
+            print(indent..tostring(p)..'='..tostring(tbl[p]))
+        end
+    end
+end
 function onSelection()
     tab = tabs[currentTabIndex()]
+    print(tab)
+    printTable(tab, '')
     print(tab.fontName)
     print(tab.fontSize)
     --setTabFont('Terminus 16')
@@ -95,17 +108,6 @@ mi.name = 'Selection'
 mi.action = 'onSelection()'
 table.insert(userMenu, mi)
 
-function printTable(tbl, indent)
-    for p in pairs(tbl) do
-        if type(tbl[p]) == 'table' then
-            print(indent..p..':')
-            local_indent = indent..'  '
-            printTable(tbl[p], local_indent)
-        else
-            print(indent..tostring(p)..'='..tostring(tbl[p]))
-        end
-    end
-end
 --printTable(userMenu, '')
 
 -- list of available encodings

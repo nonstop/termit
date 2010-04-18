@@ -206,6 +206,38 @@ static void load_init(const gchar* initFile)
     termit_lua_report_error(__FILE__, __LINE__, s);
 }
 
+int termit_lua_fill_tab(int tab_index, lua_State* ls)
+{
+#define TERMIT_TAB_ADD_NUMBER(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushnumber(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_STRING(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushstring(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_BOOLEAN(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushboolean(ls, value); \
+    lua_rawset(ls, -3); \
+}
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    lua_newtable(ls);
+    TERMIT_TAB_ADD_STRING("title", pTab->title);
+    TERMIT_TAB_ADD_STRING("command", pTab->command);
+    TERMIT_TAB_ADD_STRING("encoding", pTab->encoding);
+    TERMIT_TAB_ADD_BOOLEAN("audibleBell", pTab->audible_bell);
+    TERMIT_TAB_ADD_BOOLEAN("visibleBell", pTab->visible_bell);
+    TERMIT_TAB_ADD_NUMBER("pid", pTab->pid);
+    TERMIT_TAB_ADD_STRING("font", pTab->style.font_name);
+    TERMIT_TAB_ADD_STRING("fontName", pTab->style.font_name);
+    TERMIT_TAB_ADD_NUMBER("fontSize", pango_font_description_get_size(pTab->style.font));
+    return 1;
+}
+
 static int termit_lua_tabs_index(lua_State* ls)
 {
     if (lua_isnumber(ls, 1)) {
@@ -214,8 +246,7 @@ static int termit_lua_tabs_index(lua_State* ls)
     }
     int tab_index =  lua_tointeger(ls, 1);
     TRACE("tab_index:%d", tab_index);
-    // TODO return table
-    return 0;
+    return termit_lua_fill_tab(tab_index, ls);
 }
 
 static int termit_lua_tabs_newindex(lua_State* ls)

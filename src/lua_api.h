@@ -29,6 +29,7 @@ gchar* termit_lua_getTitleCallback(int f, const gchar* title);
 typedef enum {TERMIT_LUA_TABLE_LOADER_OK, TERMIT_LUA_TABLE_LOADER_FAILED} TermitLuaTableLoaderResult;
 typedef void (*TermitLuaTableLoaderFunc)(const gchar*, struct lua_State*, int, void*);
 TermitLuaTableLoaderResult termit_lua_load_table(struct lua_State* ls, TermitLuaTableLoaderFunc func, void* data);
+int termit_lua_fill_tab(int tab_index, struct lua_State* ls);
 /**
  * Loaders
  * */
