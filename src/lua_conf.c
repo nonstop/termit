@@ -233,8 +233,7 @@ int termit_lua_fill_tab(int tab_index, lua_State* ls)
     TERMIT_TAB_ADD_BOOLEAN("visibleBell", pTab->visible_bell);
     TERMIT_TAB_ADD_NUMBER("pid", pTab->pid);
     TERMIT_TAB_ADD_STRING("font", pTab->style.font_name);
-    TERMIT_TAB_ADD_STRING("fontName", pTab->style.font_name);
-    TERMIT_TAB_ADD_NUMBER("fontSize", pango_font_description_get_size(pTab->style.font));
+    TERMIT_TAB_ADD_NUMBER("fontSize", pango_font_description_get_size(pTab->style.font)/PANGO_SCALE);
     return 1;
 }
 

@@ -62,13 +62,14 @@ function printTable(tbl, indent)
     end
 end
 function onSelection()
-    tab = tabs[currentTabIndex()]
-    print(tab)
-    printTable(tab, '')
-    print(tab.fontName)
-    print(tab.fontSize)
-    --setTabFont('Terminus 16')
     print(selection())
+end
+function onGetTabInfo()
+    tab = tabs[currentTabIndex()]
+    if tab then
+        print(tab)
+        printTable(tab, '')
+    end
 end
 function onReconf()
     reconfigure()
@@ -106,6 +107,11 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Selection'
 mi.action = 'onSelection()'
+table.insert(userMenu, mi)
+
+mi = {}
+mi.name = 'Get tab info'
+mi.action = 'onGetTabInfo()'
 table.insert(userMenu, mi)
 
 --printTable(userMenu, '')
