@@ -206,6 +206,36 @@ static void load_init(const gchar* initFile)
     termit_lua_report_error(__FILE__, __LINE__, s);
 }
 
+static int termit_lua_tabs_index(lua_State* ls)
+{
+    if (lua_isnumber(ls, 1)) {
+        TRACE_MSG("index is not number: skipping");
+        return 0;
+    }
+    int tab_index =  lua_tointeger(ls, 1);
+    TRACE("tab_index:%d", tab_index);
+    // TODO return table
+    return 0;
+}
+
+static int termit_lua_tabs_newindex(lua_State* ls)
+{
+    ERROR("'tabs' is read-only variable");
+    return 0;
+}
+
+static void termit_lua_init_tabs()
+{
+    lua_newtable(L);
+    luaL_newmetatable(L, "tabs_meta");
+    lua_pushcfunction(L, termit_lua_tabs_index);
+    lua_setfield(L, -2, "__index");
+    lua_pushcfunction(L, termit_lua_tabs_newindex);
+    lua_setfield(L, -2, "__newindex");
+    lua_setmetatable(L, -2);
+    lua_setfield(L, LUA_GLOBALSINDEX, "tabs");
+}
+
 static const gchar* termit_init_file = NULL;
 
 void termit_lua_load_config()
@@ -224,6 +254,7 @@ void termit_lua_init(const gchar* initFile)
 
     if (!termit_init_file)
         termit_init_file = g_strdup(initFile);
+    termit_lua_init_tabs();
     termit_lua_init_api();
     termit_keys_set_defaults();
     termit_lua_load_config();

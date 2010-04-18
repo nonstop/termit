@@ -224,11 +224,6 @@ GdkColor colors[] = {
     {0, 0xeeee, 0xeeee, 0xecec}
 };
 
-static void termit_on_incr_font_sz(VteTerminal* term, gpointer data)
-{
-    TRACE("%s", __FUNCTION__);
-}
-
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     TRACE("%s", __FUNCTION__);

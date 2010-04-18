@@ -51,7 +51,7 @@ function onClose()
     closeTab()
 end
 function onSelection()
-    tab = tabs[currentTab()]
+    tab = tabs[currentTabIndex()]
     print(tab.fontName)
     print(tab.fontSize)
     --setTabFont('Terminus 16')
