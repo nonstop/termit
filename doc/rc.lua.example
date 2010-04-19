@@ -97,6 +97,21 @@ mi.action = function ()
 end
 table.insert(userMenu, mi)
 
+function changeTabFontSize(delta)
+    tab = tabs[currentTabIndex()]
+    setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(tab.fontSize + delta))
+end
+
+mi = {}
+mi.name = 'Increase font size'
+mi.action = function () changeTabFontSize(1) end
+table.insert(userMenu, mi)
+
+mi = {}
+mi.name = 'Decrease font size'
+mi.action = function () changeTabFontSize(-1) end
+table.insert(userMenu, mi)
+
 --printTable(userMenu, '')
 
 -- list of available encodings
