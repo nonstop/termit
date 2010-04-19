@@ -329,11 +329,19 @@ static int loadMenu(lua_State* ls, GArray* menus)
                 while (lua_next(ls, -2) != 0) {
                     if (lua_isstring(ls, -2)) {
                         const gchar* name = lua_tostring(ls, -2);
-                        const gchar* value = lua_tostring(ls, -1);
-                        if (!strcmp(name, "name"))
+                        if (!strcmp(name, "name")) {
+                            const gchar* value = lua_tostring(ls, -1);
                             umi.name = g_strdup(value);
-                        else if (!strcmp(name, "action"))
-                            umi.userFunc = g_strdup(value);
+                        } else if (!strcmp(name, "action")) {
+                            if (lua_isstring(ls, -1)) {
+                                const gchar* value = lua_tostring(ls, -1);
+                                umi.userFunc = g_strdup(value);
+                                ERROR("[%s] string in menu.action is deprecated, use lua function instead", value);
+                            } else if (lua_isfunction(ls, -1)) {
+                                umi.lua_callback = luaL_ref(ls, LUA_REGISTRYINDEX);
+                                lua_pushinteger(ls, 0);
+                            }
+                        }
                     }
                     lua_pop(ls, 1);
                 }

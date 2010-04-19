@@ -43,7 +43,7 @@ static void trace_menus(GArray* menus)
         gint j = 0;
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
-            TRACE("  %s: %s", umi->name, umi->userFunc);
+            TRACE("  %s: (%d) %s", umi->name, umi->lua_callback, umi->userFunc);
         }
     }
 #endif
@@ -193,7 +193,7 @@ static void load_init(const gchar* initFile)
         if (g_file_test(fullPath, G_FILE_TEST_EXISTS) == FALSE) {
             g_free(fullPath);
             fullPath = g_strdup_printf("%s/init.lua", path);
-            ERROR("%s", "[%s] is deprecated, use rc.lua instead");
+            ERROR("[%s] is deprecated, use rc.lua instead", "init.lua");
         }
         g_free(path);
     }

@@ -365,8 +365,13 @@ free_dlg:
 void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
 {
     struct UserMenuItem* pMi = (struct UserMenuItem*)data;
-    TRACE("%s: %s", pMi->name, pMi->userFunc);
-    termit_lua_execute(pMi->userFunc);
+    TRACE("%s: (%d) %s", pMi->name, pMi->lua_callback, pMi->userFunc);
+    if (pMi->lua_callback) {
+        termit_lua_dofunction(pMi->lua_callback);
+    } else {
+        ERROR("string in menu.action is deprecated, use lua function instead");
+        termit_lua_execute(pMi->userFunc);
+    }
 }
 
 gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
