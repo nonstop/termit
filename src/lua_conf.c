@@ -13,12 +13,14 @@
 
 #include <string.h>
 #include <X11/Xlib.h> // XParseGeometry
+#include <glib.h>
 
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 
 #include "termit.h"
+#include "termit_core_api.h"
 #include "configs.h"
 #include "keybindings.h"
 #include "lua_api.h"
@@ -229,8 +231,9 @@ int termit_lua_fill_tab(int tab_index, lua_State* ls)
     TERMIT_TAB_ADD_STRING("title", pTab->title);
     TERMIT_TAB_ADD_STRING("command", pTab->command);
     TERMIT_TAB_ADD_STRING("encoding", pTab->encoding);
-    TERMIT_TAB_ADD_BOOLEAN("audibleBell", pTab->audible_bell);
-    TERMIT_TAB_ADD_BOOLEAN("visibleBell", pTab->visible_bell);
+    gchar* working_dir = termit_get_pid_dir(pTab->pid);
+    TERMIT_TAB_ADD_STRING("workingDir", working_dir);
+    g_free(working_dir);
     TERMIT_TAB_ADD_NUMBER("pid", pTab->pid);
     TERMIT_TAB_ADD_STRING("font", pTab->style.font_name);
     TERMIT_TAB_ADD_NUMBER("fontSize", pango_font_description_get_size(pTab->style.font)/PANGO_SCALE);

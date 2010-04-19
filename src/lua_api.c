@@ -166,6 +166,11 @@ static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
     if (!strcmp(name, "name") && lua_isstring(ls, index)) {
+        ERROR("name is deprecated, use title");
+        const gchar* value = lua_tostring(ls, index);
+        TRACE("  %s - %s", name, value);
+        ti->name = g_strdup(value);
+    } else if (!strcmp(name, "title") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->name = g_strdup(value);
@@ -177,7 +182,12 @@ static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->encoding = g_strdup(value);
+    } else if (!strcmp(name, "workingDir") && lua_isstring(ls, index)) {
+        const gchar* value = lua_tostring(ls, index);
+        TRACE("  %s - %s", name, value);
+        ti->working_dir = g_strdup(value);
     } else if (!strcmp(name, "working_dir") && lua_isstring(ls, index)) {
+        ERROR("working_dir is deprecated, use workingDir");
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->working_dir = g_strdup(value);

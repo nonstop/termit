@@ -62,13 +62,148 @@ for further details.
 .RS
 Example rc.lua file. Demonstrates usage of almost all available settings.
 .SH "TERMIT LUA API"
+.B "Functions:"
+
 .B setOptions
 (
 .I opts
+) - Changes default options.
+    opts - table with new options:
+.P
+.B setKeys
+(
+.I keys
+) - Changes default keybindings.
+    keys - table of TermitKeybindings type.
+.P
+.B setKbPolicy
+(
+.I kb_policy
+) - Sets keyuboard policy for shortcuts.
+    kb_policy - string with one of those values:
+        keycode - use hardware keyboard codes (XkbLayout-independent)
+        keysym - use keysym values (XkbLayout-dependent)
+.P
+.B setColormap
+(
+.I colormap
+) - Sets new colormap.
+    colormap - array with 8 or 16 or 24 colors.
+.P
+.B bindKey
+(
+.I keys
+,
+.I luaFunction
+) - Sets new keybinding. If luaFunction is 
+.I nil
+removes keybinding.
+    keys - string with keybinding
+    luaFunction - callback function
+.P
+.B bindMouse
+(
+.I event
+,
+.I luaFunction
+) - Sets new mouse-binding. If luaFunction is 
+.I nil
+removes mouse-binding.
+    event - string with one of those values: DoubleClick
+    luaFunction - callback function
+.P
+.B openTab
+(
+.I tabInfo
+) - Opens new tab.
+    tabinfo - table of TermitTabInfo with tab settings.
+.P
+.B prevTab
+() - Activates previous tab.
+.P
+.B nextTab
+() - Activates next tab.
+.P
+.B closeTab
+() - Closes active tab.
+.P
+.B activateTab
+(
+.I tab_index
+) - Activates tab by index.
+    tab_index - index of tab to activate. Index of the first tab is 1.
+.P
+.B copy
+() - Copies selection into tab's buffer.
+.P
+.B paste
+() - Pastes tab's buffer.
+.P
+.B selection
+() - Returns selected text from current tab.
+.P
+.B addMenu
+(
+.I menu
+) - Adds menu in menubar.
+    menu - table of TermitMenuItem type.
+.P
+.B addPopupMenu
+(
+.I menu
 )
-Changes default options.
-.RS
-opts - table with new options:
+Adds menu in popup menu, similar to addMenu.
+    menu - table of TermitMenuItem type.
+.P
+.B setEncoding
+(
+.I encoding
+) - Changes encoding for active tab.
+    encoding - string with encoding name.
+.P
+.B setTabTitle
+(
+.I tabTitle
+) - Changes title for active tab.
+    tabTitle - string with new tab title.
+.P
+.B setWindowTitle
+(
+.I title
+) - Changes termit window title.
+    title - string with new title.
+.P
+.B setTabForegroundColor
+(
+.I color
+) - Changes foreground (e.g. font) color for active tab.
+    color - string with new color.
+.P
+.B setTabBackgroundColor
+(
+.I color
+) - Changes background color for active tab.
+    color - string with new color.
+.P
+.B spawn
+(
+.I command
+) - Spawns command (works via shell).
+    command - string with command and arguments.
+.P
+.B reconfigure
+() - Sets all configurable variables to defaults and forces rereading rc.lua.
+.P
+.B currentTabIndex
+() - Returns current tab index.
+.P
+.B currentTab
+() - Returns current tab of TermitTabInfo.
+.P
+.B "Types:"
+
+.B TermitTabInfo
+- table with termit options.
     tabName - default tab name
     encoding - default encoding
     wordChars - word characters (double click selects word)
@@ -89,193 +224,38 @@ opts - table with new options:
     hideMenubar
     scrollbackLines
     geometry - cols x rows to start with
-.RE
 .P
-.B setColormap
-(
-.I colors
-)
-Sets colors for tabs (8, 16 and 24 colors supported).
-.RE
-.P
-.B bindKey
-(
-.I keys
-,
-.I luaFunction
-)
-Sets new keybinding. If luaFunction is 
-.I nil
-removes keybinding.
-.RS
-keys - string with keybinding
-.RE
-.RS
-luaFunction - callback function
-.RE
-.P
-.B bindMouse
-(
-.I event
-,
-.I luaFunction
-)
-Sets new mouse-binding. If luaFunction is 
-.I nil
-removes mouse-binding.
-.RS
-event - string with one of those values:
-    DoubleClick
-.RE
-.RS
-luaFunction - callback function
-.RE
-.P
-.B setKbPolicy
-(
-.I kb_policy
-)
-Sets keyuboard policy for shortcuts.
-.RS
-kb_policy - string with one of those values:
-    keycode - use hardware keyboard codes (XkbLayout-independent)
-    keysym - use keysym values (XkbLayout-dependent)
-.RE
-.P
-.B currentTabIndex
-()
-Returns current tab index.
-.RE
-.P
-.B openTab
-(
-.I tabInfo
-)
-Opens new tab.
-.RS
-tabinfo - table with tab settings:
-    name - tab name
-    command - command to run as "shell"
+.B TermitTabInfo
+- table with tab settings:
+    title
+    command
     encoding
-    working_dir
-.RE
+    workingDir
+    pid - process id
+    font - font string
+    fontSize - font size
 .P
-.B prevTab
-()
-Activates previous tab.
+.B TermitMenuItem
+- table for menuitems.
+    name - name for menuitem
+    action - lua-function or string to execute when item activated. String values are deprecated.
 .P
-.B nextTab
-()
-Activates next tab.
+.B TermitKeybindings
+- table with predefined keybindings.
+    prevTab - 'Alt-Left'
+    nextTab - 'Alt-Right'
+    openTab - 'Ctrl-t'
+    closeTab - 'Ctrl-w'
+    copy - 'Ctrl-Insert'
+    paste - 'Shift-Insert'
 .P
-.B closeTab
-()
-Closes active tab.
-.P
-.B activateTab
-(
-.I tab_index
-)
-Activates tab by index.
+.B "Globals:"
+
+.B tabs
+- table with tab settings, access specific tabs by index.
 .RS
-tab_index - index of tab to activate. Index of the first tab is 1.
-.RE
-.P
-.B copy
-()
-Copies selection into tab's buffer.
-.P
-.B paste
-()
-Pastes tab's buffer.
-.P
-.B addMenu
-(
-.I menu
-)
-Adds menu in menubar.
-.RS
-menu - table with nested menuitems
-    menuitem - also table
-        name - name for menuitem
-        action - string in lua to perform when item activated
-.RE
-.P
-.B addPopupMenu
-( .I menu
-)
-Adds menu in popup menu, similar to addMenu.
-.P
-.B setEncoding
-(
-.I encoding
-)
-Changes encoding for active tab.
-.RS
-encoding - string with encoding name.
-.RE
-.P
-.B setTabTitle
-(
-.I tabTitle
-)
-Changes title for active tab.
-.RS
-tabTitle - string with new tab title.
-.RE
-.P
-.B setWindowTitle
-(
-.I title
-)
-Changes termit window title.
-.RS
-title - string with new title.
-.RE
-.P
-.B setTabForegroundColor
-(
-.I color
-)
-Changes foreground (e.g. font) color for active tab.
-.RS
-color - string with new color.
-.RE
-.P
-.B setTabBackgroundColor
-(
-.I color
-)
-Changes background color for active tab.
-.RS
-color - string with new color.
-.RE
-.P
-.B setColormap
-(
-.I colormap
-)
-Sets new colormap.
-.RS
-colormap - array with 8 or 16 or 24 colors.
-.RE
-.P
-.B spawn
-(
-.I command
-)
-Spawns command (works via shell).
-.RS
-command - string with command and arguments.
-.RE
-.P
-.B selection
-()
-Returns selected text from current tab.
-.P
-.B reconfigure
-()
-Sets all configurable variables to defaults and forces rereading rc.lua.
+.SH EXAMPLES
+Look inside provided rc.lua.example.
 .SH BUGS
 After start sometimes there is black screen. Resizing termit window helps.
 .SH AUTHOR

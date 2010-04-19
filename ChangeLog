@@ -1,7 +1,15 @@
-
+version 
 	GPLv2 license agreement in every source file
 	new Lua functions
 		selection
+		currentTab
+	global array 'tabs' with tab settings
+	fixed bug: hidden menu appears after reconfigure
+	deprecated:
+		use rc.lua instead of init.lua
+		in openTab use title instead of name
+			and workingDir instead of working_dir
+	fixed docs
 version 2.4.0
 	new Lua functions
 		setColormap

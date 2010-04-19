@@ -51,6 +51,7 @@ void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell);
 void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell);
 
 int termit_get_current_tab_index();
+gchar* termit_get_pid_dir(pid_t pid);
 
 /**
  * function to switch key processing policy

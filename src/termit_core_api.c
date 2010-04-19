@@ -92,6 +92,15 @@ static void termit_set_fonts()
     gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
 }
 
+gchar* termit_get_pid_dir(pid_t pid)
+{
+    gchar* file = g_strdup_printf("/proc/%d/cwd", pid);
+    gchar* link = g_file_read_link(file, NULL);
+    g_free(file);
+    return link;
+}
+
+
 void termit_toggle_menubar()
 {
     static int menubar_visible = TRUE;

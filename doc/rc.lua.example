@@ -56,17 +56,17 @@ table.insert(userMenu, mi)
 
 mi = {}
 mi.name = 'New tab name'
-mi.action = function () setTabName('New tab name') end
+mi.action = function () setTabTitle('New tab name') end
 table.insert(userMenu, mi)
 
 mi = {}
 mi.name = 'Zsh tab'
 mi.action = function ()
     tabInfo = {}
-    tabInfo.name = 'Zsh tab'
+    tabInfo.title = 'Zsh tab'
     tabInfo.command = 'zsh'
     tabInfo.encoding = 'UTF-8'
-    tabInfo.working_dir = '/tmp'
+    tabInfo.workingDir = '/tmp'
     openTab(tabInfo)
 end
 table.insert(userMenu, mi)

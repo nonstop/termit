@@ -25,20 +25,13 @@
 #include <lauxlib.h>
 
 #include "termit.h"
+#include "termit_core_api.h"
 #include "configs.h"
 #include "callbacks.h"
 #include "lua_api.h"
 #include "sessions.h"
 
 extern lua_State* L;
-
-static gchar* termit_get_pid_dir(pid_t pid)
-{
-    gchar* file = g_strdup_printf("/proc/%d/cwd", pid);
-    gchar* link = g_file_read_link(file, NULL);
-    g_free(file);
-    return link;
-}
 
 // from Openbox
 static gboolean parse_mkdir(const gchar *path, gint mode)
@@ -124,8 +117,8 @@ void termit_save_session(const gchar* sessionFile)
         gchar* working_dir = termit_get_pid_dir(pTab->pid);
         gchar* groupName = g_strdup_printf("tab%d", i);
         g_fprintf(fd, "%s = {}\n", groupName);
-        g_fprintf(fd, "%s.name = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-        g_fprintf(fd, "%s.working_dir = \"%s\"\n", groupName, working_dir);
+        g_fprintf(fd, "%s.title = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        g_fprintf(fd, "%s.workingDir = \"%s\"\n", groupName, working_dir);
         g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->command);
         g_fprintf(fd, "%s.encoding = \"%s\"\n", groupName, pTab->encoding);
         g_fprintf(fd, "openTab(%s)\n\n", groupName);

@@ -1,109 +1,186 @@
-setOptions(opts)
-Changes default options.
-opts - table with new options:
-    tabName - default tab name
-    encoding - default encosing
-    wordChars - word characters (double click selects word)
-    font - font name
-    showScrollbar
-    transparentBackground - use trancparency
-    transparentSaturation - level of saturation [0,1]
-    hideSingleTab
-    scrollbackLines
-    defaultGeometry - cols x rows to start with
-Example:
-    inside init.lua.example
+h4. Functions
 
-setKeys(keys)
-Changes default keybindings.
-keys - table with new keybindings:
-    prevTab
-    nextTab
-    openTab
-    closeTab
-    copy
-    paste
-Example:
-    keys = {}
-    keys.nextTab = 'Alt-Up'
-    keys.prevTab = 'Alt-Down'
-    setKeys(keys)
+*setOptions(_opts_)* - Changes default options.
+_opts_ - table of TermitOptions type with new options:
 
-setKbPolicy(kb_policy)
-Sets keyuboard policy for shortcuts.
-kb_policy - string with one of those values:
-    keycode - use hardware keyboard codes (XkbLayout-independent)
-    keysym - use keysym values (XkbLayout-dependent)
-Example:
+
+*setKeys(_keys_)* - Changes default keybindings.
+_keys_ - table of TermitKeybindings type.
+
+
+*setKbPolicy(_kb_policy_)* - Sets keyuboard policy for shortcuts.
+_kb_policy_ - string with one of those values:
+
+* keycode - use hardware keyboard codes (XkbLayout-independent)
+* keysym - use keysym values (XkbLayout-dependent)
+
+pre. Example: treat keys via current XkbLayout
     setKbPolicy('keysym')
 
 
-openTab(tabInfo)
-Opens new tab.
-tabinfo - table with tab settings:
-    name - tab name
-    command - command to run as "shell"
-    encoding
-    working_dir
-Example:
+*setColormap(_colormap_)* - Sets new colormap.
+_colormap_ - array with 8 or 16 or 24 colors.
+
+pre. Example: Tango-like color theme
+    colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000',
+        '#34346565a4a4', '#757550507b7b', '#060698209a9a', '#d3d3d7d7cfcf',
+        '#555557575353', '#efef29292929', '#8a8ae2e23434', '#fcfce9e94f4f',
+        '#72729f9fcfcf', '#adad7f7fa8a8', '#3434e2e2e2e2', '#eeeeeeeeecec'}
+    setColormap(colormap)
+
+
+*bindKey(_keys_, _luaFunction_)* - Sets new keybinding. If luaFunction is nil removes keybinding.
+_keys_ - string with keybinding
+_luaFunction_ - callback function
+
+pre. Example: don't close tab with Ctrl-w
+    bindKey('Ctrl-w', nil)
+
+
+*bindMouse(_event_, _luaFunction_)* - Sets new mouse-binding. If luaFunction is nilremoves mouse-binding.
+_event_ - string with one of those values: DoubleClick
+_luaFunction_ - callback function
+
+
+*openTab(_tabInfo_)* - Opens new tab.
+_tabinfo_ - table of TermitTabInfo with tab settings.
+
+pre. Example:
     tabInfo = {}
-    tabInfo.name = 'Zsh tab'
+    tabInfo.title = 'Zsh tab'
     tabInfo.command = 'zsh'
     tabInfo.encoding = 'UTF-8'
-    tabInfo.working_dir = '/tmp'
+    tabInfo.workingDir = '/tmp'
     openTab(tabInfo)
 
 
-closeTab()
-Closes active tab.
-Example:
-    closeTab()
-
-addMenu(menu)
-Adds menu in menubar.
-manu - table with nested menuitems
-    menuitem - also table
-        name - name for menuitem
-        action - string in lua to perform when item activated
-Example:
-    userMenu = {}
-    mi = {}
-    mi.name = 'Named tab'
-    mi.action = 'onNamed()'
-    table.insert(userMenu, mi)
-
-    mi = {}
-    mi.name = 'Zsh tab'
-    mi.action = 'onZsh()'
-    table.insert(userMenu, mi)
-
-    addMenu(userMenu, "User menu")
+*closeTab()* - Closes active tab.
 
 
-addPopupMenu(menu)
-Adds menu in popup menu, similar to addMenu.
-Example:
-    addPopupMenu(userMenu, "User menu")
+*prevTab()* - Activates previous tab.
 
 
-setEncoding(encoding)
-Changes encoding for active tab.
-encoding - string with encoding name.
-Example:
+*nextTab()* - Activates next tab.
+
+
+*activateTab(_tab_index_)* - Activates tab by index.
+_tab_index_ - index of tab to activate. Index of the first tab is 1.
+
+
+*copy()* - Copies selection into tab's buffer.
+
+
+*paste()* - Pastes tab's buffer.
+
+
+*selection()* - Returns selected text from current tab.
+
+
+*addMenu(_menu_)* - Adds menu in menubar.
+_menu_ - table of TermitMenuItem type.
+
+
+*addPopupMenu(_menu_)* - Adds menu in popup menu, similar to addMenu.
+_menu_ - table of TermitMenuItem type.
+
+
+*setEncoding(_encoding_)* - Changes encoding for active tab.
+_encoding_ - string with encoding name.
+
+pre. Example:
     setEncoding('UTF-8')
 
 
-setTabName(tabName)
-Changes name for active tab.
-tabName - string with tab name.
-Example:
-    setTabName('New tab name')
+*setTabTitle(_tabTitle_)* - Changes title for active tab.
+_tabTitle_ - string with new tab title.
 
 
-reconfigure()
-Sets all configurable variables to defaults and forces rereading init.lua.
-Example:
-    reconfigure()
+*setWindowTitle(_title_)* - Changes termit window title.
+_title_ - string with new title.
 
+
+*setTabForegroundColor(_color_)* - Changes foreground (e.g. font) color for active tab.
+_color_ - string with new color.
+
+
+*setTabBackgroundColor(_color_)* - Changes background color for active tab.
+_color_ - string with new color.
+
+
+*spawn(_command_) - Spawns command (works via shell).
+_command_ - string with command and arguments.
+
+
+*reconfigure()* - Sets all configurable variables to defaults and forces rereading rc.lua.
+
+
+*currentTabIndex()* - Returns current tab index.
+
+
+*currentTab()* - Returns current tab of TermitTabInfo.
+
+
+h4. Types
+
+*TermitOptions* - table with termit options.
+
+* tabName - default tab name
+* encoding - default encoding
+* wordChars - word characters (double click selects word)
+* font - font name
+* foregroundColor
+* backgroundColor
+* showScrollbar
+* fillTabbar - expand tabs' titles to fill whole tabbar
+* allowChangingTitle - auto change title (similar to xterm)
+* audibleBell - enables audible bell
+* visibleBell - enables visible bell
+* urgencyOnBell - set WM-hint 'urgent' on termit window when bell
+* getWindowTitle - lua function to generate new window title
+* getTabTitle - lua function to generate new tab title
+* transparentBackground - use transparency
+* transparentSaturation - level of saturation [0,1]
+* hideSingleTab
+* hideMenubar
+* scrollbackLines
+* geometry - cols x rows to start with
+
+
+*TermitTabInfo* - table with tab settings:
+
+* title
+* command
+* encoding
+* workingDir
+* pid - process id
+* font - font string
+* fontSize - font size
+
+
+*TermitMenuItem* - table for menuitems.
+
+* name - name for menuitem
+* action - lua-function or string to execute when item activated. String values are deprecated.
+
+
+*TermitKeybindings* - table with predefined keybindings.
+
+* prevTab - 'Alt-Left'
+* nextTab - 'Alt-Right'
+* openTab - 'Ctrl-t'
+* closeTab - 'Ctrl-w'
+* copy - 'Ctrl-Insert'
+* paste - 'Shift-Insert'
+
+pre. Example: enable Gnome-like tab switching
+    keys = {}
+    keys.nextTab = 'Ctrl-Page_Down'
+    keys.prevTab = 'Ctrl-Page_Up'
+    setKeys(keys)
+
+
+h4. Globals
+
+*tabs* - Table with tab settings, access specific tabs by index.
 
 
