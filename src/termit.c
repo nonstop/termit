@@ -266,8 +266,8 @@ static void termit_init(const gchar* initFile, const gchar* command)
 
     termit.tab_max_number = 1;
 
-    termit_lua_init(initFile);
     create_main_widgets(command);
+    termit_lua_init(initFile);
     
     termit_create_menubar();
     pack_widgets();
