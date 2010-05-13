@@ -245,7 +245,7 @@ void termit_on_set_tab_name()
     
     g_signal_connect(G_OBJECT(dlg), "key-press-event", G_CALLBACK(dlg_key_press), dlg);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dlg)->vbox), hbox, FALSE, FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), hbox, FALSE, FALSE, 10);
     gtk_widget_show_all(dlg);
     
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
@@ -278,7 +278,10 @@ void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint p
 {
     TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
     // it seems that set_active eventually calls toggle callback
-    ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;
+    /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;*/
+    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", NULL, NULL);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), pTab->scrollbar_is_shown);
+    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
     termit_set_statusbar_encoding(page_num);
     if (configs.allow_changing_title)
         termit_set_window_title(pTab->title);

@@ -96,7 +96,7 @@ void termit_create_menubar()
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_exit);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_file), file_menu);
 
-    gtk_menu_bar_append(menu_bar, mi_file);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_file);
 
     // Edit menu
     GtkWidget *mi_set_tab_name = gtk_menu_item_new_with_label(_("Set tab name..."));
@@ -119,7 +119,7 @@ void termit_create_menubar()
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_edit_preferences);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_edit), edit_menu);
 
-    gtk_menu_bar_append(menu_bar, mi_edit);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_edit);
 
     // Sessions menu
     GtkWidget *mi_load_session = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
@@ -133,7 +133,7 @@ void termit_create_menubar()
     gtk_menu_shell_append(GTK_MENU_SHELL(sessions_menu), mi_save_session);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_sessions), sessions_menu);
 
-    gtk_menu_bar_append(menu_bar, mi_sessions);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_sessions);
 
     // Encoding menu
     TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
@@ -151,7 +151,7 @@ void termit_create_menubar()
             g_signal_connect(G_OBJECT(mi_enc), "activate", 
                 G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
         }
-        gtk_menu_bar_append(menu_bar, mi_encodings);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_encodings);
     }
 
     // User menus
@@ -174,7 +174,7 @@ void termit_create_menubar()
                 &g_array_index(um->items, struct UserMenuItem, i));
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
         }
-        gtk_menu_bar_append(menu_bar, mi_util);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_util);
     }
     termit.menu_bar = menu_bar;
 }
@@ -194,6 +194,7 @@ void termit_create_popup_menu()
     GtkWidget *separator3 = gtk_separator_menu_item_new();
     GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
     termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Scrollbar"));
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), configs.show_scrollbar);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);
@@ -216,7 +217,7 @@ void termit_create_popup_menu()
     g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_on_paste), NULL);    
     g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_on_exit), NULL);    
 
-    ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;
+    /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;*/
 
     TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
     if (configs.encodings->len) {
