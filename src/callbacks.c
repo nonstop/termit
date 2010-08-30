@@ -365,12 +365,9 @@ free_dlg:
 void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
 {
     struct UserMenuItem* pMi = (struct UserMenuItem*)data;
-    TRACE("%s: (%d) %s", pMi->name, pMi->lua_callback, pMi->userFunc);
+    TRACE("%s: (%d)", pMi->name, pMi->lua_callback);
     if (pMi->lua_callback) {
         termit_lua_dofunction(pMi->lua_callback);
-    } else {
-        ERROR("string in menu.action is deprecated, use lua function instead");
-        termit_lua_execute(pMi->userFunc);
     }
 }
 
