@@ -68,12 +68,12 @@ static void termit_set_fonts()
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
         vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
-        gint xpad = 0, ypad = 0;
-        vte_terminal_get_padding(VTE_TERMINAL(pTab->vte), &xpad, &ypad);
-        gint w = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)) * configs.cols + xpad;
+        GtkBorder* border;
+        gtk_widget_style_get(GTK_WIDGET(pTab->vte), "inner-border", &border, NULL);
+        gint w = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)) * configs.cols + border->left + border->right;
         if (w > minWidth)
             minWidth = w;
-        gint h = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)) * configs.rows + ypad;
+        gint h = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)) * configs.rows + border->top + border->bottom;
         if (h > minHeight)
             minHeight = h;
     }
