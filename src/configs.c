@@ -95,7 +95,6 @@ static void free_menu(GArray* menus)
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
             g_free(umi->name);
-            g_free(umi->userFunc);
             termit_lua_unref(&umi->lua_callback);
         }
         g_free(um->name);

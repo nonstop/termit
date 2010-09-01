@@ -45,7 +45,7 @@ static void trace_menus(GArray* menus)
         gint j = 0;
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
-            TRACE("  %s: (%d) %s", umi->name, umi->lua_callback, umi->userFunc);
+            TRACE("  %s: (%d)", umi->name, umi->lua_callback);
         }
     }
 #endif
@@ -175,8 +175,6 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         }
         g_free(geometry_str);
     }
-    /*else if (!strcmp(name, ""))*/
-        /*config_get(&(p_cfg->), ls, index);*/
 }
 
 static void load_init(const gchar* initFile)
@@ -192,11 +190,6 @@ static void load_init(const gchar* initFile)
         else
             path = g_strdup_printf("%s/.config/termit", g_getenv("HOME"));
         fullPath = g_strdup_printf("%s/rc.lua", path);
-        if (g_file_test(fullPath, G_FILE_TEST_EXISTS) == FALSE) {
-            g_free(fullPath);
-            fullPath = g_strdup_printf("%s/init.lua", path);
-            ERROR("[%s] is deprecated, use rc.lua instead", "init.lua");
-        }
         g_free(path);
     }
     TRACE("config: %s", fullPath);

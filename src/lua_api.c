@@ -165,12 +165,7 @@ static int termit_lua_toggleMenubar(lua_State* ls)
 static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
-    if (!strcmp(name, "name") && lua_isstring(ls, index)) {
-        ERROR("name is deprecated, use title");
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->name = g_strdup(value);
-    } else if (!strcmp(name, "title") && lua_isstring(ls, index)) {
+    if (!strcmp(name, "title") && lua_isstring(ls, index)) {
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->name = g_strdup(value);
@@ -183,11 +178,6 @@ static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
         TRACE("  %s - %s", name, value);
         ti->encoding = g_strdup(value);
     } else if (!strcmp(name, "workingDir") && lua_isstring(ls, index)) {
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->working_dir = g_strdup(value);
-    } else if (!strcmp(name, "working_dir") && lua_isstring(ls, index)) {
-        ERROR("working_dir is deprecated, use workingDir");
         const gchar* value = lua_tostring(ls, index);
         TRACE("  %s - %s", name, value);
         ti->working_dir = g_strdup(value);
@@ -343,11 +333,7 @@ static int loadMenu(lua_State* ls, GArray* menus)
                             const gchar* value = lua_tostring(ls, -1);
                             umi.name = g_strdup(value);
                         } else if (!strcmp(name, "action")) {
-                            if (lua_isstring(ls, -1)) {
-                                const gchar* value = lua_tostring(ls, -1);
-                                umi.userFunc = g_strdup(value);
-                                ERROR("[%s] string in menu.action is deprecated, use lua function instead", value);
-                            } else if (lua_isfunction(ls, -1)) {
+                            if (lua_isfunction(ls, -1)) {
                                 umi.lua_callback = luaL_ref(ls, LUA_REGISTRYINDEX);
                                 lua_pushinteger(ls, 0);
                             }
