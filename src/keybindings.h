@@ -17,12 +17,17 @@
 #include <X11/Xlib.h>
 #include <gtk/gtk.h>
 
+struct KeyWithState
+{
+    guint state;
+    guint keyval;
+};
+
 typedef void(*BindingCallback)();
 struct KeyBinding
 {
     gchar* name;
-    guint state;
-    guint keyval;
+    struct KeyWithState kws;
     KeySym keycode;
     int lua_callback;
 };
@@ -34,6 +39,7 @@ struct MouseBinding
 };
 
 //void termit_load_keys();
+int termit_parse_keys_str(const gchar* keybinding, struct KeyWithState* kws);
 void termit_keys_bind(const gchar* keys, int lua_callback);
 void termit_keys_unbind(const gchar* keys);
 void termit_mouse_bind(const gchar* mouse_event, int lua_callback);
