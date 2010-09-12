@@ -519,6 +519,34 @@ static int termit_lua_reconfigure(lua_State* ls)
     return 0;
 }
 
+static int termit_menu__index(lua_State* L)
+{
+    size_t len;
+    const char *buf = luaL_checklstring(L, 2, &len);
+    // search menu by name buf
+    // if not found return nil
+    // return table with menu
+    TRACE("args=%s len=%d", buf, len);
+
+
+    TRACE("argc=%d ", lua_gettop(L));
+    TRACE("argv[1]=%s argv[2]=%s", lua_tostring(L, 1), lua_tostring(L, 2));
+    lua_pushnumber(L, 2);
+    return 1;
+}
+
+static void termit_prepare_menu()
+{
+    lua_newtable(L);
+    luaL_newmetatable(L, "termit_menu_meta");
+    lua_pushcfunction(L, termit_menu__index);
+    lua_setfield(L, -2, "__index");
+    /*lua_pushcfunction(L, termit_menu__newindex);*/
+    /*lua_setfield(L, -2, "__newindex");*/
+    lua_setmetatable(L, -2);
+    lua_setfield(L, LUA_GLOBALSINDEX, "termitMenu");
+}
+
 void termit_lua_init_api()
 {
     TRACE_FUNC;
@@ -550,5 +578,6 @@ void termit_lua_init_api()
     lua_register(L, "reconfigure", termit_lua_reconfigure);
     lua_register(L, "spawn", termit_lua_spawn);
     lua_register(L, "selection", termit_lua_selection);
+    termit_prepare_menu();
 }
 

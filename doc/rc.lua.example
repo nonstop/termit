@@ -97,6 +97,11 @@ mi.action = function ()
 end
 table.insert(userMenu, mi)
 
+mi = {}
+mi.name = 'Print menu'
+mi.action = function () print(termitMenu["User menu"]) printTable(termitMenu["User menu"]) end
+table.insert(userMenu, mi)
+
 function changeTabFontSize(delta)
     tab = tabs[currentTabIndex()]
     setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(tab.fontSize + delta))
