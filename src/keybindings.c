@@ -38,7 +38,7 @@ void termit_keys_trace()
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        TRACE("%s: %d, %d(%ld)", kb->name, kb->state, kb->keyval, kb->keycode);
+        TRACE("%s: %d, %d(%ld)", kb->name, kb->kws.state, kb->kws.keyval, kb->keycode);
     }
     TRACE_MSG("");
 #endif
@@ -165,40 +165,49 @@ void termit_keys_unbind(const gchar* keybinding)
     g_array_remove_index(configs.key_bindings, kb_index);
 }
 
-void termit_keys_bind(const gchar* keybinding, int lua_callback)
+int termit_parse_keys_str(const gchar* keybinding, struct KeyWithState* kws)
 {
     gchar** tokens = g_strsplit(keybinding, "-", 2);
     // token[0] - modifier. Only Alt, Ctrl or Shift allowed.
     if (!tokens[0] || !tokens[1])
-        return;
+        return -1;
     guint tmp_state = get_modifier_state(tokens[0]);
     if (tmp_state == GDK_NOTHING) {
         TRACE("Bad modifier: %s", keybinding);
-        return;
+        return -1;
     }
     // token[1] - key. Only alfabet and numeric keys allowed.
     guint tmp_keyval = gdk_keyval_from_name(tokens[1]);
     if (tmp_keyval == GDK_VoidSymbol) {
         TRACE("Bad keyval: %s", keybinding);
+        return -1;
+    }
+    g_strfreev(tokens);
+    kws->state = tmp_state;
+    kws->keyval = gdk_keyval_to_lower(tmp_keyval);
+    return 0;
+}
+
+void termit_keys_bind(const gchar* keybinding, int lua_callback)
+{
+    struct KeyWithState kws = {};
+    if (termit_parse_keys_str(keybinding, &kws) < 0) {
+        ERROR("failed to parse keybinding: %s", keybinding);
         return;
     }
-//    TRACE("%s: %s(%d), %s(%d)", kb->name, tokens[0], tmp_state, tokens[1], tmp_keyval);
-    g_strfreev(tokens);
     
     gint kb_index = get_kb_index(keybinding);
     if (kb_index < 0) {
         struct KeyBinding kb = {0};
         kb.name = g_strdup(keybinding);
-        kb.state = tmp_state;
-        kb.keyval = gdk_keyval_to_lower(tmp_keyval);
-        kb.keycode = XKeysymToKeycode(disp, kb.keyval);
+        kb.kws = kws;
+        kb.keycode = XKeysymToKeycode(disp, kb.kws.keyval);
         kb.lua_callback = lua_callback;
         g_array_append_val(configs.key_bindings, kb);
     } else {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, kb_index);
-        kb->state = tmp_state;
-        kb->keyval = gdk_keyval_to_lower(tmp_keyval);
-        kb->keycode = XKeysymToKeycode(disp, kb->keyval);
+        kb->kws = kws;
+        kb->keycode = XKeysymToKeycode(disp, kb->kws.keyval);
         termit_lua_unref(&kb->lua_callback);
         kb->lua_callback = lua_callback;
     }
@@ -247,7 +256,7 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->state) == kb->state)
+        if (kb && (event->state & kb->kws.state) == kb->kws.state)
             if (event->hardware_keycode == kb->keycode) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
@@ -261,8 +270,8 @@ static gboolean termit_key_press_use_keysym(GdkEventKey *event)
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->state) == kb->state)
-            if (gdk_keyval_to_lower(event->keyval) == kb->keyval) {
+        if (kb && (event->state & kb->kws.state) == kb->kws.state)
+            if (gdk_keyval_to_lower(event->keyval) == kb->kws.keyval) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
             }

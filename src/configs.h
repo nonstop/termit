@@ -63,6 +63,7 @@ struct Match
 struct UserMenuItem
 {
     gchar* name;
+    gchar* accel;
     int lua_callback;
 };
 struct UserMenu

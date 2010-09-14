@@ -45,7 +45,7 @@ static void trace_menus(GArray* menus)
         gint j = 0;
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
-            TRACE("  %s: (%d)", umi->name, umi->lua_callback);
+            TRACE("  %s: (%d) [%s]", umi->name, umi->lua_callback, umi->accel);
         }
     }
 #endif

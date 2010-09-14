@@ -7,8 +7,7 @@ defaults.font = 'Terminus 12'
 --defaults.foregroundColor = 'gray'
 --defaults.backgroundColor = 'black'
 defaults.showScrollbar = true
-defaults.transparentBackground = false
-defaults.transparentSaturation = 0.5
+defaults.transparency = 0.7
 defaults.hideSingleTab = false
 defaults.hideMenubar = false
 defaults.fillTabbar = false
@@ -81,6 +80,7 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Reconfigure'
 mi.action = reconfigure
+mi.accel = 'Ctrl-g'
 table.insert(userMenu, mi)
 
 mi = {}

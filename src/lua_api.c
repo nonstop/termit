@@ -337,6 +337,9 @@ static int loadMenu(lua_State* ls, GArray* menus)
                                 umi.lua_callback = luaL_ref(ls, LUA_REGISTRYINDEX);
                                 lua_pushinteger(ls, 0);
                             }
+                        } else if (!strcmp(name, "accel")) {
+                            const gchar* value = lua_tostring(ls, -1);
+                            umi.accel = g_strdup(value);
                         }
                     }
                     lua_pop(ls, 1);

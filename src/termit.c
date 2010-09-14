@@ -12,6 +12,7 @@
     along with termit. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
 #include <string.h>
 
@@ -23,6 +24,7 @@
 #include "lua_api.h"
 #include "callbacks.h"
 #include "sessions.h"
+#include "keybindings.h"
 #include "configs.h"
 #include "termit.h"
 
@@ -75,8 +77,25 @@ static void pack_widgets()
     g_signal_connect(G_OBJECT(termit.main_window), "button-press-event", G_CALLBACK(termit_on_double_click), NULL);
 }
 
+static void menu_item_set_accel(GtkMenuItem* mi, const gchar* parentName,
+        const gchar* itemName, const gchar* accel)
+{
+    struct KeyWithState kws = {};
+    if (termit_parse_keys_str(accel, &kws) < 0) {
+        ERROR("failed to parse keybinding: %s", accel);
+        return;
+    }
+    gchar* path = NULL;
+    path = g_strdup_printf("<Termit>/%s/%s", parentName, itemName);
+    gtk_menu_item_set_accel_path(GTK_MENU_ITEM(mi), path);
+    gtk_accel_map_add_entry(path, kws.keyval, kws.state);
+    g_free(path);
+}
+
 void termit_create_menubar()
 {
+    GtkAccelGroup *accel = gtk_accel_group_new();
+    gtk_window_add_accel_group(GTK_WINDOW(termit.main_window), accel);
     GtkWidget* menu_bar = gtk_menu_bar_new();
 
     // File menu
@@ -90,6 +109,7 @@ void termit_create_menubar()
 
     GtkWidget *mi_file = gtk_menu_item_new_with_label(_("File"));
     GtkWidget *file_menu = gtk_menu_new();
+
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_close_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), separator1);
@@ -162,20 +182,25 @@ void termit_create_menubar()
 
         GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
         GtkWidget *utils_menu = gtk_menu_new();
+        
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
+        gtk_menu_set_accel_group(GTK_MENU(utils_menu), accel);
         
         TRACE("%s items->len=%d", um->name, um->items->len);
-        
         gint i=0;
+        gtk_menu_set_accel_group(GTK_MENU(utils_menu), accel);
         for (; i<um->items->len; ++i) {
-            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(
-                g_array_index(um->items, struct UserMenuItem, i).name);
-            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_user_menu_item_selected),
-                &g_array_index(um->items, struct UserMenuItem, i));
+            struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
+            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
+            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_user_menu_item_selected), umi);
+            if (umi->accel) {
+                menu_item_set_accel(GTK_MENU_ITEM(mi_tmp), um->name, umi->name, umi->accel);
+            }
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
         }
         gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_util);
     }
+
     termit.menu_bar = menu_bar;
 }
 
