@@ -572,6 +572,7 @@ static int termit_menu__index(lua_State* ls)
         lua_pushnil(ls);
         return 1;
     }
+    
     TRACE("args=%s len=%d", buf, len);
     gint j = 0;
     for (; j<configs.user_menus->len; ++j) {

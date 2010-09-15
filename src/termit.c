@@ -190,6 +190,26 @@ void termit_create_menubar()
     termit_create_menus(menu_bar, accel, configs.user_menus);
 
     termit.menu_bar = menu_bar;
+    
+    GList* menus = gtk_container_get_children(GTK_CONTAINER(termit.menu_bar));
+    while (menus) {
+        GtkMenuItem* mi = GTK_MENU_ITEM(menus->data);
+        TRACE("menu [%s]", gtk_menu_item_get_label(mi));
+        GtkWidget* submenu = gtk_menu_item_get_submenu(mi);
+        if (submenu) {
+            GList* items = gtk_container_get_children(GTK_CONTAINER(submenu));
+            while (items) {
+                GtkMenuItem* mi2 = GTK_MENU_ITEM(items->data);
+                items = items->next;
+                if (strlen(gtk_menu_item_get_label(mi2)) == 0) {
+                    continue; // skip separators
+                }
+                TRACE("  item [%s]", gtk_menu_item_get_label(mi2));
+            }
+        }
+        menus = menus->next;
+    }
+
 }
 
 void termit_create_popup_menu()
