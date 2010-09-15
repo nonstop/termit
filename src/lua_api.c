@@ -519,19 +519,78 @@ static int termit_lua_reconfigure(lua_State* ls)
     return 0;
 }
 
-static int termit_menu__index(lua_State* L)
+static int termit_submenu__index(lua_State* ls)
 {
     size_t len;
-    const char *buf = luaL_checklstring(L, 2, &len);
-    // search menu by name buf
-    // if not found return nil
-    // return table with menu
+    const char *buf = luaL_checklstring(ls, 2, &len);
+    if (!buf) {
+        ERROR("invalid argument");
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushnil(ls); // may be it would be better to use stack instead of tab field
+    struct UserMenu* um = NULL;
+    while (lua_next(ls, 1) != 0) {
+        if (lua_isstring(ls, -2) && lua_islightuserdata(ls, -1)) {
+            const gchar* name = lua_tostring(ls, -2);
+            if (strcmp(name, "usermenuaddr") != 0) {
+                continue;                
+            }
+            um = lua_touserdata(ls, -1);
+        }
+        lua_pop(ls, 1);
+    }
+    lua_pop(ls, 1);
+    if (!um) {
+        ERROR("usermenuaddr not found");
+        lua_pushnil(ls);
+        return 1;
+    }
+    TRACE("%s items->len=%d", um->name, um->items->len);
+    gint i=0;
+    for (; i<um->items->len; ++i) {
+        struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
+        if (strncmp(buf, umi->name, len + 1) == 0) {
+            lua_newtable(ls);
+            TERMIT_TAB_ADD_VOID("usermenuitemaddr", umi);
+            TERMIT_TAB_ADD_STRING("name", umi->name);
+            TERMIT_TAB_ADD_STRING("accel", umi->accel);
+            /*TERMIT_TAB_ADD_CALLBACK("action", umi->lua_callback);*/
+            lua_pushstring(ls, "action");
+            lua_rawgeti(ls, LUA_REGISTRYINDEX, umi->lua_callback);
+//            lua_pushvalue(ls, -1);
+            lua_rawset(ls, -3);
+            return 1;
+        }
+    }
+    return 1;
+}
+
+static int termit_menu__index(lua_State* ls)
+{
+    size_t len;
+    const char *buf = luaL_checklstring(ls, 2, &len);
+    if (!buf) {
+        ERROR("invalid argument");
+        lua_pushnil(ls);
+        return 1;
+    }
     TRACE("args=%s len=%d", buf, len);
-
-
-    TRACE("argc=%d ", lua_gettop(L));
-    TRACE("argv[1]=%s argv[2]=%s", lua_tostring(L, 1), lua_tostring(L, 2));
-    lua_pushnumber(L, 2);
+    gint j = 0;
+    for (; j<configs.user_menus->len; ++j) {
+        struct UserMenu* um = &g_array_index(configs.user_menus, struct UserMenu, j);
+        if (strncmp(buf, um->name, len + 1) == 0) {
+            lua_newtable(ls);
+            TERMIT_TAB_ADD_VOID("usermenuaddr", um);
+            luaL_newmetatable(ls, "termit_submenu_meta");
+            lua_pushcfunction(ls, termit_submenu__index);
+            lua_setfield(ls, -2, "__index");
+            lua_setmetatable(ls, -2);
+            return 1;
+        }
+    }
+    lua_pushnil(ls);
     return 1;
 }
 

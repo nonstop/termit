@@ -37,5 +37,25 @@ void termit_lua_options_loader(const gchar* name, struct lua_State* ls, int inde
 void termit_lua_keys_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_lua_matches_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 
+#define TERMIT_TAB_ADD_NUMBER(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushnumber(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_STRING(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushstring(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_VOID(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushlightuserdata(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_BOOLEAN(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushboolean(ls, value); \
+    lua_rawset(ls, -3); \
+}
 #endif /* TERMIT_LUA_API_H */
 
