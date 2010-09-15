@@ -362,7 +362,7 @@ free_dlg:
     g_free(fullPath);
 }
 
-void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
+void termit_on_menu_item_selected(GtkWidget *widget, void *data)
 {
     struct UserMenuItem* pMi = (struct UserMenuItem*)data;
     if (pMi->lua_callback) {

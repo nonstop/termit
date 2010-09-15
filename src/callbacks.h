@@ -34,7 +34,7 @@ void termit_on_toggle_scrollbar();
 void termit_on_child_exited();
 void termit_on_exit();
 void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data);
-void termit_on_user_menu_item_selected(GtkWidget *widget, void *data);
+void termit_on_menu_item_selected(GtkWidget *widget, void *data);
 void termit_on_del_tab();
 gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data);
 void termit_on_save_session();
