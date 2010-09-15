@@ -556,11 +556,7 @@ static int termit_submenu__index(lua_State* ls)
             TERMIT_TAB_ADD_VOID("usermenuitemaddr", umi);
             TERMIT_TAB_ADD_STRING("name", umi->name);
             TERMIT_TAB_ADD_STRING("accel", umi->accel);
-            /*TERMIT_TAB_ADD_CALLBACK("action", umi->lua_callback);*/
-            lua_pushstring(ls, "action");
-            lua_rawgeti(ls, LUA_REGISTRYINDEX, umi->lua_callback);
-//            lua_pushvalue(ls, -1);
-            lua_rawset(ls, -3);
+            TERMIT_TAB_ADD_CALLBACK("action", umi->lua_callback);
             return 1;
         }
     }

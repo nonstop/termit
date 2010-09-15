@@ -57,5 +57,10 @@ void termit_lua_matches_loader(const gchar* name, struct lua_State* ls, int inde
     lua_pushboolean(ls, value); \
     lua_rawset(ls, -3); \
 }
+#define TERMIT_TAB_ADD_CALLBACK(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_rawgeti(ls, LUA_REGISTRYINDEX, value); \
+    lua_rawset(ls, -3); \
+}
 #endif /* TERMIT_LUA_API_H */
 
