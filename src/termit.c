@@ -184,27 +184,8 @@ void termit_create_menubar()
 
     gtk_menu_bar_append(menu_bar, mi_sessions);
 
-    // Encoding menu
-    TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len) {
-        GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
-        GtkWidget *enc_menu = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
-
-        gint i=0;
-        for (; i<configs.encodings->len; ++i) {
-            TRACE("%s", g_array_index(configs.encodings, gchar*, i));
-            GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
-            gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
-            
-            g_signal_connect(G_OBJECT(mi_enc), "activate", 
-                G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
-        }
-        gtk_menu_bar_append(menu_bar, mi_encodings);
-    }
-
     // Default menus
-    //termit_create_menus(menu_bar, accel, configs.default_menus);
+//    termit_create_menus(menu_bar, accel, configs.default_menus);
     // User menus
     termit_create_menus(menu_bar, accel, configs.user_menus);
 
@@ -250,22 +231,6 @@ void termit_create_popup_menu()
 
     ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;
 
-    TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len) {
-        GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
-        GtkWidget *enc_menu = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
-        gint i = 0;
-        for (; i<configs.encodings->len; ++i) {
-            GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
-            gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
-            g_signal_connect(G_OBJECT(mi_enc), "activate", 
-                G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
-        }
-
-        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_encodings, 5);
-    }
-    
     // User popup menus
     TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
     gint j = 0;

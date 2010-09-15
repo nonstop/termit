@@ -32,7 +32,6 @@ struct Configs
     guint scrollback_lines;
     guint cols;
     guint rows;
-    GArray* encodings;
     GArray* user_menus;         // UserMenu
     GArray* user_popup_menus;   // UserMenu
     GArray* key_bindings;       // KeyBinding
