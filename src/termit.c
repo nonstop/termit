@@ -37,7 +37,7 @@ struct TermitTab* termit_get_tab_by_index(gint index)
         ERROR("tabWidget is NULL");
         return NULL;
     }
-    struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), "termit.tab");
+    struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA);
     return pTab;
 }
 
@@ -111,7 +111,8 @@ static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArra
         for (; i<um->items->len; ++i) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
-            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_menu_item_selected), umi);
+            g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
+            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
             if (umi->accel) {
                 menu_item_set_accel(GTK_MENU_ITEM(mi_tmp), um->name, umi->name, umi->accel);
             }
@@ -204,6 +205,10 @@ void termit_create_menubar()
                 if (strlen(gtk_menu_item_get_label(mi2)) == 0) {
                     continue; // skip separators
                 }
+                struct UserMenuItem* umi = (struct UserMenuItem*)g_object_get_data(G_OBJECT(mi2), "termit.usermenu");
+                if (!umi) {
+                    continue;
+                }
                 TRACE("  item [%s]", gtk_menu_item_get_label(mi2));
             }
         }
@@ -265,11 +270,12 @@ void termit_create_popup_menu()
         
         gint i = 0;
         for (; i<um->items->len; i++) {
-            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(
-                g_array_index(um->items, struct UserMenuItem, i).name);
+            struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
+            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
+            g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
             g_signal_connect(G_OBJECT(mi_tmp), "activate", 
-                G_CALLBACK(termit_on_menu_item_selected), &g_array_index(um->items, struct UserMenuItem, i));
+                G_CALLBACK(termit_on_menu_item_selected), NULL);
         }
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
     }

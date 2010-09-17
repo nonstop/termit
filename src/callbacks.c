@@ -364,8 +364,9 @@ free_dlg:
 
 void termit_on_menu_item_selected(GtkWidget *widget, void *data)
 {
-    struct UserMenuItem* pMi = (struct UserMenuItem*)data;
-    if (pMi->lua_callback) {
+    struct UserMenuItem* pMi = (struct UserMenuItem*)g_object_get_data(G_OBJECT(widget),
+            TERMIT_USER_MENU_ITEM_DATA);
+    if (pMi && pMi->lua_callback) {
         termit_lua_dofunction(pMi->lua_callback);
     }
 }

@@ -81,7 +81,7 @@ int termit_lua_dofunction(int f)
     if(f != LUA_REFNIL) {
         lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
         if (lua_pcall(ls, 0, 0, 0)) {
-            TRACE("error running function: %s", lua_tostring(ls, -1));
+            TRACE("error running function (%d): %s", f, lua_tostring(ls, -1));
             lua_pop(ls, 1);
             return 0;
         }
@@ -251,10 +251,10 @@ static void termit_load_colormap(lua_State* ls, GdkColormap* colormap)
     while (lua_next(ls, 1) != 0) {
         /* uses 'key' (at index -2) and 'value' (at index -1) */
         const int valueIndex = -1;
-        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
+//        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
         if (!lua_isnil(ls, valueIndex) && lua_isstring(ls, valueIndex)) {
             const gchar* colorStr = lua_tostring(ls, valueIndex);
-            TRACE("%d - %s", i, colorStr);
+//            TRACE("%d - %s", i, colorStr);
             if (!gdk_color_parse(colorStr, &colormap->colors[i])) {
                 ERROR("failed to parse color: %d - %s", i, colorStr);
             }
