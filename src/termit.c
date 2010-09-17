@@ -122,15 +122,28 @@ static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArra
     }
 }
 
+static GtkWidget* termit_menu_item_from_stock(const gchar* stock_id, const char* luaFunc)
+{
+    GtkWidget *mi = gtk_image_menu_item_new_from_stock(stock_id, NULL);
+    g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
+    struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
+    umi->name = gtk_menu_item_get_label(GTK_MENU_ITEM(mi));
+    umi->lua_callback = termit_get_lua_func(luaFunc);
+    g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
+    return mi;
+}
+
 void termit_create_menubar()
 {
+
     GtkAccelGroup *accel = gtk_accel_group_new();
     gtk_window_add_accel_group(GTK_WINDOW(termit.main_window), accel);
     GtkWidget* menu_bar = gtk_menu_bar_new();
 
     // File menu
-    GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
-    g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);
+    GtkWidget *mi_new_tab = termit_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
+    /*GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);*/
+    /*g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);*/
     GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
     g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_on_close_tab), NULL);
     GtkWidget *separator1 = gtk_separator_menu_item_new();

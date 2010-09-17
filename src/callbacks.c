@@ -263,11 +263,6 @@ void termit_on_edit_preferences()
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     termit_preferences_dialog(pTab);
 }
-void termit_on_new_tab()
-{
-    termit_append_tab();
-}
-
 void termit_on_exit()
 {
     if (confirm_exit() == FALSE)

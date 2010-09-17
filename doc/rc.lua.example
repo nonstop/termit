@@ -72,7 +72,7 @@ table.insert(userMenu, mi)
 
 mi = {}
 mi.name = 'set red color'
-mi.action = function () setColor('red') end
+mi.action = function () setTabForegroundColor('red') end
 table.insert(userMenu, mi)
 
 mi = {}
