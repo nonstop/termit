@@ -20,6 +20,7 @@
 #include "termit_core_api.h"
 #include "keybindings.h"
 #include "configs.h"
+#include "callbacks.h"
 #include "lua_api.h"
 
 extern lua_State* L;
@@ -415,6 +416,30 @@ static int termit_lua_changeTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_loadSessionDialog(lua_State* ls)
+{
+    termit_on_load_session();
+    return 0;
+}
+
+static int termit_lua_saveSessionDialog(lua_State* ls)
+{
+    termit_on_save_session();
+    return 0;
+}
+
+static int termit_lua_preferencesDialog(lua_State* ls)
+{
+    termit_on_edit_preferences();
+    return 0;
+}
+
+static int termit_lua_setTabTitleDialog(lua_State* ls)
+{
+    termit_on_set_tab_name();
+    return 0;
+}
+
 static int termit_lua_setTabTitle(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -516,6 +541,12 @@ static int termit_lua_reconfigure(lua_State* ls)
 {
     termit_reconfigure();
     termit_config_trace();
+    return 0;
+}
+
+static int termit_lua_quit(lua_State* ls)
+{
+    termit_on_exit();
     return 0;
 }
 
@@ -636,7 +667,12 @@ struct TermitLuaFunction
     {"toggleMenu", termit_lua_toggleMenubar, 0},
     {"reconfigure", termit_lua_reconfigure, 0},
     {"spawn", termit_lua_spawn, 0},
-    {"selection", termit_lua_selection, 0}
+    {"selection", termit_lua_selection, 0},
+    {"setTabTitleDlg", termit_lua_setTabTitleDialog, 0},
+    {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
+    {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
+    {"preferencesDlg", termit_lua_preferencesDialog, 0},
+    {"quit", termit_lua_quit, 0}
 };
 
 int termit_get_lua_func(const char* name)

@@ -127,6 +127,11 @@ mi.name = 'Decrease font size'
 mi.action = function () changeTabFontSize(-1) end
 table.insert(userMenu, mi)
 
+mi = {}
+mi.name = 'User quit'
+mi.action = function () quit() end
+table.insert(userMenu, mi)
+
 --printTable(userMenu, '')
 
 -- list of available encodings

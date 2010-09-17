@@ -159,21 +159,6 @@ void termit_on_next_tab()
     termit_next_tab();
 }
 
-void termit_on_paste()
-{
-    termit_paste();
-}
-
-void termit_on_copy()
-{
-    termit_copy();
-}
-
-void termit_on_close_tab()
-{
-    termit_close_tab();
-}
-
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {

@@ -22,9 +22,6 @@ gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer use
 void termit_on_set_encoding(GtkWidget *, void *);
 void termit_on_prev_tab();
 void termit_on_next_tab();
-void termit_on_close_tab();
-void termit_on_paste();
-void termit_on_copy();
 gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user_data);
 void termit_on_beep(VteTerminal *vte, gpointer user_data);
 void termit_on_edit_preferences();
