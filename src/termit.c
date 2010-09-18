@@ -128,7 +128,8 @@ static GtkWidget* termit_lua_menu_item_from_stock(const gchar* stock_id, const c
     GtkWidget *mi = gtk_image_menu_item_new_from_stock(stock_id, NULL);
     g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
     struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
-    umi->name = gtk_menu_item_get_label(GTK_MENU_ITEM(mi));
+    umi->name = g_strdup(gtk_menu_item_get_label(GTK_MENU_ITEM(mi)));
+    umi->accel = NULL;
     umi->lua_callback = termit_get_lua_func(luaFunc);
     g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
     return mi;
@@ -140,6 +141,7 @@ static GtkWidget* termit_lua_menu_item_from_string(const gchar* label, const cha
     g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
     struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
     umi->name = gtk_menu_item_get_label(GTK_MENU_ITEM(mi));
+    umi->accel = NULL;
     umi->lua_callback = termit_get_lua_func(luaFunc);
     g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
     return mi;
@@ -201,30 +203,6 @@ void termit_create_menubar()
     termit_create_menus(menu_bar, accel, configs.user_menus);
 
     termit.menu_bar = menu_bar;
-// menu items visitor
-    GList* menus = gtk_container_get_children(GTK_CONTAINER(termit.menu_bar));
-    while (menus) {
-        GtkMenuItem* mi = GTK_MENU_ITEM(menus->data);
-        TRACE("menu [%s]", gtk_menu_item_get_label(mi));
-        GtkWidget* submenu = gtk_menu_item_get_submenu(mi);
-        if (submenu) {
-            GList* items = gtk_container_get_children(GTK_CONTAINER(submenu));
-            while (items) {
-                GtkMenuItem* mi2 = GTK_MENU_ITEM(items->data);
-                items = items->next;
-                if (strlen(gtk_menu_item_get_label(mi2)) == 0) {
-                    continue; // skip separators
-                }
-                struct UserMenuItem* umi = (struct UserMenuItem*)g_object_get_data(G_OBJECT(mi2), "termit.usermenu");
-                if (!umi) {
-                    continue;
-                }
-                TRACE("  item [%s]", gtk_menu_item_get_label(mi2));
-            }
-        }
-        menus = menus->next;
-    }
-
 }
 
 void termit_create_popup_menu()

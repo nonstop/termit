@@ -100,15 +100,25 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Print menu'
 mi.action = function ()
+    um = termitMenu["File"]
+    print(um)
+    printTable(um, '')
+    umi = um["gtk-delete"]
+    if umi then
+        print(umi)
+        printTable(umi, '')
+        --umi.action()
+    end
     um = termitMenu["User menu"]
     print(type(um))
     print(um)
     printTable(um, '')
     umi = um["Get tab info"]
-    print(type(umi))
-    print(umi)
-    printTable(umi, '')
-    umi.action()
+    if umi then
+        print(umi)
+        printTable(umi, '')
+        --umi.action()
+    end
 end
 table.insert(userMenu, mi)
 

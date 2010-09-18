@@ -552,71 +552,84 @@ static int termit_lua_quit(lua_State* ls)
 
 static int termit_submenu__index(lua_State* ls)
 {
-    size_t len;
+    size_t len = 0;
     const char *buf = luaL_checklstring(ls, 2, &len);
     if (!buf) {
         ERROR("invalid argument");
         lua_pushnil(ls);
         return 1;
     }
-
     lua_pushnil(ls); // may be it would be better to use stack instead of tab field
-    struct UserMenu* um = NULL;
+    TRACE("searching [%s]", buf);
+    GtkWidget* submenu = NULL;
     while (lua_next(ls, 1) != 0) {
         if (lua_isstring(ls, -2) && lua_islightuserdata(ls, -1)) {
             const gchar* name = lua_tostring(ls, -2);
-            if (strcmp(name, "usermenuaddr") != 0) {
+            if (strcmp(name, "submenu") != 0) {
                 continue;                
             }
-            um = lua_touserdata(ls, -1);
+            submenu = lua_touserdata(ls, -1);
         }
         lua_pop(ls, 1);
     }
     lua_pop(ls, 1);
-    if (!um) {
-        ERROR("usermenuaddr not found");
+    if (!submenu) {
+        ERROR("usermenu not found: %s", buf);
         lua_pushnil(ls);
         return 1;
     }
-    TRACE("%s items->len=%d", um->name, um->items->len);
-    gint i=0;
-    for (; i<um->items->len; ++i) {
-        struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
-        if (strncmp(buf, umi->name, len + 1) == 0) {
+    GList* items = gtk_container_get_children(GTK_CONTAINER(submenu));
+    while (items) {
+        GtkMenuItem* mi = GTK_MENU_ITEM(items->data);
+        items = items->next;
+        if (strlen(gtk_menu_item_get_label(mi)) == 0) {
+            continue; // skip separators
+        }
+        TRACE("submenu.item [%s]", gtk_menu_item_get_label(mi));
+        if (strcmp(buf, gtk_menu_item_get_label(mi)) == 0) {
+            struct UserMenuItem* umi = (struct UserMenuItem*)g_object_get_data(G_OBJECT(mi),
+                    TERMIT_USER_MENU_ITEM_DATA);
+            if (!umi) {
+                ERROR("usermenu not found: %s", buf);
+                lua_pushnil(ls);
+                return 1;
+            }
+            TRACE("  item: name=%5.5s accel=%5.5s callback=%d", umi->name, umi->accel, umi->lua_callback);
             lua_newtable(ls);
-            TERMIT_TAB_ADD_VOID("usermenuitemaddr", umi);
             TERMIT_TAB_ADD_STRING("name", umi->name);
             TERMIT_TAB_ADD_STRING("accel", umi->accel);
             TERMIT_TAB_ADD_CALLBACK("action", umi->lua_callback);
             return 1;
         }
     }
+    lua_pushnil(ls);
     return 1;
 }
 
 static int termit_menu__index(lua_State* ls)
 {
-    size_t len;
+    size_t len = 0;
     const char *buf = luaL_checklstring(ls, 2, &len);
     if (!buf) {
         ERROR("invalid argument");
         lua_pushnil(ls);
         return 1;
     }
-    
     TRACE("args=%s len=%d", buf, len);
-    gint j = 0;
-    for (; j<configs.user_menus->len; ++j) {
-        struct UserMenu* um = &g_array_index(configs.user_menus, struct UserMenu, j);
-        if (strncmp(buf, um->name, len + 1) == 0) {
+    GList* menus = gtk_container_get_children(GTK_CONTAINER(termit.menu_bar));
+    while (menus) {
+        GtkMenuItem* mi = GTK_MENU_ITEM(menus->data);
+        if (mi && strcmp(gtk_menu_item_get_label(mi), buf) == 0) {
+            TRACE("found menu [%s]", buf);
             lua_newtable(ls);
-            TERMIT_TAB_ADD_VOID("usermenuaddr", um);
+            TERMIT_TAB_ADD_VOID("submenu", gtk_menu_item_get_submenu(mi));
             luaL_newmetatable(ls, "termit_submenu_meta");
             lua_pushcfunction(ls, termit_submenu__index);
             lua_setfield(ls, -2, "__index");
             lua_setmetatable(ls, -2);
             return 1;
         }
+        menus = menus->next;
     }
     lua_pushnil(ls);
     return 1;
@@ -698,7 +711,6 @@ void termit_lua_init_api()
         lua_setglobal(L, functions[i].lua_func_name);
         TRACE("%s [%d]", functions[i].lua_func_name, functions[i].lua_func);
     }
-
     termit_prepare_menu();
 }
 
