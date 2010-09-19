@@ -100,9 +100,11 @@ table.insert(userMenu, mi)
 mi = {}
 mi.name = 'Print menu'
 mi.action = function ()
+    termitMenu["File"] = 123
     um = termitMenu["File"]
     print(um)
     printTable(um, '')
+    um["gtk-delete"] = "lol"
     umi = um["gtk-delete"]
     if umi then
         print(umi)

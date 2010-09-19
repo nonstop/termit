@@ -606,6 +606,13 @@ static int termit_submenu__index(lua_State* ls)
     return 1;
 }
 
+static int termit_submenu__newindex(lua_State* ls)
+{
+    ERROR("assign to submenu is denied");
+    lua_pushnil(ls);
+    return 1;
+}
+
 static int termit_menu__index(lua_State* ls)
 {
     size_t len = 0;
@@ -626,11 +633,20 @@ static int termit_menu__index(lua_State* ls)
             luaL_newmetatable(ls, "termit_submenu_meta");
             lua_pushcfunction(ls, termit_submenu__index);
             lua_setfield(ls, -2, "__index");
+            lua_pushcfunction(L, termit_submenu__newindex);
+            lua_setfield(L, -2, "__newindex");
             lua_setmetatable(ls, -2);
             return 1;
         }
         menus = menus->next;
     }
+    lua_pushnil(ls);
+    return 1;
+}
+
+static int termit_menu__newindex(lua_State* ls)
+{
+    ERROR("assign to menu is denied");
     lua_pushnil(ls);
     return 1;
 }
@@ -641,8 +657,8 @@ static void termit_prepare_menu()
     luaL_newmetatable(L, "termit_menu_meta");
     lua_pushcfunction(L, termit_menu__index);
     lua_setfield(L, -2, "__index");
-    /*lua_pushcfunction(L, termit_menu__newindex);*/
-    /*lua_setfield(L, -2, "__newindex");*/
+    lua_pushcfunction(L, termit_menu__newindex);
+    lua_setfield(L, -2, "__newindex");
     lua_setmetatable(L, -2);
     lua_setfield(L, LUA_GLOBALSINDEX, "termitMenu");
 }
