@@ -550,6 +550,81 @@ static int termit_lua_quit(lua_State* ls)
     return 0;
 }
 
+static int termit_menuitem__index(lua_State* ls)
+{
+    size_t len = 0;
+    const char *buf = luaL_checklstring(ls, 2, &len);
+    if (!buf) {
+        ERROR("invalid argument");
+        lua_pushnil(ls);
+        return 1;
+    }
+    TRACE("menuitem.%s", buf);
+    lua_pushnil(ls);
+    return 1;
+}
+
+static int termit_menuitem__newindex(lua_State* ls)
+{
+    size_t len = 0;
+    const char *val = luaL_checklstring(ls, 2, &len);
+    if (!val) {
+        ERROR("invalid argument");
+        return 0;
+    }
+    if (strcmp(val, "accel") != 0) {
+        ERROR("invalid argument: only changing accel is allowed");
+        return 0;
+    }
+    TRACE("menuitem.newindex: [%s]", val);
+    if (lua_isnil(ls, 3)) {
+        // unset accel
+        TRACE_MSG("no font defined: skipping");
+        return 0;
+    }
+    if (!lua_isstring(ls, 3)) {
+        ERROR("new accel val is not string: skipping");
+        return 0;
+    }
+    val =  lua_tostring(ls, 3);
+    TRACE("menuitem.newindex: [%s]", val);
+    struct KeyWithState kws = {};
+    if (termit_parse_keys_str(val, &kws) < 0) {
+        ERROR("parse failed for [%s]", val);
+        return 0;
+    }
+    GtkWidget* menu = NULL, *submenu = NULL;
+    lua_pushnil(ls); // may be it would be better to use stack instead of tab field
+    while (lua_next(ls, 1) != 0) {
+        if (lua_isstring(ls, -2) && lua_islightuserdata(ls, -1)) {
+            const gchar* name = lua_tostring(ls, -2);
+            if (strcmp(name, "submenu") == 0) {
+                submenu = lua_touserdata(ls, -1);
+            } else if (strcmp(name, "menu") == 0) {
+                menu = lua_touserdata(ls, -1);
+            } else {
+                ERROR("unknown tab field: %s", name);
+            }
+        }
+        lua_pop(ls, 1);
+    }
+    lua_pop(ls, 1);
+    gchar* path = NULL;
+    path = g_strdup_printf("<Termit>/%s/%s",
+            gtk_menu_item_get_label(GTK_MENU_ITEM(menu)),
+            gtk_menu_item_get_label(GTK_MENU_ITEM(submenu)));
+    if (gtk_accel_map_lookup_entry(path, NULL) == TRUE) {
+        if (gtk_accel_map_change_entry(path, kws.keyval, kws.state, TRUE) != TRUE) {
+            ERROR("failed to change accelerator: %s", val);
+        }
+    } else {
+        gtk_accel_map_add_entry(path, kws.keyval, kws.state);
+    }
+    TRACE("changing %s to [%s]", path, val);
+    g_free(path);
+    return 0;
+}
+
 static int termit_submenu__index(lua_State* ls)
 {
     size_t len = 0;
@@ -561,19 +636,22 @@ static int termit_submenu__index(lua_State* ls)
     }
     lua_pushnil(ls); // may be it would be better to use stack instead of tab field
     TRACE("searching [%s]", buf);
-    GtkWidget* submenu = NULL;
+    GtkWidget* menu = NULL, *submenu = NULL;
     while (lua_next(ls, 1) != 0) {
         if (lua_isstring(ls, -2) && lua_islightuserdata(ls, -1)) {
             const gchar* name = lua_tostring(ls, -2);
-            if (strcmp(name, "submenu") != 0) {
-                continue;                
+            if (strcmp(name, "submenu") == 0) {
+                submenu = lua_touserdata(ls, -1);
+            } else if (strcmp(name, "menu") == 0) {
+                menu = lua_touserdata(ls, -1);
+            } else {
+                ERROR("unknown tab field: %s", name);
             }
-            submenu = lua_touserdata(ls, -1);
         }
         lua_pop(ls, 1);
     }
     lua_pop(ls, 1);
-    if (!submenu) {
+    if (!submenu || !menu) {
         ERROR("usermenu not found: %s", buf);
         lua_pushnil(ls);
         return 1;
@@ -599,6 +677,14 @@ static int termit_submenu__index(lua_State* ls)
             TERMIT_TAB_ADD_STRING("name", umi->name);
             TERMIT_TAB_ADD_STRING("accel", umi->accel);
             TERMIT_TAB_ADD_CALLBACK("action", umi->lua_callback);
+            TERMIT_TAB_ADD_VOID("menu", menu);
+            TERMIT_TAB_ADD_VOID("submenu", mi);
+            luaL_newmetatable(ls, "termit_menuitem_meta");
+            lua_pushcfunction(ls, termit_menuitem__index);
+            lua_setfield(ls, -2, "__index");
+            lua_pushcfunction(ls, termit_menuitem__newindex);
+            lua_setfield(ls, -2, "__newindex");
+            lua_setmetatable(ls, -2);
             return 1;
         }
     }
@@ -629,12 +715,13 @@ static int termit_menu__index(lua_State* ls)
         if (mi && strcmp(gtk_menu_item_get_label(mi), buf) == 0) {
             TRACE("found menu [%s]", buf);
             lua_newtable(ls);
+            TERMIT_TAB_ADD_VOID("menu", mi);
             TERMIT_TAB_ADD_VOID("submenu", gtk_menu_item_get_submenu(mi));
             luaL_newmetatable(ls, "termit_submenu_meta");
             lua_pushcfunction(ls, termit_submenu__index);
             lua_setfield(ls, -2, "__index");
-            lua_pushcfunction(L, termit_submenu__newindex);
-            lua_setfield(L, -2, "__newindex");
+            lua_pushcfunction(ls, termit_submenu__newindex);
+            lua_setfield(ls, -2, "__newindex");
             lua_setmetatable(ls, -2);
             return 1;
         }
