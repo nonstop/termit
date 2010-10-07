@@ -77,7 +77,7 @@ struct TermitTab* termit_get_tab_by_index(gint index);
     {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return retCode; }
 
 //#define ERROR(x) g_fprintf(stderr, "%s:%d error: %s\n", __FILE__, __LINE__, x)
-#define ERROR(format, ...) g_fprintf(stderr, format "\n", ## __VA_ARGS__)
+#define ERROR(format, ...) g_fprintf(stderr, "%s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)
 
 #ifdef DEBUG
 #define STDFMT "%s:%d "

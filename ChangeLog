@@ -1,3 +1,12 @@
+	accelerators for user menus
+	new Lua functions
+		setTabTitleDlg
+		loadSessionDlg
+		saveSessionDlg
+		preferencesDlg
+		quit
+	cleanup
+	fixed docs
 version 2.5.0
 	GPLv2 license agreement in every source file
 	new Lua functions

@@ -325,7 +325,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         ERROR("tabWidget is NULL");
         return;
     }
-    g_object_set_data(G_OBJECT(tabWidget), "termit.tab", pTab);
+    g_object_set_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA, pTab);
 
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);

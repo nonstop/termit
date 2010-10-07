@@ -32,7 +32,6 @@ struct Configs
     guint scrollback_lines;
     guint cols;
     guint rows;
-    GArray* encodings;
     GArray* user_menus;         // UserMenu
     GArray* user_popup_menus;   // UserMenu
     GArray* key_bindings;       // KeyBinding
@@ -81,6 +80,8 @@ void termit_config_load();
 void termit_config_trace();
 void termit_keys_trace();
 
+#define TERMIT_USER_MENU_ITEM_DATA "termit.umi_data"
+#define TERMIT_TAB_DATA "termit.tab_data"
 
 #endif /* CONFIGS_H */
 

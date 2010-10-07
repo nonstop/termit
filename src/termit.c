@@ -14,6 +14,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <getopt.h>
@@ -37,7 +38,7 @@ struct TermitTab* termit_get_tab_by_index(gint index)
         ERROR("tabWidget is NULL");
         return NULL;
     }
-    struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), "termit.tab");
+    struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA);
     return pTab;
 }
 
@@ -92,49 +93,94 @@ static void menu_item_set_accel(GtkMenuItem* mi, const gchar* parentName,
     g_free(path);
 }
 
+static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArray* menus)
+{
+    TRACE("menus->len=%d", menus->len);
+    gint j = 0;
+    for (; j<menus->len; ++j) {
+        struct UserMenu* um = &g_array_index(menus, struct UserMenu, j);
+
+        GtkWidget *mi_menu = gtk_menu_item_new_with_label(um->name);
+        GtkWidget *menu = gtk_menu_new();
+
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_menu), menu);
+        gtk_menu_set_accel_group(GTK_MENU(menu), accel);
+
+        TRACE("%s items->len=%d", um->name, um->items->len);
+        gint i=0;
+        gtk_menu_set_accel_group(GTK_MENU(menu), accel);
+        for (; i<um->items->len; ++i) {
+            struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
+            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
+            g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
+            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
+            if (umi->accel) {
+                menu_item_set_accel(GTK_MENU_ITEM(mi_tmp), um->name, umi->name, umi->accel);
+            }
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi_tmp);
+        }
+        gtk_menu_bar_append(menu_bar, mi_menu);
+    }
+}
+
+static GtkWidget* termit_lua_menu_item_from_stock(const gchar* stock_id, const char* luaFunc)
+{
+    GtkWidget *mi = gtk_image_menu_item_new_from_stock(stock_id, NULL);
+    g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
+    struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
+    umi->name = g_strdup(gtk_menu_item_get_label(GTK_MENU_ITEM(mi)));
+    umi->accel = NULL;
+    umi->lua_callback = termit_get_lua_func(luaFunc);
+    g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
+    return mi;
+}
+
+static GtkWidget* termit_lua_menu_item_from_string(const gchar* label, const char* luaFunc)
+{
+    GtkWidget *mi = gtk_menu_item_new_with_label(label);
+    g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
+    struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
+    umi->name = gtk_menu_item_get_label(GTK_MENU_ITEM(mi));
+    umi->accel = NULL;
+    umi->lua_callback = termit_get_lua_func(luaFunc);
+    g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
+    return mi;
+}
+
 void termit_create_menubar()
 {
+
     GtkAccelGroup *accel = gtk_accel_group_new();
     gtk_window_add_accel_group(GTK_WINDOW(termit.main_window), accel);
     GtkWidget* menu_bar = gtk_menu_bar_new();
 
     // File menu
-    GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
-    g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);
-    GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
-    g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_on_close_tab), NULL);
-    GtkWidget *separator1 = gtk_separator_menu_item_new();
-    GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
-    g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_on_exit), NULL);
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
+    GtkWidget *mi_exit = termit_lua_menu_item_from_stock(GTK_STOCK_QUIT, "quit");
 
     GtkWidget *mi_file = gtk_menu_item_new_with_label(_("File"));
     GtkWidget *file_menu = gtk_menu_new();
 
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_close_tab);
-    gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), separator1);
+    gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), mi_exit);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_file), file_menu);
 
     gtk_menu_bar_append(menu_bar, mi_file);
 
     // Edit menu
-    GtkWidget *mi_set_tab_name = gtk_menu_item_new_with_label(_("Set tab name..."));
-    g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_on_set_tab_name), NULL);
-    GtkWidget *mi_edit_preferences = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES, NULL);
-    g_signal_connect(G_OBJECT(mi_edit_preferences), "activate", G_CALLBACK(termit_on_edit_preferences), NULL);
-    GtkWidget *separator2 = gtk_separator_menu_item_new();
-    GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-    g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
-    GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
-    g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_on_paste), NULL);
-
+    GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
+    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_stock(GTK_STOCK_PREFERENCES, "preferencesDlg");
+    GtkWidget *mi_copy = termit_lua_menu_item_from_stock(GTK_STOCK_COPY, "copy");
+    GtkWidget *mi_paste = termit_lua_menu_item_from_stock(GTK_STOCK_PASTE, "paste");
 
     GtkWidget *mi_edit = gtk_menu_item_new_with_label(_("Edit"));
     GtkWidget *edit_menu = gtk_menu_new();
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_copy);
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_paste);
-    gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), separator2);
+    gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), mi_edit_preferences);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_edit), edit_menu);
@@ -142,10 +188,8 @@ void termit_create_menubar()
     gtk_menu_bar_append(menu_bar, mi_edit);
 
     // Sessions menu
-    GtkWidget *mi_load_session = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
-    g_signal_connect(G_OBJECT(mi_load_session), "activate", G_CALLBACK(termit_on_load_session), NULL);
-    GtkWidget *mi_save_session = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE, NULL);
-    g_signal_connect(G_OBJECT(mi_save_session), "activate", G_CALLBACK(termit_on_save_session), NULL);
+    GtkWidget *mi_load_session = termit_lua_menu_item_from_stock(GTK_STOCK_OPEN, "loadSessionDlg");
+    GtkWidget *mi_save_session = termit_lua_menu_item_from_stock(GTK_STOCK_SAVE, "saveSessionDlg");
 
     GtkWidget *mi_sessions = gtk_menu_item_new_with_label(_("Sessions"));
     GtkWidget *sessions_menu = gtk_menu_new();
@@ -155,51 +199,8 @@ void termit_create_menubar()
 
     gtk_menu_bar_append(menu_bar, mi_sessions);
 
-    // Encoding menu
-    TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len) {
-        GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
-        GtkWidget *enc_menu = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
-
-        gint i=0;
-        for (; i<configs.encodings->len; ++i) {
-            TRACE("%s", g_array_index(configs.encodings, gchar*, i));
-            GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
-            gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
-            
-            g_signal_connect(G_OBJECT(mi_enc), "activate", 
-                G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
-        }
-        gtk_menu_bar_append(menu_bar, mi_encodings);
-    }
-
     // User menus
-    TRACE("user_menus->len=%d", configs.user_menus->len);
-    gint j = 0;
-    for (; j<configs.user_menus->len; ++j) {
-        struct UserMenu* um = &g_array_index(configs.user_menus, struct UserMenu, j);
-
-        GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
-        GtkWidget *utils_menu = gtk_menu_new();
-        
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
-        gtk_menu_set_accel_group(GTK_MENU(utils_menu), accel);
-        
-        TRACE("%s items->len=%d", um->name, um->items->len);
-        gint i=0;
-        gtk_menu_set_accel_group(GTK_MENU(utils_menu), accel);
-        for (; i<um->items->len; ++i) {
-            struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
-            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
-            g_signal_connect(G_OBJECT(mi_tmp), "activate", G_CALLBACK(termit_on_user_menu_item_selected), umi);
-            if (umi->accel) {
-                menu_item_set_accel(GTK_MENU_ITEM(mi_tmp), um->name, umi->name, umi->accel);
-            }
-            gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
-        }
-        gtk_menu_bar_append(menu_bar, mi_util);
-    }
+    termit_create_menus(menu_bar, accel, configs.user_menus);
 
     termit.menu_bar = menu_bar;
 }
@@ -208,57 +209,31 @@ void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
     
-    GtkWidget *mi_new_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
-    GtkWidget *mi_close_tab = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
-    GtkWidget *separator1 = gtk_separator_menu_item_new();
-    GtkWidget *mi_set_tab_name = gtk_menu_item_new_with_label(_("Set tab name..."));
-    GtkWidget *mi_edit_preferences = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES, NULL);
-    GtkWidget *separator2 = gtk_separator_menu_item_new();
-    GtkWidget *mi_copy = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-    GtkWidget *mi_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
-    GtkWidget *separator3 = gtk_separator_menu_item_new();
-    GtkWidget *mi_exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
+    GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
+    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_stock(GTK_STOCK_PREFERENCES, "preferencesDlg");
+    GtkWidget *mi_copy = termit_lua_menu_item_from_stock(GTK_STOCK_COPY, "copy");
+    GtkWidget *mi_paste = termit_lua_menu_item_from_stock(GTK_STOCK_PASTE, "paste");
+    GtkWidget *mi_exit = termit_lua_menu_item_from_stock(GTK_STOCK_QUIT, "quit");
     termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Scrollbar"));
+    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);
-    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator1);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_set_tab_name);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), termit.mi_show_scrollbar);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_edit_preferences);
-    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator2);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_copy);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_paste);
-    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), separator3);
+    gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_exit);
 
-    g_signal_connect(G_OBJECT(mi_new_tab), "activate", G_CALLBACK(termit_on_new_tab), NULL);
-    g_signal_connect(G_OBJECT(mi_set_tab_name), "activate", G_CALLBACK(termit_on_set_tab_name), NULL);
-    g_signal_connect(G_OBJECT(mi_edit_preferences), "activate", G_CALLBACK(termit_on_edit_preferences), NULL);
-    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
-    g_signal_connect(G_OBJECT(mi_close_tab), "activate", G_CALLBACK(termit_on_close_tab), NULL);
-    g_signal_connect(G_OBJECT(mi_copy), "activate", G_CALLBACK(termit_on_copy), NULL);
-    g_signal_connect(G_OBJECT(mi_paste), "activate", G_CALLBACK(termit_on_paste), NULL);    
-    g_signal_connect(G_OBJECT(mi_exit), "activate", G_CALLBACK(termit_on_exit), NULL);    
 
     ((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;
 
-    TRACE("%s: configs.encodings->len=%d", __FUNCTION__, configs.encodings->len);
-    if (configs.encodings->len) {
-        GtkWidget *mi_encodings = gtk_menu_item_new_with_label(_("Encoding"));
-        GtkWidget *enc_menu = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_encodings), enc_menu);
-        gint i = 0;
-        for (; i<configs.encodings->len; ++i) {
-            GtkWidget* mi_enc = gtk_menu_item_new_with_label(g_array_index(configs.encodings, gchar*, i));
-            gtk_menu_shell_append(GTK_MENU_SHELL(enc_menu), mi_enc);
-            g_signal_connect(G_OBJECT(mi_enc), "activate", 
-                G_CALLBACK(termit_on_set_encoding), g_array_index(configs.encodings, gchar*, i));
-        }
-
-        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_encodings, 5);
-    }
-    
     // User popup menus
     TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
     gint j = 0;
@@ -273,11 +248,12 @@ void termit_create_popup_menu()
         
         gint i = 0;
         for (; i<um->items->len; i++) {
-            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(
-                g_array_index(um->items, struct UserMenuItem, i).name);
+            struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
+            GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
+            g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
             g_signal_connect(G_OBJECT(mi_tmp), "activate", 
-                G_CALLBACK(termit_on_user_menu_item_selected), &g_array_index(um->items, struct UserMenuItem, i));
+                G_CALLBACK(termit_on_menu_item_selected), NULL);
         }
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
     }

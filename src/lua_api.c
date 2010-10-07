@@ -20,6 +20,7 @@
 #include "termit_core_api.h"
 #include "keybindings.h"
 #include "configs.h"
+#include "callbacks.h"
 #include "lua_api.h"
 
 extern lua_State* L;
@@ -81,7 +82,7 @@ int termit_lua_dofunction(int f)
     if(f != LUA_REFNIL) {
         lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
         if (lua_pcall(ls, 0, 0, 0)) {
-            TRACE("error running function: %s", lua_tostring(ls, -1));
+            TRACE("error running function (%d): %s", f, lua_tostring(ls, -1));
             lua_pop(ls, 1);
             return 0;
         }
@@ -251,10 +252,10 @@ static void termit_load_colormap(lua_State* ls, GdkColormap* colormap)
     while (lua_next(ls, 1) != 0) {
         /* uses 'key' (at index -2) and 'value' (at index -1) */
         const int valueIndex = -1;
-        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
+//        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
         if (!lua_isnil(ls, valueIndex) && lua_isstring(ls, valueIndex)) {
             const gchar* colorStr = lua_tostring(ls, valueIndex);
-            TRACE("%d - %s", i, colorStr);
+//            TRACE("%d - %s", i, colorStr);
             if (!gdk_color_parse(colorStr, &colormap->colors[i])) {
                 ERROR("failed to parse color: %d - %s", i, colorStr);
             }
@@ -415,6 +416,30 @@ static int termit_lua_changeTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_loadSessionDialog(lua_State* ls)
+{
+    termit_on_load_session();
+    return 0;
+}
+
+static int termit_lua_saveSessionDialog(lua_State* ls)
+{
+    termit_on_save_session();
+    return 0;
+}
+
+static int termit_lua_preferencesDialog(lua_State* ls)
+{
+    termit_on_edit_preferences();
+    return 0;
+}
+
+static int termit_lua_setTabTitleDialog(lua_State* ls)
+{
+    termit_on_set_tab_name();
+    return 0;
+}
+
 static int termit_lua_setTabTitle(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -519,36 +544,75 @@ static int termit_lua_reconfigure(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_quit(lua_State* ls)
+{
+    termit_on_exit();
+    return 0;
+}
+
+struct TermitLuaFunction
+{
+    const char* lua_func_name;
+    lua_CFunction c_func;
+    int lua_func;
+} functions[] = {
+    {"setOptions", termit_lua_setOptions, 0},
+    {"bindKey", termit_lua_bindKey, 0},
+    {"bindMouse", termit_lua_bindMouse, 0},
+    {"setKbPolicy", termit_lua_setKbPolicy, 0},
+    {"setMatches", termit_lua_setMatches, 0},
+    {"setColormap", termit_lua_setColormap, 0},
+    {"openTab", termit_lua_openTab, 0},
+    {"nextTab", termit_lua_nextTab, 0},
+    {"prevTab", termit_lua_prevTab, 0},
+    {"activateTab", termit_lua_activateTab, 0},
+    {"changeTab", termit_lua_changeTab, 0},
+    {"closeTab", termit_lua_closeTab, 0},
+    {"copy", termit_lua_copy, 0},
+    {"paste", termit_lua_paste, 0},
+    {"addMenu", termit_lua_addMenu, 0},
+    {"addPopupMenu", termit_lua_addPopupMenu, 0},
+    {"currentTabIndex", termit_lua_currentTabIndex, 0},
+    {"currentTab", termit_lua_currentTab, 0},
+    {"setEncoding", termit_lua_setEncoding, 0},
+    {"setTabTitle", termit_lua_setTabTitle, 0},
+    {"setWindowTitle", termit_lua_setWindowTitle, 0},
+    {"setTabForegroundColor", termit_lua_setTabForegroundColor, 0},
+    {"setTabBackgroundColor", termit_lua_setTabBackgroundColor, 0},
+    {"setTabFont", termit_lua_setTabFont, 0},
+    {"toggleMenu", termit_lua_toggleMenubar, 0},
+    {"reconfigure", termit_lua_reconfigure, 0},
+    {"spawn", termit_lua_spawn, 0},
+    {"selection", termit_lua_selection, 0},
+    {"setTabTitleDlg", termit_lua_setTabTitleDialog, 0},
+    {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
+    {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
+    {"preferencesDlg", termit_lua_preferencesDialog, 0},
+    {"quit", termit_lua_quit, 0}
+};
+
+int termit_get_lua_func(const char* name)
+{
+    int i = 0;
+    for (; i < sizeof(functions)/sizeof(functions[0]); ++i) {
+        if (strcmp(name, functions[i].lua_func_name) == 0) {
+            return functions[i].lua_func;
+        }
+    }
+    ERROR("not found lua function by name [%s]", name);
+    return 0;
+}
+
+
 void termit_lua_init_api()
 {
-    TRACE_FUNC;
-    lua_register(L, "setOptions", termit_lua_setOptions);
-    lua_register(L, "bindKey", termit_lua_bindKey);
-    lua_register(L, "bindMouse", termit_lua_bindMouse);
-    lua_register(L, "setKbPolicy", termit_lua_setKbPolicy);
-    lua_register(L, "setMatches", termit_lua_setMatches);
-    lua_register(L, "setColormap", termit_lua_setColormap);
-    lua_register(L, "openTab", termit_lua_openTab);
-    lua_register(L, "nextTab", termit_lua_nextTab);
-    lua_register(L, "prevTab", termit_lua_prevTab);
-    lua_register(L, "activateTab", termit_lua_activateTab);
-    lua_register(L, "changeTab", termit_lua_changeTab);
-    lua_register(L, "closeTab", termit_lua_closeTab);
-    lua_register(L, "copy", termit_lua_copy);
-    lua_register(L, "paste", termit_lua_paste);
-    lua_register(L, "addMenu", termit_lua_addMenu);
-    lua_register(L, "addPopupMenu", termit_lua_addPopupMenu);
-    lua_register(L, "currentTabIndex", termit_lua_currentTabIndex);
-    lua_register(L, "currentTab", termit_lua_currentTab);
-    lua_register(L, "setEncoding", termit_lua_setEncoding);
-    lua_register(L, "setTabTitle", termit_lua_setTabTitle);
-    lua_register(L, "setWindowTitle", termit_lua_setWindowTitle);
-    lua_register(L, "setTabForegroundColor", termit_lua_setTabForegroundColor);
-    lua_register(L, "setTabBackgroundColor", termit_lua_setTabBackgroundColor);
-    lua_register(L, "setTabFont", termit_lua_setTabFont);
-    lua_register(L, "toggleMenu", termit_lua_toggleMenubar);
-    lua_register(L, "reconfigure", termit_lua_reconfigure);
-    lua_register(L, "spawn", termit_lua_spawn);
-    lua_register(L, "selection", termit_lua_selection);
+    int i = 0;
+    for (; i < sizeof(functions)/sizeof(functions[0]); ++i) {
+        lua_pushcfunction(L, functions[i].c_func);
+        functions[i].lua_func = luaL_ref(L, LUA_REGISTRYINDEX);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, functions[i].lua_func);
+        lua_setglobal(L, functions[i].lua_func_name);
+        TRACE("%s [%d]", functions[i].lua_func_name, functions[i].lua_func);
+    }
 }
 
