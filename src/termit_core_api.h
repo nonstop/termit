@@ -59,6 +59,7 @@ gchar* termit_get_pid_dir(pid_t pid);
  * keysyms - kb layout dependent
  * */
 void termit_set_kb_policy(enum TermitKbPolicy kbp);
+void termit_set_show_scrollbar_signal(GtkWidget* menuItem, gpointer pHanderId);
 
 #endif /* TERMIT_CORE_API_H */
 

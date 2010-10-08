@@ -11,6 +11,7 @@
     You should have received a copy of the GNU General Public License
     along with termit. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include <string.h>
 #include "termit.h"
 #include "configs.h"
 #include "callbacks.h"
@@ -563,5 +564,16 @@ void termit_set_window_title(const gchar* title)
         gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
         g_free(window_title);
     }
+}
+
+void termit_set_show_scrollbar_signal(GtkWidget* menuItem, gpointer pHandlerId)
+{
+    gulong handlerId = g_signal_connect(G_OBJECT(menuItem), "toggled",
+            G_CALLBACK(termit_on_toggle_scrollbar), NULL);
+    if (pHandlerId == NULL) {
+        pHandlerId = g_malloc(sizeof(handlerId));
+    }
+    memcpy(pHandlerId, &handlerId, sizeof(handlerId));
+    g_object_set_data(G_OBJECT(menuItem), "handlerId", pHandlerId);
 }
 

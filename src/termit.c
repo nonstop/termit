@@ -15,7 +15,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <getopt.h>
 
@@ -119,7 +118,7 @@ static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArra
             }
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi_tmp);
         }
-        gtk_menu_bar_append(menu_bar, mi_menu);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_menu);
     }
 }
 
@@ -218,7 +217,7 @@ void termit_create_popup_menu()
     GtkWidget *mi_exit = termit_lua_menu_item_from_stock(GTK_STOCK_QUIT, "quit");
     termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Scrollbar"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), configs.show_scrollbar);
-    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
+    termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, NULL);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_new_tab);
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_close_tab);

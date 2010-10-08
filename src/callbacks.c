@@ -13,6 +13,7 @@
 
 #include <sys/wait.h>
 #include <stdint.h>
+#include <string.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "termit.h"
@@ -259,9 +260,13 @@ void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint p
     TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
     // it seems that set_active eventually calls toggle callback
     /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;*/
-    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", NULL, NULL);
+    gpointer pHandlerId = g_object_get_data(G_OBJECT(termit.mi_show_scrollbar), "handlerId");
+    if (pHandlerId) {
+        g_signal_handler_disconnect(G_OBJECT(termit.mi_show_scrollbar), *((gulong*)pHandlerId));
+    }
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), pTab->scrollbar_is_shown);
-    g_signal_connect(G_OBJECT(termit.mi_show_scrollbar), "toggled", G_CALLBACK(termit_on_toggle_scrollbar), NULL);
+    termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, pHandlerId);
+
     termit_set_statusbar_encoding(page_num);
     if (configs.allow_changing_title)
         termit_set_window_title(pTab->title);
