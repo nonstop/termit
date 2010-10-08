@@ -203,21 +203,6 @@ static void load_init(const gchar* initFile)
 
 int termit_lua_fill_tab(int tab_index, lua_State* ls)
 {
-#define TERMIT_TAB_ADD_NUMBER(name, value) {\
-    lua_pushstring(ls, name); \
-    lua_pushnumber(ls, value); \
-    lua_rawset(ls, -3); \
-}
-#define TERMIT_TAB_ADD_STRING(name, value) {\
-    lua_pushstring(ls, name); \
-    lua_pushstring(ls, value); \
-    lua_rawset(ls, -3); \
-}
-#define TERMIT_TAB_ADD_BOOLEAN(name, value) {\
-    lua_pushstring(ls, name); \
-    lua_pushboolean(ls, value); \
-    lua_rawset(ls, -3); \
-}
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
     lua_newtable(ls);

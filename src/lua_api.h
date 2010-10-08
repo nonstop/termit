@@ -25,6 +25,7 @@ void termit_lua_execute(const gchar* cmd);
 int termit_lua_dofunction(int f);
 void termit_lua_unref(int* lua_callback);
 gchar* termit_lua_getTitleCallback(int f, const gchar* title);
+int termit_get_lua_func(const char* name);
 
 typedef enum {TERMIT_LUA_TABLE_LOADER_OK, TERMIT_LUA_TABLE_LOADER_FAILED} TermitLuaTableLoaderResult;
 typedef void (*TermitLuaTableLoaderFunc)(const gchar*, struct lua_State*, int, void*);
@@ -37,5 +38,30 @@ void termit_lua_options_loader(const gchar* name, struct lua_State* ls, int inde
 void termit_lua_keys_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_lua_matches_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 
+#define TERMIT_TAB_ADD_NUMBER(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushnumber(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_STRING(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushstring(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_VOID(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushlightuserdata(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_BOOLEAN(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_pushboolean(ls, value); \
+    lua_rawset(ls, -3); \
+}
+#define TERMIT_TAB_ADD_CALLBACK(name, value) {\
+    lua_pushstring(ls, name); \
+    lua_rawgeti(ls, LUA_REGISTRYINDEX, value); \
+    lua_rawset(ls, -3); \
+}
 #endif /* TERMIT_LUA_API_H */
 

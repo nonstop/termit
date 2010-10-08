@@ -159,21 +159,6 @@ void termit_on_next_tab()
     termit_next_tab();
 }
 
-void termit_on_paste()
-{
-    termit_paste();
-}
-
-void termit_on_copy()
-{
-    termit_copy();
-}
-
-void termit_on_close_tab()
-{
-    termit_close_tab();
-}
-
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
@@ -263,11 +248,6 @@ void termit_on_edit_preferences()
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     termit_preferences_dialog(pTab);
 }
-void termit_on_new_tab()
-{
-    termit_append_tab();
-}
-
 void termit_on_exit()
 {
     if (confirm_exit() == FALSE)
@@ -365,10 +345,11 @@ free_dlg:
     g_free(fullPath);
 }
 
-void termit_on_user_menu_item_selected(GtkWidget *widget, void *data)
+void termit_on_menu_item_selected(GtkWidget *widget, void *data)
 {
-    struct UserMenuItem* pMi = (struct UserMenuItem*)data;
-    if (pMi->lua_callback) {
+    struct UserMenuItem* pMi = (struct UserMenuItem*)g_object_get_data(G_OBJECT(widget),
+            TERMIT_USER_MENU_ITEM_DATA);
+    if (pMi && pMi->lua_callback) {
         termit_lua_dofunction(pMi->lua_callback);
     }
 }

@@ -70,7 +70,6 @@ void termit_configs_set_defaults()
     configs.user_popup_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBinding));
     configs.mouse_bindings = g_array_new(FALSE, TRUE, sizeof(struct MouseBinding));
-    configs.encodings = g_array_new(FALSE, TRUE, sizeof(gchar*));
     configs.matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
 
     configs.hide_single_tab = FALSE;
@@ -112,18 +111,13 @@ void termit_config_deinit()
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);
 
-    gint i = 0;
-    for (; i<configs.encodings->len; ++i)
-        g_free(g_array_index(configs.encodings, gchar*, i));
-    g_array_free(configs.encodings, TRUE);
-    
     free_menu(configs.user_menus);
     g_array_free(configs.user_menus, TRUE);
     free_menu(configs.user_popup_menus);
     g_array_free(configs.user_popup_menus, TRUE);
 
     // name and default_binding are static (e.g. can be in readonly mempage)
-    i = 0;
+    gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         termit_lua_unref(&kb->lua_callback);

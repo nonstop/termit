@@ -120,6 +120,21 @@ _command_ - string with command and arguments.
 *currentTab()* - Returns current tab of TermitTabInfo.
 
 
+*setTabTitleDlg()* - Displays "Set tab title" dialog.
+
+
+*loadSessionDlg()* - Displays "Load session" dialog.
+
+
+*saveSessionDlg()* - Displays "Save session" dialog.
+
+
+*preferencesDlg()* - Displays "Preferences" dialog.
+
+
+*quit()* - Quit.
+
+
 h4. Types
 
 *TermitOptions* - table with termit options.
@@ -160,7 +175,8 @@ h4. Types
 *TermitMenuItem* - table for menuitems.
 
 * name - name for menuitem
-* action - lua-function or string to execute when item activated. String values are deprecated.
+* action - lua-function to execute when item activated
+* accel - accelerator for menuitem. String with keybinding
 
 
 *TermitKeybindings* - table with predefined keybindings.

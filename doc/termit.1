@@ -200,6 +200,21 @@ Adds menu in popup menu, similar to addMenu.
 .B currentTab
 () - Returns current tab of TermitTabInfo.
 .P
+.B setTabTitleDlg
+() - Displays "Set tab title" dialog.
+.P
+.B loadSessionDlg
+() - Displays "Load session" dialog.
+.P
+.B saveSessionDlg
+() - Displays "Save session" dialog.
+.P
+.B preferencesDlg
+() - Displays "Preferences" dialog.
+.P
+.B quit
+() - Quit.
+.P
 .B "Types:"
 
 .B TermitTabInfo
@@ -237,7 +252,8 @@ Adds menu in popup menu, similar to addMenu.
 .B TermitMenuItem
 - table for menuitems.
     name - name for menuitem
-    action - lua-function or string to execute when item activated. String values are deprecated.
+    action - lua-function to execute when item activated
+    accel - accelerator for menuitem. String with keybinding
 .P
 .B TermitKeybindings
 - table with predefined keybindings.
