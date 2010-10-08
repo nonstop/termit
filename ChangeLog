@@ -1,3 +1,4 @@
+	fixed -e option: read configs first only then execute
 	accelerators for user menus
 	new Lua functions
 		setTabTitleDlg
@@ -7,6 +8,11 @@
 		quit
 	cleanup
 	fixed docs
+	removed support for deprecated:
+		use rc.lua instead of init.lua
+		in openTab use title instead of name
+			and workingDir instead of working_dir
+		action in menuitem must be lua-function
 version 2.5.0
 	GPLv2 license agreement in every source file
 	new Lua functions
