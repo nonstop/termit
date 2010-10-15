@@ -1,3 +1,4 @@
+version 2.6.0
 	fixed -e option: read configs first only then execute
 	accelerators for user menus
 	new Lua functions

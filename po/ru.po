@@ -15,61 +15,60 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:241
+#: src/termit_preferences.c:241
 msgid "Audible bell"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:225
+#: src/termit_preferences.c:225
 msgid "Background"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit_core_api.c:309
+#: src/termit_core_api.c:310
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: /home/evgeny/coding/termit/src/termit_core_api.c:269
+#: src/termit_core_api.c:270
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit.c:179
+#: src/termit.c:178
 msgid "Edit"
 msgstr "Правка"
 
-#: /home/evgeny/coding/termit/src/termit.c:162
+#: src/termit.c:161
 msgid "File"
 msgstr "Файл"
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:211
+#: src/termit_preferences.c:211
 msgid "Font"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:218
+#: src/termit_preferences.c:218
 msgid "Foreground"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/callbacks.c:325
+#: src/callbacks.c:333
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:295
+#: src/callbacks.c:303
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: /home/evgeny/coding/termit/src/termit.c:219
+#: src/termit.c:218
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: /home/evgeny/coding/termit/src/termit.c:194
+#: src/termit.c:193
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: /home/evgeny/coding/termit/src/termit.c:174
-#: /home/evgeny/coding/termit/src/termit.c:214
+#: src/termit.c:173 src/termit.c:213
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:36
+#: src/callbacks.c:37
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -77,26 +76,25 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: /home/evgeny/coding/termit/src/callbacks.c:212
-#: /home/evgeny/coding/termit/src/callbacks.c:221
+#: src/callbacks.c:213 src/callbacks.c:222
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:204
+#: src/termit_preferences.c:204
 #, fuzzy
 msgid "Title"
 msgstr "Файл"
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:233
+#: src/termit_preferences.c:233
 msgid "Transparency"
 msgstr ""
 
-#: /home/evgeny/coding/termit/src/sessions.c:89
+#: src/sessions.c:89
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
 
-#: /home/evgeny/coding/termit/src/termit_preferences.c:249
+#: src/termit_preferences.c:249
 msgid "Visible bell"
 msgstr ""
 
