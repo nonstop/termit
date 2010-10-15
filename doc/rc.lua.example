@@ -27,6 +27,10 @@ colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000', 
 colormap={'#1e2320', '#705050', '#60b48a', '#dfaf8f', '#b8c2cb', '#dc8cc3', '#486858', '#dcdccc', '#709080' ,'#dca3a3', '#c3bf9f', '#f0dfaf', '#94bff3', '#ec93d3', '#93e0e3', '#ffffff'}
 setColormap(colormap)
 
+matches = {}
+matches['http.*'] = function (url) print('Matching url: '..url) end
+setMatches(matches)
+
 bindKey('Alt-Right', nextTab)
 bindKey('Alt-Left', prevTab)
 bindKey('Ctrl-2', function () print('Hello2!') end)

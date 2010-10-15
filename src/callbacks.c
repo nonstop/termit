@@ -93,7 +93,7 @@ void termit_on_child_exited()
     termit_close_tab();
 }
 
-static int termit_cursor_under_match(GdkEventButton* ev)
+static int termit_cursor_under_match(const GdkEventButton* ev, char** matchedText)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX2(pTab, page, -1);
@@ -101,15 +101,15 @@ static int termit_cursor_under_match(GdkEventButton* ev)
     glong column = ((glong) (ev->x) / vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)));
     glong row = ((glong) (ev->y) / vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)));
     int tag = -1;
-    char* current_match = vte_terminal_match_check(VTE_TERMINAL(pTab->vte), column, row, &tag);
-    TRACE("column=%ld row=%ld current_match=%p tag=%d", column, row, current_match, tag);
+    *matchedText = vte_terminal_match_check(VTE_TERMINAL(pTab->vte), column, row, &tag);
+    TRACE("column=%ld row=%ld matchedText=[%s] tag=%d", column, row, *matchedText, tag);
     return tag;
 }
 
 static struct Match* get_match_by_tag(GArray* matches, int tag)
 {
-    if (tag < 0)
-        return NULL;
+    /*if (tag < 0)*/
+        /*return NULL;*/
     gint i = 0;
     for (; i<matches->len; ++i) {
         struct Match* match = &g_array_index(matches, struct Match, i);
@@ -134,12 +134,18 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
         TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
         
-        int matchTag = termit_cursor_under_match(event_button);
-        struct Match* match = get_match_by_tag(pTab->matches, matchTag);
-        if (!match)
+        char* matchedText = NULL;
+        int matchTag = termit_cursor_under_match(event_button, &matchedText);
+        if (!matchedText)
             return FALSE;
+        struct Match* match = get_match_by_tag(pTab->matches, matchTag);
+        if (!match) {
+            g_free(matchedText);
+            return FALSE;
+        }
         TRACE("tag=%d match=[%s]", matchTag, match->pattern);
-        termit_lua_dofunction(match->lua_callback);
+        termit_lua_domatch(match->lua_callback, matchedText);
+        g_free(matchedText);
     }
 
     return FALSE;

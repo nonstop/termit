@@ -91,6 +91,22 @@ int termit_lua_dofunction(int f)
     return 0;
 }
 
+int termit_lua_domatch(int f, const gchar* matchedText)
+{
+    lua_State* ls = L;
+    if(f != LUA_REFNIL) {
+        lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
+        lua_pushstring(ls, matchedText);
+        if (lua_pcall(ls, 1, 0, 0)) {
+            TRACE("error running function (%d: %s): %s", f, matchedText, lua_tostring(ls, -1));
+            lua_pop(ls, 1);
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 void termit_lua_unref(int* lua_callback)
 {
     if (*lua_callback) {
@@ -411,11 +427,6 @@ static int termit_lua_currentTabIndex(lua_State* ls)
     return 1;
 }
 
-static int termit_lua_changeTab(lua_State* ls)
-{
-    return 0;
-}
-
 static int termit_lua_loadSessionDialog(lua_State* ls)
 {
     termit_on_load_session();
@@ -556,39 +567,38 @@ struct TermitLuaFunction
     lua_CFunction c_func;
     int lua_func;
 } functions[] = {
-    {"setOptions", termit_lua_setOptions, 0},
-    {"bindKey", termit_lua_bindKey, 0},
-    {"bindMouse", termit_lua_bindMouse, 0},
-    {"setKbPolicy", termit_lua_setKbPolicy, 0},
-    {"setMatches", termit_lua_setMatches, 0},
-    {"setColormap", termit_lua_setColormap, 0},
-    {"openTab", termit_lua_openTab, 0},
-    {"nextTab", termit_lua_nextTab, 0},
-    {"prevTab", termit_lua_prevTab, 0},
     {"activateTab", termit_lua_activateTab, 0},
-    {"changeTab", termit_lua_changeTab, 0},
-    {"closeTab", termit_lua_closeTab, 0},
-    {"copy", termit_lua_copy, 0},
-    {"paste", termit_lua_paste, 0},
     {"addMenu", termit_lua_addMenu, 0},
     {"addPopupMenu", termit_lua_addPopupMenu, 0},
-    {"currentTabIndex", termit_lua_currentTabIndex, 0},
+    {"bindKey", termit_lua_bindKey, 0},
+    {"bindMouse", termit_lua_bindMouse, 0},
+    {"closeTab", termit_lua_closeTab, 0},
+    {"copy", termit_lua_copy, 0},
     {"currentTab", termit_lua_currentTab, 0},
+    {"currentTabIndex", termit_lua_currentTabIndex, 0},
+    {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
+    {"nextTab", termit_lua_nextTab, 0},
+    {"openTab", termit_lua_openTab, 0},
+    {"paste", termit_lua_paste, 0},
+    {"preferencesDlg", termit_lua_preferencesDialog, 0},
+    {"prevTab", termit_lua_prevTab, 0},
+    {"quit", termit_lua_quit, 0},
+    {"reconfigure", termit_lua_reconfigure, 0},
+    {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
+    {"selection", termit_lua_selection, 0},
+    {"setColormap", termit_lua_setColormap, 0},
     {"setEncoding", termit_lua_setEncoding, 0},
-    {"setTabTitle", termit_lua_setTabTitle, 0},
-    {"setWindowTitle", termit_lua_setWindowTitle, 0},
-    {"setTabForegroundColor", termit_lua_setTabForegroundColor, 0},
+    {"setKbPolicy", termit_lua_setKbPolicy, 0},
+    {"setMatches", termit_lua_setMatches, 0},
+    {"setOptions", termit_lua_setOptions, 0},
     {"setTabBackgroundColor", termit_lua_setTabBackgroundColor, 0},
     {"setTabFont", termit_lua_setTabFont, 0},
-    {"toggleMenu", termit_lua_toggleMenubar, 0},
-    {"reconfigure", termit_lua_reconfigure, 0},
-    {"spawn", termit_lua_spawn, 0},
-    {"selection", termit_lua_selection, 0},
+    {"setTabForegroundColor", termit_lua_setTabForegroundColor, 0},
+    {"setTabTitle", termit_lua_setTabTitle, 0},
     {"setTabTitleDlg", termit_lua_setTabTitleDialog, 0},
-    {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
-    {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
-    {"preferencesDlg", termit_lua_preferencesDialog, 0},
-    {"quit", termit_lua_quit, 0}
+    {"setWindowTitle", termit_lua_setWindowTitle, 0},
+    {"spawn", termit_lua_spawn, 0},
+    {"toggleMenubar", termit_lua_toggleMenubar, 0}
 };
 
 int termit_get_lua_func(const char* name)

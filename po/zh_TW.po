@@ -45,11 +45,11 @@ msgstr ""
 msgid "Foreground"
 msgstr ""
 
-#: src/callbacks.c:333
+#: src/callbacks.c:339
 msgid "Open session"
 msgstr "開啟作業階段"
 
-#: src/callbacks.c:303
+#: src/callbacks.c:309
 msgid "Save session"
 msgstr "儲存作業階段"
 
@@ -72,7 +72,7 @@ msgid ""
 "Close anyway?"
 msgstr "已開啟數個分頁。是否關閉？"
 
-#: src/callbacks.c:213 src/callbacks.c:222
+#: src/callbacks.c:219 src/callbacks.c:228
 msgid "Tab name"
 msgstr "分頁名稱"
 

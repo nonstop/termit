@@ -30,11 +30,11 @@ msgstr ""
 msgid "Foreground"
 msgstr ""
 
-#: src/callbacks.c:333
+#: src/callbacks.c:339
 msgid "Open session"
 msgstr ""
 
-#: src/callbacks.c:303
+#: src/callbacks.c:309
 msgid "Save session"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgid ""
 "Close anyway?"
 msgstr ""
 
-#: src/callbacks.c:213 src/callbacks.c:222
+#: src/callbacks.c:219 src/callbacks.c:228
 msgid "Tab name"
 msgstr ""
 

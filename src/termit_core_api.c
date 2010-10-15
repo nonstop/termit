@@ -181,7 +181,7 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
     gint i = 0;
     for (; i<matches->len; ++i) {
         struct Match* match = &g_array_index(matches, struct Match, i);
-        struct Match tabMatch = {0};
+        struct Match tabMatch = {};
         tabMatch.lua_callback = match->lua_callback;
         tabMatch.pattern = match->pattern;
         tabMatch.tag = vte_terminal_match_add_gregex(VTE_TERMINAL(pTab->vte), match->regex, match->flags);

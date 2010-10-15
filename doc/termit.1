@@ -64,31 +64,24 @@ Example rc.lua file. Demonstrates usage of almost all available settings.
 .SH "TERMIT LUA API"
 .B "Functions:"
 
-.B setOptions
+.B activateTab
 (
-.I opts
-) - Changes default options.
-    opts - table with new options:
+.I tab_index
+) - Activates tab by index.
+    tab_index - index of tab to activate. Index of the first tab is 1.
 .P
-.B setKeys
+.B addMenu
 (
-.I keys
-) - Changes default keybindings.
-    keys - table of TermitKeybindings type.
+.I menu
+) - Adds menu in menubar.
+    menu - table of TermitMenuItem type.
 .P
-.B setKbPolicy
+.B addPopupMenu
 (
-.I kb_policy
-) - Sets keyuboard policy for shortcuts.
-    kb_policy - string with one of those values:
-        keycode - use hardware keyboard codes (XkbLayout-independent)
-        keysym - use keysym values (XkbLayout-dependent)
-.P
-.B setColormap
-(
-.I colormap
-) - Sets new colormap.
-    colormap - array with 8 or 16 or 24 colors.
+.I menu
+)
+Adds menu in popup menu, similar to addMenu.
+    menu - table of TermitMenuItem type.
 .P
 .B bindKey
 (
@@ -112,48 +105,56 @@ removes mouse-binding.
     event - string with one of those values: DoubleClick
     luaFunction - callback function
 .P
+.B closeTab
+() - Closes active tab.
+.P
+.B copy
+() - Copies selection into tab's buffer.
+.P
+.B currentTab
+() - Returns current tab of TermitTabInfo.
+.P
+.B currentTabIndex
+() - Returns current tab index.
+.P
+.B loadSessionDlg
+() - Displays "Load session" dialog.
+.P
+.B nextTab
+() - Activates next tab.
+.P
 .B openTab
 (
 .I tabInfo
 ) - Opens new tab.
     tabinfo - table of TermitTabInfo with tab settings.
 .P
+.B paste
+() - Pastes tab's buffer.
+.P
+.B preferencesDlg
+() - Displays "Preferences" dialog.
+.P
 .B prevTab
 () - Activates previous tab.
 .P
-.B nextTab
-() - Activates next tab.
+.B quit
+() - Quit.
 .P
-.B closeTab
-() - Closes active tab.
+.B reconfigure
+() - Sets all configurable variables to defaults and forces rereading rc.lua.
 .P
-.B activateTab
-(
-.I tab_index
-) - Activates tab by index.
-    tab_index - index of tab to activate. Index of the first tab is 1.
-.P
-.B copy
-() - Copies selection into tab's buffer.
-.P
-.B paste
-() - Pastes tab's buffer.
+.B saveSessionDlg
+() - Displays "Save session" dialog.
 .P
 .B selection
 () - Returns selected text from current tab.
 .P
-.B addMenu
+.B setColormap
 (
-.I menu
-) - Adds menu in menubar.
-    menu - table of TermitMenuItem type.
-.P
-.B addPopupMenu
-(
-.I menu
-)
-Adds menu in popup menu, similar to addMenu.
-    menu - table of TermitMenuItem type.
+.I colormap
+) - Sets new colormap.
+    colormap - array with 8 or 16 or 24 colors.
 .P
 .B setEncoding
 (
@@ -161,23 +162,25 @@ Adds menu in popup menu, similar to addMenu.
 ) - Changes encoding for active tab.
     encoding - string with encoding name.
 .P
-.B setTabTitle
+.B setKbPolicy
 (
-.I tabTitle
-) - Changes title for active tab.
-    tabTitle - string with new tab title.
+.I kb_policy
+) - Sets keyuboard policy for shortcuts.
+    kb_policy - string with one of those values:
+        keycode - use hardware keyboard codes (XkbLayout-independent)
+        keysym - use keysym values (XkbLayout-dependent)
 .P
-.B setWindowTitle
+.B setMatches
 (
-.I title
-) - Changes termit window title.
-    title - string with new title.
+.I matches
+) - Sets matches and callbacks for them.
+    matches - table of TermitMatch type.
 .P
-.B setTabForegroundColor
+.B setOptions
 (
-.I color
-) - Changes foreground (e.g. font) color for active tab.
-    color - string with new color.
+.I opts
+) - Changes default options.
+    opts - table with new options.
 .P
 .B setTabBackgroundColor
 (
@@ -185,38 +188,64 @@ Adds menu in popup menu, similar to addMenu.
 ) - Changes background color for active tab.
     color - string with new color.
 .P
+.B setTabFont
+(
+.I font
+) - Changes font for active tab.
+    font - string with new font.
+.P
+.B setTabForegroundColor
+(
+.I color
+) - Changes foreground (e.g. font) color for active tab.
+    color - string with new color.
+.P
+.B setTabTitle
+(
+.I tabTitle
+) - Changes title for active tab.
+    tabTitle - string with new tab title.
+.P
+.B setTabTitleDlg
+() - Displays "Set tab title" dialog.
+.P
+.B setWindowTitle
+(
+.I title
+) - Changes termit window title.
+    title - string with new title.
+.P
 .B spawn
 (
 .I command
 ) - Spawns command (works via shell).
     command - string with command and arguments.
 .P
-.B reconfigure
-() - Sets all configurable variables to defaults and forces rereading rc.lua.
-.P
-.B currentTabIndex
-() - Returns current tab index.
-.P
-.B currentTab
-() - Returns current tab of TermitTabInfo.
-.P
-.B setTabTitleDlg
-() - Displays "Set tab title" dialog.
-.P
-.B loadSessionDlg
-() - Displays "Load session" dialog.
-.P
-.B saveSessionDlg
-() - Displays "Save session" dialog.
-.P
-.B preferencesDlg
-() - Displays "Preferences" dialog.
-.P
-.B quit
-() - Quit.
+.B toggleMenubar
+() - Displays or hides menubar.
 .P
 .B "Types:"
 
+.B TermitKeybindings
+- table with predefined keybindings.
+    prevTab - 'Alt-Left'
+    nextTab - 'Alt-Right'
+    openTab - 'Ctrl-t'
+    closeTab - 'Ctrl-w'
+    copy - 'Ctrl-Insert'
+    paste - 'Shift-Insert'
+.P
+.B TermitMatch
+- table for matches.
+    field name - match regular expression
+    field value - lua callback for action on Left-click.
+.P
+.B TermitMenuItem
+- table for menuitems.
+    name - name for menuitem
+    action - lua-function to execute when item activated
+    accel - accelerator for menuitem. String with keybinding
+.P
 .B TermitTabInfo
 - table with termit options.
     tabName - default tab name
@@ -248,21 +277,6 @@ Adds menu in popup menu, similar to addMenu.
     pid - process id
     font - font string
     fontSize - font size
-.P
-.B TermitMenuItem
-- table for menuitems.
-    name - name for menuitem
-    action - lua-function to execute when item activated
-    accel - accelerator for menuitem. String with keybinding
-.P
-.B TermitKeybindings
-- table with predefined keybindings.
-    prevTab - 'Alt-Left'
-    nextTab - 'Alt-Right'
-    openTab - 'Ctrl-t'
-    closeTab - 'Ctrl-w'
-    copy - 'Ctrl-Insert'
-    paste - 'Shift-Insert'
 .P
 .B "Globals:"
 

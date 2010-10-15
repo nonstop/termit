@@ -1,32 +1,15 @@
 h4. Functions
 
-*setOptions(_opts_)* - Changes default options.
-_opts_ - table of TermitOptions type with new options:
+*activateTab(_tab_index_)* - Activates tab by index.
+_tab_index_ - index of tab to activate. Index of the first tab is 1.
 
 
-*setKeys(_keys_)* - Changes default keybindings.
-_keys_ - table of TermitKeybindings type.
+*addMenu(_menu_)* - Adds menu in menubar.
+_menu_ - table of TermitMenuItem type.
 
 
-*setKbPolicy(_kb_policy_)* - Sets keyuboard policy for shortcuts.
-_kb_policy_ - string with one of those values:
-
-* keycode - use hardware keyboard codes (XkbLayout-independent)
-* keysym - use keysym values (XkbLayout-dependent)
-
-pre. Example: treat keys via current XkbLayout
-    setKbPolicy('keysym')
-
-
-*setColormap(_colormap_)* - Sets new colormap.
-_colormap_ - array with 8 or 16 or 24 colors.
-
-pre. Example: Tango-like color theme
-    colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000',
-        '#34346565a4a4', '#757550507b7b', '#060698209a9a', '#d3d3d7d7cfcf',
-        '#555557575353', '#efef29292929', '#8a8ae2e23434', '#fcfce9e94f4f',
-        '#72729f9fcfcf', '#adad7f7fa8a8', '#3434e2e2e2e2', '#eeeeeeeeecec'}
-    setColormap(colormap)
+*addPopupMenu(_menu_)* - Adds menu in popup menu, similar to addMenu.
+_menu_ - table of TermitMenuItem type.
 
 
 *bindKey(_keys_, _luaFunction_)* - Sets new keybinding. If luaFunction is nil removes keybinding.
@@ -42,6 +25,24 @@ _event_ - string with one of those values: DoubleClick
 _luaFunction_ - callback function
 
 
+*closeTab()* - Closes active tab.
+
+
+*copy()* - Copies selection into tab's buffer.
+
+
+*currentTab()* - Returns current tab of TermitTabInfo.
+
+
+*currentTabIndex()* - Returns current tab index.
+
+
+*loadSessionDlg()* - Displays "Load session" dialog.
+
+
+*nextTab()* - Activates next tab.
+
+
 *openTab(_tabInfo_)* - Opens new tab.
 _tabinfo_ - table of TermitTabInfo with tab settings.
 
@@ -54,34 +55,36 @@ pre. Example:
     openTab(tabInfo)
 
 
-*closeTab()* - Closes active tab.
+*paste()* - Pastes tab's buffer.
+
+
+*preferencesDlg()* - Displays "Preferences" dialog.
 
 
 *prevTab()* - Activates previous tab.
 
 
-*nextTab()* - Activates next tab.
+*quit()* - Quit.
 
 
-*activateTab(_tab_index_)* - Activates tab by index.
-_tab_index_ - index of tab to activate. Index of the first tab is 1.
+*reconfigure()* - Sets all configurable variables to defaults and forces rereading rc.lua.
 
 
-*copy()* - Copies selection into tab's buffer.
-
-
-*paste()* - Pastes tab's buffer.
+*saveSessionDlg()* - Displays "Save session" dialog.
 
 
 *selection()* - Returns selected text from current tab.
 
 
-*addMenu(_menu_)* - Adds menu in menubar.
-_menu_ - table of TermitMenuItem type.
+*setColormap(_colormap_)* - Sets new colormap.
+_colormap_ - array with 8 or 16 or 24 colors.
 
-
-*addPopupMenu(_menu_)* - Adds menu in popup menu, similar to addMenu.
-_menu_ - table of TermitMenuItem type.
+pre. Example: Tango-like color theme
+    colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000',
+        '#34346565a4a4', '#757550507b7b', '#060698209a9a', '#d3d3d7d7cfcf',
+        '#555557575353', '#efef29292929', '#8a8ae2e23434', '#fcfce9e94f4f',
+        '#72729f9fcfcf', '#adad7f7fa8a8', '#3434e2e2e2e2', '#eeeeeeeeecec'}
+    setColormap(colormap)
 
 
 *setEncoding(_encoding_)* - Changes encoding for active tab.
@@ -91,51 +94,84 @@ pre. Example:
     setEncoding('UTF-8')
 
 
-*setTabTitle(_tabTitle_)* - Changes title for active tab.
-_tabTitle_ - string with new tab title.
+*setKbPolicy(_kb_policy_)* - Sets keyuboard policy for shortcuts.
+_kb_policy_ - string with one of those values:
 
+* keycode - use hardware keyboard codes (XkbLayout-independent)
+* keysym - use keysym values (XkbLayout-dependent)
 
-*setWindowTitle(_title_)* - Changes termit window title.
-_title_ - string with new title.
+pre. Example: treat keys via current XkbLayout
+    setKbPolicy('keysym')
 
+*setMatches(_matches_)* - Sets matches and callbacks for them.
+_matches_ - table of TermitMatch type.
 
-*setTabForegroundColor(_color_)* - Changes foreground (e.g. font) color for active tab.
-_color_ - string with new color.
+*setOptions(_opts_)* - Changes default options.
+_opts_ - table of TermitOptions type with new options:
 
 
 *setTabBackgroundColor(_color_)* - Changes background color for active tab.
 _color_ - string with new color.
 
 
-*spawn(_command_) - Spawns command (works via shell).
-_command_ - string with command and arguments.
+*setTabFont(_font_)* - Changes font for active tab.
+_font_ - string with new font.
 
 
-*reconfigure()* - Sets all configurable variables to defaults and forces rereading rc.lua.
+*setTabForegroundColor(_color_)* - Changes foreground (e.g. font) color for active tab.
+_color_ - string with new color.
 
 
-*currentTabIndex()* - Returns current tab index.
-
-
-*currentTab()* - Returns current tab of TermitTabInfo.
+*setTabTitle(_tabTitle_)* - Changes title for active tab.
+_tabTitle_ - string with new tab title.
 
 
 *setTabTitleDlg()* - Displays "Set tab title" dialog.
 
 
-*loadSessionDlg()* - Displays "Load session" dialog.
+*setWindowTitle(_title_)* - Changes termit window title.
+_title_ - string with new title.
 
 
-*saveSessionDlg()* - Displays "Save session" dialog.
+*spawn(_command_) - Spawns command (works via shell).
+_command_ - string with command and arguments.
 
-
-*preferencesDlg()* - Displays "Preferences" dialog.
-
-
-*quit()* - Quit.
-
+*toggleMenubar()* - Displays or hides menubar.
 
 h4. Types
+
+*TermitKeybindings* - table with predefined keybindings.
+
+* prevTab - 'Alt-Left'
+* nextTab - 'Alt-Right'
+* openTab - 'Ctrl-t'
+* closeTab - 'Ctrl-w'
+* copy - 'Ctrl-Insert'
+* paste - 'Shift-Insert'
+
+pre. Example: enable Gnome-like tab switching
+    keys = {}
+    keys.nextTab = 'Ctrl-Page_Down'
+    keys.prevTab = 'Ctrl-Page_Up'
+    setKeys(keys)
+
+
+*TermitMatch* - table for matches.
+*field name - match regular expression.
+*field value - lua callback for action on Left-click.
+
+pre. Example: matching url
+    matches = {}
+    matches['http.*'] = function (url) print('Matchin url: '..url) end
+    setMatches(matches)
+
+
+*TermitMenuItem* - table for menuitems.
+
+* name - name for menuitem
+* action - lua-function to execute when item activated
+* accel - accelerator for menuitem. String with keybinding
+
 
 *TermitOptions* - table with termit options.
 
@@ -170,29 +206,6 @@ h4. Types
 * pid - process id
 * font - font string
 * fontSize - font size
-
-
-*TermitMenuItem* - table for menuitems.
-
-* name - name for menuitem
-* action - lua-function to execute when item activated
-* accel - accelerator for menuitem. String with keybinding
-
-
-*TermitKeybindings* - table with predefined keybindings.
-
-* prevTab - 'Alt-Left'
-* nextTab - 'Alt-Right'
-* openTab - 'Ctrl-t'
-* closeTab - 'Ctrl-w'
-* copy - 'Ctrl-Insert'
-* paste - 'Shift-Insert'
-
-pre. Example: enable Gnome-like tab switching
-    keys = {}
-    keys.nextTab = 'Ctrl-Page_Down'
-    keys.prevTab = 'Ctrl-Page_Up'
-    setKeys(keys)
 
 
 h4. Globals
