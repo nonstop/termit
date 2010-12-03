@@ -1,3 +1,13 @@
+version 2.7.0 - testing
+  refactored reading table from Lua
+	fixed working with sessions
+	new options:
+		colormap - instead of setColormap
+		matches - instead of setMatches
+		tabs - opened by default tabs
+	changed default binding for 'closeTab' from 'Ctrl-w' to 'CtrlShift-w'
+	cleanup
+	fixed docs
 version 2.6.0
 	fixed -e option: read configs first only then execute
 	accelerators for user menus
