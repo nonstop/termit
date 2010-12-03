@@ -1,7 +1,8 @@
-version 2.7.0 - testing
-  refactored reading table from Lua
+version 2.7.0
+	refactored reading table from Lua
 	fixed working with sessions
 	new options:
+		imageFile - path to image to be set on the background
 		colormap - instead of setColormap
 		matches - instead of setMatches
 		tabs - opened by default tabs
