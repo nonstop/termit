@@ -194,7 +194,9 @@ void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
 {
     pTab->style.transparency = transparency;
     if (transparency) {
-        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        if (configs.image_file == NULL) {
+            vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        }
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
     } else {
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
@@ -331,6 +333,11 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
+    if (configs.image_file == NULL) {
+        vte_terminal_set_background_image(VTE_TERMINAL(pTab->vte), NULL);
+    } else {
+        vte_terminal_set_background_image_file(VTE_TERMINAL(pTab->vte), configs.image_file);
+    }
     if (configs.style.colormap) {
         termit_tab_set_colormap(pTab, configs.style.colormap);
     } else {

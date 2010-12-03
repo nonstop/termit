@@ -177,6 +177,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         config_getboolean(&(p_cfg->show_scrollbar), ls, index);
     else if (!strcmp(name, "transparency"))
         config_getdouble(&(p_cfg->style.transparency), ls, index);
+    else if (!strcmp(name, "imageFile"))
+        config_getstring(&(p_cfg->image_file), ls, index);
     else if (!strcmp(name, "fillTabbar"))
         config_getboolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))

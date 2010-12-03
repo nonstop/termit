@@ -8,6 +8,7 @@ defaults.font = 'Terminus 12'
 --defaults.backgroundColor = 'black'
 defaults.showScrollbar = true
 defaults.transparency = 0.7
+--defaults.imageFile = '/tmp/img.png'
 defaults.hideSingleTab = false
 defaults.hideMenubar = false
 defaults.fillTabbar = false
@@ -24,8 +25,8 @@ defaults.colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0
 -- Zenburn Color Theme
 defaults.colormap={'#1e2320', '#705050', '#60b48a', '#dfaf8f', '#b8c2cb', '#dc8cc3', '#486858', '#dcdccc', '#709080' ,'#dca3a3', '#c3bf9f', '#f0dfaf', '#94bff3', '#ec93d3', '#93e0e3', '#ffffff'}
 defaults.matches = {['http.*'] = function (url) print('Matching url: '..url) end}
-defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
-    {title = 'Test new tab 2'; workingDir = '/tmp'}}
+--defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
+    --{title = 'Test new tab 2'; workingDir = '/tmp'}}
 setOptions(defaults)
 
 bindKey('Alt-Right', nextTab)

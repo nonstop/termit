@@ -28,6 +28,7 @@ void termit_config_trace()
     TRACE("     default_tab_name        = %s", configs.default_tab_name);
     TRACE("     default_encoding        = %s", configs.default_encoding);
     TRACE("     default_word_chars      = %s", configs.default_word_chars);
+    TRACE("     image file              = %s", configs.image_file);
     TRACE("     show_scrollbar          = %d", configs.show_scrollbar);
     TRACE("     hide_menubar            = %d", configs.hide_menubar);
     TRACE("     fill_tabbar             = %d", configs.fill_tabbar);
@@ -65,6 +66,8 @@ void termit_configs_set_defaults()
     configs.scrollback_lines = 4096;
     configs.cols = 80;
     configs.rows = 24;
+
+    configs.image_file = NULL;
 
     configs.user_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.user_popup_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
@@ -110,6 +113,10 @@ void termit_config_deinit()
     g_free(configs.default_command);
     g_free(configs.default_encoding);
     g_free(configs.default_word_chars);
+
+    if (configs.image_file) {
+        g_free(configs.image_file);
+    }
 
     free_menu(configs.user_menus);
     g_array_free(configs.user_menus, TRUE);
