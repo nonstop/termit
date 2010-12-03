@@ -30,14 +30,15 @@ int termit_get_lua_func(const char* name);
 
 typedef enum {TERMIT_LUA_TABLE_LOADER_OK, TERMIT_LUA_TABLE_LOADER_FAILED} TermitLuaTableLoaderResult;
 typedef void (*TermitLuaTableLoaderFunc)(const gchar*, struct lua_State*, int, void*);
-TermitLuaTableLoaderResult termit_lua_load_table(struct lua_State* ls, TermitLuaTableLoaderFunc func, void* data);
+TermitLuaTableLoaderResult termit_lua_load_table(struct lua_State* ls, TermitLuaTableLoaderFunc func,
+        const int tableIndex, void* data);
 int termit_lua_fill_tab(int tab_index, struct lua_State* ls);
 /**
  * Loaders
  * */
 void termit_lua_options_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_lua_keys_loader(const gchar* name, struct lua_State* ls, int index, void* data);
-void termit_lua_matches_loader(const gchar* name, struct lua_State* ls, int index, void* data);
+void termit_lua_tab_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 
 #define TERMIT_TAB_ADD_NUMBER(name, value) {\
     lua_pushstring(ls, name); \

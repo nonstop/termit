@@ -28,7 +28,7 @@
 #include "configs.h"
 #include "termit.h"
 
-struct TermitData termit = {0};
+struct TermitData termit = {};
 
 struct TermitTab* termit_get_tab_by_index(gint index)
 {
@@ -45,19 +45,6 @@ static GtkWidget* create_statusbar()
 {
     GtkWidget* statusbar = gtk_statusbar_new();
     return statusbar;
-}
-
-static void create_main_widgets(const gchar* command)
-{
-    termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    termit.statusbar = create_statusbar();
-    termit.notebook = gtk_notebook_new();
-    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
-    
-    if (command) {
-        TRACE("using command: %s", command);
-        termit_append_tab_with_command(command);
-    }
 }
 
 static void pack_widgets()
@@ -231,9 +218,6 @@ void termit_create_popup_menu()
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), gtk_separator_menu_item_new());
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_exit);
 
-
-    /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = configs.show_scrollbar;*/
-
     // User popup menus
     TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
     gint j = 0;
@@ -267,8 +251,17 @@ static void termit_init(const gchar* initFile, const gchar* command)
 
     termit.tab_max_number = 1;
 
+    termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    termit.statusbar = create_statusbar();
+    termit.notebook = gtk_notebook_new();
+    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+
     termit_lua_init(initFile);
-    create_main_widgets(command);
+
+    if (command) {
+        TRACE("using command: %s", command);
+        termit_append_tab_with_command(command);
+    }
     
     termit_create_menubar();
     pack_widgets();

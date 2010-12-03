@@ -150,12 +150,6 @@ removes mouse-binding.
 .B selection
 () - Returns selected text from current tab.
 .P
-.B setColormap
-(
-.I colormap
-) - Sets new colormap.
-    colormap - array with 8 or 16 or 24 colors.
-.P
 .B setEncoding
 (
 .I encoding
@@ -170,17 +164,11 @@ removes mouse-binding.
         keycode - use hardware keyboard codes (XkbLayout-independent)
         keysym - use keysym values (XkbLayout-dependent)
 .P
-.B setMatches
-(
-.I matches
-) - Sets matches and callbacks for them.
-    matches - table of TermitMatch type.
-.P
 .B setOptions
 (
 .I opts
 ) - Changes default options.
-    opts - table with new options.
+    opts - TermitOptions table with new options.
 .P
 .B setTabBackgroundColor
 (
@@ -246,7 +234,7 @@ removes mouse-binding.
     action - lua-function to execute when item activated
     accel - accelerator for menuitem. String with keybinding
 .P
-.B TermitTabInfo
+.B TermitOptions
 - table with termit options.
     tabName - default tab name
     encoding - default encoding
@@ -267,6 +255,9 @@ removes mouse-binding.
     hideMenubar
     scrollbackLines
     geometry - cols x rows to start with
+    colormap - array with 8 or 16 or 24 colors
+    matches - table with items of TermitMatch type
+    tabs - table with items of TermitTabInfo type
 .P
 .B TermitTabInfo
 - table with tab settings:
@@ -287,6 +278,8 @@ removes mouse-binding.
 Look inside provided rc.lua.example.
 .SH BUGS
 After start sometimes there is black screen. Resizing termit window helps.
+.P
+In options table 'tabs' field should be the last one. When loading all settings are applied in the same order as they are set in options table. So if you set tabs and only then colormap, these tabs would have default colormap.
 .SH AUTHOR
 Evgeny Ratnikov <ratnikov.ev at gmail dot com>
 .SH "SEE ALSO"

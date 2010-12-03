@@ -350,7 +350,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
 void termit_append_tab_with_command(const gchar* command)
 {
-    struct TabInfo ti = {0};
+    struct TabInfo ti = {};
     ti.command = g_strdup(command);
     termit_append_tab_with_details(&ti);
     g_free(ti.command);

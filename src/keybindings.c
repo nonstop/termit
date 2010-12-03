@@ -33,14 +33,11 @@ static Display* disp;
 void termit_keys_trace()
 {
 #ifdef DEBUG
-    TRACE_MSG("");
-    TRACE("len: %d", configs.key_bindings->len);
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         TRACE("%s: %d, %d(%ld)", kb->name, kb->kws.state, kb->kws.keyval, kb->keycode);
     }
-    TRACE_MSG("");
 #endif
 }
 #define ADD_DEFAULT_KEYBINDING(keybinding_, lua_callback_) \
@@ -63,7 +60,7 @@ void termit_keys_set_defaults()
     ADD_DEFAULT_KEYBINDING("Alt-Left", "prevTab");
     ADD_DEFAULT_KEYBINDING("Alt-Right", "nextTab");
     ADD_DEFAULT_KEYBINDING("Ctrl-t", "openTab");
-    ADD_DEFAULT_KEYBINDING("Ctrl-w", "closeTab");
+    ADD_DEFAULT_KEYBINDING("CtrlShift-w", "closeTab");
     ADD_DEFAULT_KEYBINDING("Ctrl-Insert", "copy");
     ADD_DEFAULT_KEYBINDING("Shift-Insert", "paste");
     // push func to stack, get ref
@@ -198,7 +195,7 @@ void termit_keys_bind(const gchar* keybinding, int lua_callback)
     
     gint kb_index = get_kb_index(keybinding);
     if (kb_index < 0) {
-        struct KeyBinding kb = {0};
+        struct KeyBinding kb = {};
         kb.name = g_strdup(keybinding);
         kb.kws = kws;
         kb.keycode = XKeysymToKeycode(disp, kb.kws.keyval);
@@ -222,7 +219,7 @@ void termit_mouse_bind(const gchar* mouse_event, int lua_callback)
     }
     gint mb_index = get_mb_index(type);
     if (mb_index < 0) {
-        struct MouseBinding mb = {0};
+        struct MouseBinding mb = {};
         mb.type = type;
         mb.lua_callback = lua_callback;
         g_array_append_val(configs.mouse_bindings, mb);
@@ -256,11 +253,12 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
     gint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->kws.state) == kb->kws.state)
+        if (kb && (event->state & kb->kws.state) == kb->kws.state) {
             if (event->hardware_keycode == kb->keycode) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
             }
+        }
     }
     return FALSE;
 }

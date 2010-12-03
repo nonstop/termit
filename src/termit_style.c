@@ -23,13 +23,13 @@ void termit_style_init(struct TermitStyle* style)
     style->font_name = g_strdup("Monospace 10");
     style->font = pango_font_description_from_string(style->font_name);
     {
-        GdkColor color = {0};
+        GdkColor color = {};
         if (gdk_color_parse("gray", &color) == TRUE) {
             style->foreground_color = color;
         }
     }
     {
-        GdkColor color = {0};
+        GdkColor color = {};
         if (gdk_color_parse("black", &color) == TRUE) {
             style->background_color = color;
         }
@@ -46,7 +46,7 @@ void termit_style_free(struct TermitStyle* style)
         g_free(style->colormap->colors);
         g_free(style->colormap);
     }
-    struct TermitStyle tmp = {0};
+    struct TermitStyle tmp = {};
     *style = tmp;
 }
 

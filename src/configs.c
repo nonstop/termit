@@ -18,7 +18,7 @@
 #include "configs.h"
 #include "lua_api.h"
 
-struct Configs configs = {0};
+struct Configs configs = {};
 
 void termit_config_trace()
 {

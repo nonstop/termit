@@ -78,10 +78,8 @@ static void config_getboolean(gboolean* opt, lua_State* ls, int index)
 static void config_getfunction(int* opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isfunction(ls, index)) {
-        *opt = luaL_ref(ls, LUA_REGISTRYINDEX);
-        // dirty hack - luaL_ref pops value by itself
-        // TODO - fix table loader
-        lua_pushinteger(ls, 0);
+        *opt = luaL_ref(ls, LUA_REGISTRYINDEX); // luaL_ref pops value so we restore stack size
+        lua_pushnil(ls);
     }
 }
 static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
@@ -90,8 +88,7 @@ static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
     config_getstring(&color_str, ls, index);
     TRACE("color_str=%s", color_str);
     if (color_str) {
-        //struct GdkColor color;
-        GdkColor color = {0};
+        GdkColor color = {};
         if (gdk_color_parse(color_str, &color) == TRUE) {
             *opt = color;
         }
@@ -99,7 +96,7 @@ static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
     g_free(color_str);
 }
 
-void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int index, void* data)
+static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index, void* data)
 {
     TRACE("pattern=%s index=%d data=%p", pattern, index, data);
     if (!lua_isfunction(ls, index)) {
@@ -107,7 +104,7 @@ void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int i
         return;
     }
     GArray* matches = (GArray*)data;
-    struct Match match = {0};
+    struct Match match = {};
     GError* err = NULL;
     match.regex = g_regex_new(pattern, 0, 0, &err);
     if (err) {
@@ -118,6 +115,45 @@ void termit_lua_matches_loader(const gchar* pattern, struct lua_State* ls, int i
     match.pattern = g_strdup(pattern);
     config_getfunction(&match.lua_callback, ls, index);
     g_array_append_val(matches, match);
+}
+
+struct ColormapHelper
+{
+    GdkColormap* cm;
+    int idx;
+};
+
+static void colormapLoader(const gchar* name, lua_State* ls, int index, void* data)
+{
+    struct ColormapHelper* ch = (struct ColormapHelper*)data;
+    if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
+        const gchar* colorStr = lua_tostring(ls, index);
+        if (!gdk_color_parse(colorStr, &(ch->cm->colors[ch->idx]))) {
+            ERROR("failed to parse color: %d - %s", ch->idx, colorStr);
+        }
+    } else {
+        ERROR("invalid type in colormap: skipping");
+    }
+    ++ch->idx;
+}
+
+static void tabsLoader(const gchar* name, lua_State* ls, int index, void* data)
+{
+    if (lua_istable(ls, index)) {
+        struct TabInfo ti = {};
+        if (termit_lua_load_table(ls, termit_lua_tab_loader, index, &ti)
+                != TERMIT_LUA_TABLE_LOADER_OK) {
+            ERROR("failed to load tab: %s", lua_tostring(ls, 3));
+        }
+        termit_append_tab_with_details(&ti);
+        g_free(ti.name);
+        g_free(ti.command);
+        g_free(ti.encoding);
+        g_free(ti.working_dir);
+    } else {
+        ERROR("unknown type instead if tab table: skipping");
+        lua_pop(ls, 1);
+    }
 }
 
 void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
@@ -161,7 +197,34 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         config_getfunction(&(p_cfg->get_window_title_callback), ls, index);
     else if (!strcmp(name, "getTabTitle"))
         config_getfunction(&(p_cfg->get_tab_title_callback), ls, index);
-    else if (!strcmp(name, "geometry")) {
+    else if (!strcmp(name, "colormap")) {
+        if (!lua_isnil(ls, index) && lua_istable(ls, index)) {
+            const int size = lua_objlen(ls, index);
+            if ((size != 8) && (size != 16) && (size != 24)) {
+                ERROR("bad colormap length: %d", size);
+                return;
+            }
+            struct ColormapHelper ch = {g_malloc0(sizeof(GdkColormap)), 0};
+            ch.cm->size = size;
+            ch.cm->colors = g_malloc0(ch.cm->size * sizeof(GdkColor));
+            if (termit_lua_load_table(ls, colormapLoader, index, &ch)
+                    == TERMIT_LUA_TABLE_LOADER_OK) {
+                if (configs.style.colormap) {
+                    g_free(configs.style.colormap->colors);
+                }
+                configs.style.colormap = ch.cm;
+            } else {
+                ERROR("failed to load colormap");
+            }
+        } else {
+            ERROR("invalid type in colormap");
+        }
+    } else if (!strcmp(name, "matches")) {
+        if (termit_lua_load_table(ls, matchesLoader, index, configs.matches)
+                != TERMIT_LUA_TABLE_LOADER_OK) {
+            ERROR("failed to load matches");
+        }
+    } else if (!strcmp(name, "geometry")) {
         gchar* geometry_str = NULL;
         config_getstring(&geometry_str, ls, index);
         if (geometry_str) {
@@ -174,6 +237,16 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
             }
         }
         g_free(geometry_str);
+    } else if (!strcmp(name, "tabs")) {
+        if (lua_istable(ls, index)) {
+            TRACE("tabs at index: %d", index);
+            if (termit_lua_load_table(ls, tabsLoader, index, NULL)
+                    != TERMIT_LUA_TABLE_LOADER_OK) {
+                ERROR("openTab failed");
+            }
+        } else {
+            ERROR("expecting table");
+        }
     }
 }
 

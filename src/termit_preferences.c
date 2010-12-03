@@ -41,7 +41,7 @@ static void dlg_set_tab_color__(GtkColorButton *widget, gpointer user_data, void
         return;
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
-    GdkColor color = {0};
+    GdkColor color = {};
     gtk_color_button_get_color(widget, &color);
     callback(pTab, &color);
 }
@@ -179,7 +179,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     // store font_name, foreground, background
     struct TermitDlgHelper* hlp = termit_dlg_helper_new(pTab);
 
-    GtkStockItem item = {0};
+    GtkStockItem item = {};
     gtk_stock_lookup(GTK_STOCK_PREFERENCES, &item); // may be memory leak inside
     GtkWidget* dialog = gtk_dialog_new_with_buttons(item.label,
             GTK_WINDOW_TOPLEVEL,

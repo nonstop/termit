@@ -76,17 +76,6 @@ pre. Example:
 *selection()* - Returns selected text from current tab.
 
 
-*setColormap(_colormap_)* - Sets new colormap.
-_colormap_ - array with 8 or 16 or 24 colors.
-
-pre. Example: Tango-like color theme
-    colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000',
-        '#34346565a4a4', '#757550507b7b', '#060698209a9a', '#d3d3d7d7cfcf',
-        '#555557575353', '#efef29292929', '#8a8ae2e23434', '#fcfce9e94f4f',
-        '#72729f9fcfcf', '#adad7f7fa8a8', '#3434e2e2e2e2', '#eeeeeeeeecec'}
-    setColormap(colormap)
-
-
 *setEncoding(_encoding_)* - Changes encoding for active tab.
 _encoding_ - string with encoding name.
 
@@ -102,9 +91,6 @@ _kb_policy_ - string with one of those values:
 
 pre. Example: treat keys via current XkbLayout
     setKbPolicy('keysym')
-
-*setMatches(_matches_)* - Sets matches and callbacks for them.
-_matches_ - table of TermitMatch type.
 
 *setOptions(_opts_)* - Changes default options.
 _opts_ - table of TermitOptions type with new options:
@@ -156,16 +142,6 @@ pre. Example: enable Gnome-like tab switching
     setKeys(keys)
 
 
-*TermitMatch* - table for matches.
-*field name - match regular expression.
-*field value - lua callback for action on Left-click.
-
-pre. Example: matching url
-    matches = {}
-    matches['http.*'] = function (url) print('Matchin url: '..url) end
-    setMatches(matches)
-
-
 *TermitMenuItem* - table for menuitems.
 
 * name - name for menuitem
@@ -195,6 +171,9 @@ pre. Example: matching url
 * hideMenubar
 * scrollbackLines
 * geometry - cols x rows to start with
+* colormap - array with 8 or 16 or 24 colors.
+* matches - table with items of TermitMatch type
+* tabs - table with items of TermitTabInfo type
 
 
 *TermitTabInfo* - table with tab settings:
@@ -210,6 +189,13 @@ pre. Example: matching url
 
 h4. Globals
 
-*tabs* - Table with tab settings, access specific tabs by index.
+*tabs* - Readonly table with tab settings, access specific tabs by index.
+
+
+h4. Bugs
+
+After start sometimes there is black screen. Resizing termit window helps.
+
+In options table 'tabs' field should be the last one. When loading all settings are applied in the same order as they are set in options table. So if you set tabs and only then colormap, these tabs would have default colormap.
 
 

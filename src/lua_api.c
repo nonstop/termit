@@ -25,30 +25,27 @@
 
 extern lua_State* L;
 
-TermitLuaTableLoaderResult termit_lua_load_table(lua_State* ls, TermitLuaTableLoaderFunc func, void* data)
+TermitLuaTableLoaderResult termit_lua_load_table(lua_State* ls, TermitLuaTableLoaderFunc func,
+        const int tableIndex, void* data)
 {
-    if (!data) {
-        TRACE_MSG("data is NULL: skipping");
+    if (!lua_istable(ls, tableIndex)) {
+        ERROR("not a table");
         return TERMIT_LUA_TABLE_LOADER_FAILED;
     }
-    if (lua_isnil(ls, 1)) {
-        TRACE_MSG("tabInfo not defined: skipping");
-        return TERMIT_LUA_TABLE_LOADER_FAILED;
-    }
-    if (!lua_istable(ls, 1)) {
-        TRACE_MSG("tabInfo is not table: skipping");
-        lua_pop(ls, 1);
-        return TERMIT_LUA_TABLE_LOADER_FAILED;
-    }
+
     lua_pushnil(ls);
-    while (lua_next(ls, 1) != 0) {
-        if (lua_isstring(ls, -2)) {
-            const gchar* name = lua_tostring(ls, -2);
-            func(name, ls, -1, data);
+    while (lua_next(ls, tableIndex) != 0) {
+        if (lua_isnumber(ls, tableIndex + 1)) {
+            func("0", ls, tableIndex + 2, data);
+        } else if (lua_isstring(ls, tableIndex + 1)) {
+            const char* name = lua_tostring(ls, tableIndex + 1);
+            func(name, ls, tableIndex + 2, data);
+        } else {
+            ERROR("neither number nor string value found - skipping");
+            lua_pop(ls, 1);
         }
         lua_pop(ls, 1);
     }
-    lua_pop(ls, 1);
     return TERMIT_LUA_TABLE_LOADER_OK;
 }
 
@@ -72,7 +69,7 @@ void termit_lua_report_error(const char* file, int line, int status)
 static int termit_lua_setOptions(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
-    termit_lua_load_table(ls, termit_lua_options_loader, &configs);
+    termit_lua_load_table(ls, termit_lua_options_loader, 1, &configs);
     return 0;
 }
 
@@ -179,7 +176,7 @@ static int termit_lua_toggleMenubar(lua_State* ls)
     return 0;
 }
 
-static void tabLoader(const gchar* name, lua_State* ls, int index, void* data)
+void termit_lua_tab_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
     if (!strcmp(name, "title") && lua_isstring(ls, index)) {
@@ -233,9 +230,12 @@ static int termit_lua_openTab(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
     if (lua_istable(ls, 1)) {
-        struct TabInfo ti = {0};
-        if (termit_lua_load_table(ls, tabLoader, &ti) != TERMIT_LUA_TABLE_LOADER_OK)
+        struct TabInfo ti = {};
+        if (termit_lua_load_table(ls, termit_lua_tab_loader, 1, &ti)
+                != TERMIT_LUA_TABLE_LOADER_OK) {
+            ERROR("openTab failed");
             return 0;
+        }
         termit_append_tab_with_details(&ti);
         g_free(ti.name);
         g_free(ti.command);
@@ -251,54 +251,6 @@ static int termit_lua_closeTab(lua_State* ls)
 {
     termit_close_tab();
     TRACE_FUNC;
-    return 0;
-}
-
-static void termit_load_colormap(lua_State* ls, GdkColormap* colormap)
-{
-    int size = lua_objlen(ls, 1);
-    if ((size != 8) && (size != 16) && (size != 24)) {
-        ERROR("bad colormap length: %d", size);
-        return;
-    }
-    colormap->size = size;
-    colormap->colors = g_malloc0(colormap->size * sizeof(GdkColor));
-    int i = 0;
-    lua_pushnil(ls);  /* first key */
-    while (lua_next(ls, 1) != 0) {
-        /* uses 'key' (at index -2) and 'value' (at index -1) */
-        const int valueIndex = -1;
-//        TRACE("%s - %s", lua_typename(ls, lua_type(ls, -2)), lua_typename(ls, lua_type(ls, valueIndex)));
-        if (!lua_isnil(ls, valueIndex) && lua_isstring(ls, valueIndex)) {
-            const gchar* colorStr = lua_tostring(ls, valueIndex);
-//            TRACE("%d - %s", i, colorStr);
-            if (!gdk_color_parse(colorStr, &colormap->colors[i])) {
-                ERROR("failed to parse color: %d - %s", i, colorStr);
-            }
-        }
-        /* removes 'value'; keeps 'key' for next iteration */
-        lua_pop(ls, 1);
-        i++;
-    }
-}
-
-static int termit_lua_setColormap(lua_State* ls)
-{
-    TRACE_MSG(__FUNCTION__);
-    
-    if (configs.style.colormap) {
-        g_free(configs.style.colormap->colors);
-    } else {
-        configs.style.colormap = g_malloc0(sizeof(GdkColormap));
-    }
-    termit_load_colormap(ls, configs.style.colormap);
-    return 0;
-}
-
-static int termit_lua_setMatches(lua_State* ls)
-{
-    TRACE_MSG(__FUNCTION__);
-    termit_lua_load_table(ls, termit_lua_matches_loader, configs.matches);
     return 0;
 }
 
@@ -323,53 +275,60 @@ static int termit_lua_setKbPolicy(lua_State* ls)
     return 0;
 }
 
+static void menuItemLoader(const gchar* name, lua_State* ls, int index, void* data)
+{
+    struct UserMenuItem* umi = (struct UserMenuItem*)data;
+    if (!strcmp(name, "name") && lua_isstring(ls, index)) {
+        const gchar* value = lua_tostring(ls, index);
+        umi->name = g_strdup(value);
+    } else if (!strcmp(name, "action") && lua_isfunction(ls, index)) {
+        umi->lua_callback = luaL_ref(ls, LUA_REGISTRYINDEX);
+        lua_pushnil(ls); // luaL_ref pops value so we restore stack size
+    } else if (!strcmp(name, "accel") && lua_isstring(ls, index)) {
+        const gchar* value = lua_tostring(ls, index);
+        umi->accel = g_strdup(value);
+    }
+}
+
+static void menuLoader(const gchar* name, lua_State* ls, int index, void* data)
+{
+    struct UserMenu* um = (struct UserMenu*)data;
+    if (lua_istable(ls, index)) {
+        struct UserMenuItem umi = {};
+        if (termit_lua_load_table(ls, menuItemLoader, index, &umi) == TERMIT_LUA_TABLE_LOADER_OK) {
+            g_array_append_val(um->items, umi);
+        } else {
+            ERROR("failed to load item: %s", lua_tostring(ls, 3));
+        }
+    } else {
+        ERROR("unknown type instead if menu table: skipping");
+        lua_pop(ls, 1);
+    }
+}
+
 static int loadMenu(lua_State* ls, GArray* menus)
 {
-    int res = 0;
     if (lua_isnil(ls, 1) || lua_isnil(ls, 2)) {
         TRACE_MSG("menu not defined: skipping");
-        res = -1;
+        return -1;
     } else if (!lua_istable(ls, 1) || !lua_isstring(ls, 2)) {
         TRACE_MSG("menu is not table: skipping");
-        res = -1;
-    } else {
-        const gchar* menuName = lua_tostring(ls, 2);
-        TRACE("Menu: %s", menuName);
-        lua_pushnil(ls);
-        struct UserMenu um;
-        um.name = g_strdup(menuName);
-        um.items = g_array_new(FALSE, TRUE, sizeof(struct UserMenuItem));
-        while (lua_next(ls, 1) != 0) {
-            if (lua_isstring(ls, -2)) {
-                struct UserMenuItem umi = {0};
-                lua_pushnil(ls);
-                while (lua_next(ls, -2) != 0) {
-                    if (lua_isstring(ls, -2)) {
-                        const gchar* name = lua_tostring(ls, -2);
-                        if (!strcmp(name, "name")) {
-                            const gchar* value = lua_tostring(ls, -1);
-                            umi.name = g_strdup(value);
-                        } else if (!strcmp(name, "action")) {
-                            if (lua_isfunction(ls, -1)) {
-                                umi.lua_callback = luaL_ref(ls, LUA_REGISTRYINDEX);
-                                lua_pushinteger(ls, 0);
-                            }
-                        } else if (!strcmp(name, "accel")) {
-                            const gchar* value = lua_tostring(ls, -1);
-                            umi.accel = g_strdup(value);
-                        }
-                    }
-                    lua_pop(ls, 1);
-                }
-                g_array_append_val(um.items, umi);
-            }
-            lua_pop(ls, 1);
-        }
-        g_array_append_val(menus, um);
+        return -1;
     }
+    struct UserMenu um = {};
+    um.name = g_strdup(lua_tostring(ls, 2));
     lua_pop(ls, 1);
-
-    return res;
+    um.items = g_array_new(FALSE, TRUE, sizeof(struct UserMenuItem));
+    if (termit_lua_load_table(ls, menuLoader, 1, &um) != TERMIT_LUA_TABLE_LOADER_OK) {
+        ERROR("addMenu failed");
+    }
+    if (um.items->len > 0) {
+        g_array_append_val(menus, um);
+    } else {
+        g_free(um.name);
+        g_array_free(um.items, TRUE);
+    }
+    return 0;
 }
 
 static int termit_lua_addMenu(lua_State* ls)
@@ -586,10 +545,8 @@ struct TermitLuaFunction
     {"reconfigure", termit_lua_reconfigure, 0},
     {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
     {"selection", termit_lua_selection, 0},
-    {"setColormap", termit_lua_setColormap, 0},
     {"setEncoding", termit_lua_setEncoding, 0},
     {"setKbPolicy", termit_lua_setKbPolicy, 0},
-    {"setMatches", termit_lua_setMatches, 0},
     {"setOptions", termit_lua_setOptions, 0},
     {"setTabBackgroundColor", termit_lua_setTabBackgroundColor, 0},
     {"setTabFont", termit_lua_setTabFont, 0},
