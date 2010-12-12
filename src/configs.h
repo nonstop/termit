@@ -29,7 +29,6 @@ struct Configs
     gchar* default_command;
     gchar* default_encoding;
     gchar* default_word_chars;
-    gchar* image_file;
     guint scrollback_lines;
     guint cols;
     guint rows;

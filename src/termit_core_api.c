@@ -52,8 +52,8 @@ static void termit_set_colors()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (configs.style.colormap) {
-            termit_tab_set_colormap(pTab, configs.style.colormap);
+        if (configs.style.colors) {
+            termit_tab_set_colormap(pTab, configs.style.colors, configs.style.colors_size);
         } else {
             termit_tab_set_color_foreground(pTab, &configs.style.foreground_color);
             termit_tab_set_color_background(pTab, &configs.style.background_color);
@@ -194,8 +194,10 @@ void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
 {
     pTab->style.transparency = transparency;
     if (transparency) {
-        if (configs.image_file == NULL) {
+        if (pTab->style.image_file == NULL) {
             vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        } else {
+            vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), FALSE);
         }
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
     } else {
@@ -215,26 +217,6 @@ void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell)
     pTab->visible_bell = visible_bell;
     vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), visible_bell);
 }
-
-// Tango Color Theme
-GdkColor colors[] = {
-    {0, 0x2e2e, 0x3434, 0x3636},
-    {0, 0xcccc, 0x0000, 0x0000},
-    {0, 0x4e4e, 0x9a9a, 0x0606},
-    {0, 0xc4c4, 0xa0a0, 0x0000},
-    {0, 0x3434, 0x6565, 0xa4a4},
-    {0, 0x7575, 0x5050, 0x7b7b},
-    {0, 0x0606, 0x9820, 0x9a9a},
-    {0, 0xd3d3, 0xd7d7, 0xcfcf},
-    {0, 0x5555, 0x5757, 0x5353},
-    {0, 0xefef, 0x2929, 0x2929},
-    {0, 0x8a8a, 0xe2e2, 0x3434},
-    {0, 0xfcfc, 0xe9e9, 0x4f4f},
-    {0, 0x7272, 0x9f9f, 0xcfcf},
-    {0, 0xadad, 0x7f7f, 0xa8a8},
-    {0, 0x3434, 0xe2e2, 0xe2e2},
-    {0, 0xeeee, 0xeeee, 0xecec}
-};
 
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
@@ -279,13 +261,40 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     if (cmd_path && cmd_file) {
         g_free(cmd_argv[0]);
         cmd_argv[0] = g_strdup(cmd_file);
-
+#if VTE_CHECK_VERSION(0, 26, 0) > 0
+        if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
+                VTE_PTY_DEFAULT,
+                ti->working_dir, 
+                cmd_argv, NULL,
+                G_SPAWN_SEARCH_PATH,
+                NULL, NULL,
+                &pTab->pid,
+                &cmd_err) != TRUE) {
+            ERROR("failed to open tab: %s", cmd_err->message);
+            g_error_free(cmd_err);
+        }
+#else
         pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
                 cmd_path, cmd_argv, NULL, ti->working_dir, TRUE, TRUE, TRUE);
+#endif // version >= 0.26
     } else {
         /* default tab */
+#if VTE_CHECK_VERSION(0, 26, 0) > 0
+        if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
+                    VTE_PTY_DEFAULT,
+                    ti->working_dir,
+                    cmd_argv, NULL,
+                    G_SPAWN_SEARCH_PATH,
+                    NULL, NULL,
+                    &pTab->pid,
+                    &cmd_err) != TRUE) {
+            ERROR("failed to open tab: %s", cmd_err->message);
+            g_error_free(cmd_err);
+        }
+#else
         pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
                 configs.default_command, NULL, NULL, ti->working_dir, TRUE, TRUE, TRUE);
+#endif // version >= 0.26
     }
 
     g_strfreev(cmd_argv);
@@ -312,9 +321,13 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         ERROR("%s", _("Cannot create a new tab"));
         return;
     }
-    TRACE("index=%d, encoding=%s", index, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
-    if (configs.fill_tabbar)
-        gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE, TRUE, GTK_PACK_START);
+    if (configs.fill_tabbar) {
+        GValue val = {};
+        g_value_init(&val, G_TYPE_BOOLEAN);
+        g_value_set_boolean(&val, TRUE);
+        gtk_container_child_set_property(GTK_CONTAINER(termit.notebook), pTab->hbox, "tab-expand", &val);
+        gtk_container_child_set_property(GTK_CONTAINER(termit.notebook), pTab->hbox, "tab-fill", &val);
+    }
 
     termit_tab_set_audible_bell(pTab, configs.audible_bell);
     termit_tab_set_visible_bell(pTab, configs.visible_bell);
@@ -333,13 +346,13 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
-    if (configs.image_file == NULL) {
+    if (pTab->style.image_file == NULL) {
         vte_terminal_set_background_image(VTE_TERMINAL(pTab->vte), NULL);
     } else {
-        vte_terminal_set_background_image_file(VTE_TERMINAL(pTab->vte), configs.image_file);
+        vte_terminal_set_background_image_file(VTE_TERMINAL(pTab->vte), pTab->style.image_file);
     }
-    if (configs.style.colormap) {
-        termit_tab_set_colormap(pTab, configs.style.colormap);
+    if (configs.style.colors) {
+        termit_tab_set_colormap(pTab, configs.style.colors, configs.style.colors_size);
     } else {
         termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
         termit_tab_set_color_background(pTab, &pTab->style.background_color);
@@ -433,6 +446,23 @@ void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name)
     termit_tab_set_font(pTab, font_name);
 }
 
+void termit_tab_set_background_image(struct TermitTab* pTab, const gchar* image_file)
+{
+    TRACE("pTab->image_file=%s image_file=%s", pTab->style.image_file, image_file);
+    if (pTab->style.image_file) {
+        g_free(pTab->style.image_file);
+    }
+    if (image_file == NULL) {
+        pTab->style.image_file = NULL;
+        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), TRUE);
+        vte_terminal_set_background_image(VTE_TERMINAL(pTab->vte), NULL);
+    } else {
+        pTab->style.image_file = g_strdup(image_file);
+        vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), FALSE);
+        vte_terminal_set_background_image_file(VTE_TERMINAL(pTab->vte), pTab->style.image_file);
+    }
+}
+
 static void termit_set_color__(gint tab_index, const GdkColor* p_color, void (*callback)(struct TermitTab*, const GdkColor*))
 {
     TRACE("%s: tab_index=%d color=%p", __FUNCTION__, tab_index, p_color);
@@ -457,9 +487,9 @@ void termit_tab_set_color_background_by_index(gint tab_index, const GdkColor* p_
     termit_set_color__(tab_index, p_color, termit_tab_set_color_background);
 }
 
-void termit_tab_set_colormap(struct TermitTab* pTab, const GdkColormap* p_colormap)
+void termit_tab_set_colormap(struct TermitTab* pTab, const GdkColor* colors, glong colors_size)
 {
-    vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, p_colormap->colors, p_colormap->size);
+    vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, colors, colors_size);
 }
 
 void termit_paste()

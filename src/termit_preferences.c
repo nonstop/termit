@@ -103,6 +103,7 @@ struct TermitDlgHelper
     gboolean handmade_tab_title;
     gdouble transparency;
     gchar* font_name;
+    gchar* image_file;
     GdkColor foreground_color;
     GdkColor background_color;
     gboolean au_bell;
@@ -113,6 +114,7 @@ struct TermitDlgHelper
     GtkWidget* btn_font;
     GtkWidget* btn_foreground;
     GtkWidget* btn_background;
+    GtkWidget* btn_image_file;
     GtkWidget* scale_transparency;
     GtkWidget* audible_bell;
     GtkWidget* visible_bell;
@@ -128,9 +130,13 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
     } else {
         hlp->tab_title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
     }
+    // TODO: copy style
     hlp->font_name = g_strdup(pTab->style.font_name);
     hlp->foreground_color = pTab->style.foreground_color;
     hlp->background_color = pTab->style.background_color;
+    if (pTab->style.image_file) {
+        hlp->image_file = g_strdup(pTab->style.image_file);
+    }
     hlp->transparency = pTab->style.transparency;
     hlp->au_bell = pTab->audible_bell;
     hlp->vi_bell = pTab->visible_bell;
@@ -141,6 +147,9 @@ static void termit_dlg_helper_free(struct TermitDlgHelper* hlp)
 {
     g_free(hlp->tab_title);
     g_free(hlp->font_name);
+    if (hlp->image_file) {
+        g_free(hlp->image_file);
+    }
     g_free(hlp);
 }
 
@@ -149,11 +158,15 @@ static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgH
     if (hlp->tab_title)
         termit_tab_set_title(pTab, hlp->tab_title);
     termit_tab_set_font(pTab, hlp->font_name);
+    termit_tab_set_background_image(pTab, hlp->image_file);
     termit_tab_set_color_foreground(pTab, &hlp->foreground_color);
     termit_tab_set_color_background(pTab, &hlp->background_color);
     termit_tab_set_transparency(pTab, hlp->transparency);
     termit_tab_set_audible_bell(pTab, hlp->au_bell);
     termit_tab_set_visible_bell(pTab, hlp->vi_bell);
+    if (hlp->image_file) {
+        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->image_file);
+    }
 }
 
 static void dlg_set_default_values(struct TermitDlgHelper* hlp)
@@ -165,6 +178,11 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->transparency);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->audible_bell), hlp->au_bell);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->visible_bell), hlp->vi_bell);
+    if (hlp->image_file) {
+        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->image_file);
+    } else {
+        gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(hlp->btn_image_file));
+    }
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -172,6 +190,24 @@ static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
     struct TermitDlgHelper* hlp = (struct TermitDlgHelper*)user_data;
     dlg_set_default_values(hlp);
     dlg_set_tab_default_values(hlp->pTab, hlp);
+}
+
+static void dlg_set_image_file(GtkFileChooserButton *widget, gpointer user_data)
+{
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    termit_tab_set_background_image(pTab, gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget)));
+}
+
+static gboolean dlg_clear_image_file(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
+{
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    if (event->keyval == GDK_KEY_Delete) {
+        if (pTab->style.image_file) {
+            gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(widget));
+            termit_tab_set_background_image(pTab, NULL);
+        }
+    }
+    return FALSE;
 }
 
 void termit_preferences_dialog(struct TermitTab *pTab)
@@ -187,12 +223,16 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             GTK_STOCK_CANCEL, GTK_RESPONSE_NONE,
             GTK_STOCK_OK, GTK_RESPONSE_OK,
             NULL);
-    gtk_dialog_set_has_separator(GTK_DIALOG(dialog), TRUE);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
     GtkWidget* dlg_table = gtk_table_new(5, 2, FALSE);
 
 #define TERMIT_PREFERENCE_ROW(pref_name, widget) \
     gtk_table_attach(GTK_TABLE(dlg_table), gtk_label_new(pref_name), 0, 1, row, row + 1, 0, 0, 0, 0); \
+    gtk_table_attach_defaults(GTK_TABLE(dlg_table), widget, 1, 2, row, row + 1); \
+    hlp->widget = widget; \
+    row++;
+#define TERMIT_PREFERENCE_ROW2(pref_widget, widget) \
+    gtk_table_attach(GTK_TABLE(dlg_table), pref_widget, 0, 1, row, row + 1, 0, 0, 0, 0); \
     gtk_table_attach_defaults(GTK_TABLE(dlg_table), widget, 1, 2, row, row + 1); \
     hlp->widget = widget; \
     row++;
@@ -225,6 +265,29 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         TERMIT_PREFERENCE_ROW(_("Background"), btn_background);
     }
     
+    { // background image
+        GtkWidget* btn_image_file = gtk_file_chooser_button_new(pTab->style.image_file,
+            GTK_FILE_CHOOSER_ACTION_OPEN);
+        GtkFileFilter* filter = gtk_file_filter_new();
+        gtk_file_filter_set_name(filter, _("images"));
+        gtk_file_filter_add_mime_type(filter, "image/*");
+        if (pTab->style.image_file) {
+            gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(btn_image_file), pTab->style.image_file);
+        }
+        gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(btn_image_file), filter);
+        g_signal_connect(btn_image_file, "file-set", G_CALLBACK(dlg_set_image_file), pTab);
+        g_signal_connect(btn_image_file, "key-press-event", G_CALLBACK(dlg_clear_image_file), pTab);
+
+        GtkWidget* btn_switch_image_file = gtk_check_button_new_with_label(_("Background image"));
+        if (pTab->style.image_file) {
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(btn_switch_image_file), TRUE);
+        }
+        /*g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);*/
+
+        /*TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);*/
+        TERMIT_PREFERENCE_ROW(_("Image"), btn_image_file);
+    }
+
     { // transparency
         GtkWidget* scale_transparency = gtk_spin_button_new_with_range(0, 1, 0.05);
         gtk_spin_button_set_value(GTK_SPIN_BUTTON(scale_transparency), pTab->style.transparency);

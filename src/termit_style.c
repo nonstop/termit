@@ -34,7 +34,9 @@ void termit_style_init(struct TermitStyle* style)
             style->background_color = color;
         }
     }
-    style->colormap = NULL;
+    style->colors = NULL;
+    style->image_file = NULL;
+    style->colors_size = 0;
     style->transparency = 0;    
 }
 
@@ -42,9 +44,11 @@ void termit_style_free(struct TermitStyle* style)
 {
     g_free(style->font_name);
     pango_font_description_free(style->font);
-    if (style->colormap) {
-        g_free(style->colormap->colors);
-        g_free(style->colormap);
+    if (style->colors) {
+        g_free(style->colors);
+    }
+    if (style->image_file) {
+        g_free(style->image_file);
     }
     struct TermitStyle tmp = {};
     *style = tmp;
@@ -57,12 +61,13 @@ void termit_style_copy(struct TermitStyle* dest, const struct TermitStyle* src)
     dest->background_color = src->background_color;
     dest->font = pango_font_description_from_string(src->font_name);
     dest->transparency = src->transparency;
-    if (dest->colormap) {
-        dest->colormap = g_malloc0(sizeof(GdkColormap));
-        dest->colormap->size = src->colormap->size;
-        dest->colormap->colors = g_memdup(src->colormap->colors, src->colormap->size * sizeof(GdkColor));
+    dest->image_file = g_strdup(src->image_file);
+    if (src->colors_size) {
+        dest->colors = g_memdup(src->colors, src->colors_size * sizeof(GdkColor));
+        dest->colors_size = src->colors_size;
     } else {
-        dest->colormap = NULL;
+        dest->colors = NULL;
+        dest->colors_size = 0;
     }
 }
 

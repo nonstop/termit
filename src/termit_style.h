@@ -25,7 +25,9 @@ struct TermitStyle
     PangoFontDescription* font;
     GdkColor foreground_color;
     GdkColor background_color;
-    GdkColormap* colormap;
+    gchar *image_file;
+    GdkColor* colors;
+    glong colors_size;
     gdouble transparency;
 };
 

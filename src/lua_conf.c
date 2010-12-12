@@ -119,7 +119,7 @@ static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index,
 
 struct ColormapHelper
 {
-    GdkColormap* cm;
+    GdkColor* colors;
     int idx;
 };
 
@@ -128,7 +128,7 @@ static void colormapLoader(const gchar* name, lua_State* ls, int index, void* da
     struct ColormapHelper* ch = (struct ColormapHelper*)data;
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         const gchar* colorStr = lua_tostring(ls, index);
-        if (!gdk_color_parse(colorStr, &(ch->cm->colors[ch->idx]))) {
+        if (!gdk_color_parse(colorStr, &(ch->colors[ch->idx]))) {
             ERROR("failed to parse color: %d - %s", ch->idx, colorStr);
         }
     } else {
@@ -178,7 +178,7 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     else if (!strcmp(name, "transparency"))
         config_getdouble(&(p_cfg->style.transparency), ls, index);
     else if (!strcmp(name, "imageFile"))
-        config_getstring(&(p_cfg->image_file), ls, index);
+        config_getstring(&(p_cfg->style.image_file), ls, index);
     else if (!strcmp(name, "fillTabbar"))
         config_getboolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
@@ -206,15 +206,15 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
                 ERROR("bad colormap length: %d", size);
                 return;
             }
-            struct ColormapHelper ch = {g_malloc0(sizeof(GdkColormap)), 0};
-            ch.cm->size = size;
-            ch.cm->colors = g_malloc0(ch.cm->size * sizeof(GdkColor));
+            struct ColormapHelper ch = {};
+            ch.colors = g_malloc0(size * sizeof(GdkColor));
             if (termit_lua_load_table(ls, colormapLoader, index, &ch)
                     == TERMIT_LUA_TABLE_LOADER_OK) {
-                if (configs.style.colormap) {
-                    g_free(configs.style.colormap->colors);
+                if (configs.style.colors) {
+                    g_free(configs.style.colors);
                 }
-                configs.style.colormap = ch.cm;
+                configs.style.colors = ch.colors;
+                configs.style.colors_size = size;
             } else {
                 ERROR("failed to load colormap");
             }

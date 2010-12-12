@@ -11,40 +11,51 @@ msgstr ""
 "PO-Revision-Date: 2007-12-15 18:05+0400\n"
 "Last-Translator: Evgeny V. Ratnikov ratnikov.ev@gmail.com\n"
 "Language-Team: ru_RU\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/termit_preferences.c:241
+#: src/termit_preferences.c:304
 msgid "Audible bell"
 msgstr ""
 
-#: src/termit_preferences.c:225
+#: src/termit_preferences.c:265
 msgid "Background"
 msgstr ""
 
-#: src/termit_core_api.c:310
+#: src/termit_preferences.c:281
+msgid "Background image"
+msgstr ""
+
+#: src/termit_core_api.c:321
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: src/termit_core_api.c:270
+#: src/termit_core_api.c:254
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:178
+#: src/termit.c:165
 msgid "Edit"
 msgstr "Правка"
 
-#: src/termit.c:161
+#: src/termit.c:148
 msgid "File"
 msgstr "Файл"
 
-#: src/termit_preferences.c:211
+#: src/termit_preferences.c:251
 msgid "Font"
 msgstr ""
 
-#: src/termit_preferences.c:218
+#: src/termit_preferences.c:258
 msgid "Foreground"
+msgstr ""
+
+#. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
+#. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
+#: src/termit_preferences.c:288
+msgid "Image"
 msgstr ""
 
 #: src/callbacks.c:339
@@ -55,16 +66,16 @@ msgstr "Открыть сессию"
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: src/termit.c:218
+#: src/termit.c:205
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: src/termit.c:193
+#: src/termit.c:180
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: src/termit.c:173 src/termit.c:213
+#: src/termit.c:160 src/termit.c:200
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
@@ -80,12 +91,12 @@ msgstr ""
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: src/termit_preferences.c:204
+#: src/termit_preferences.c:244
 #, fuzzy
 msgid "Title"
 msgstr "Файл"
 
-#: src/termit_preferences.c:233
+#: src/termit_preferences.c:296
 msgid "Transparency"
 msgstr ""
 
@@ -94,8 +105,12 @@ msgstr ""
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
 
-#: src/termit_preferences.c:249
+#: src/termit_preferences.c:312
 msgid "Visible bell"
+msgstr ""
+
+#: src/termit_preferences.c:272
+msgid "images"
 msgstr ""
 
 #~ msgid "Bookmarks"

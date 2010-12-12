@@ -261,7 +261,7 @@ void termit_on_exit()
         termit_quit();
 }
 
-void termit_on_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data)
+void termit_on_switch_page(GtkNotebook *notebook, guint page_num, gpointer user_data)
 {
     TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
     // it seems that set_active eventually calls toggle callback

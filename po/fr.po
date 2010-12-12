@@ -5,42 +5,53 @@ msgstr ""
 "PO-Revision-Date: 2008-01-22 11:12+0100\n"
 "Last-Translator: Mallory Mollo <mallory@sweetpeople.org>\n"
 "Language-Team: Mallory Mollo <mallory@sweetpeople.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
 
-#: src/termit_preferences.c:241
+#: src/termit_preferences.c:304
 msgid "Audible bell"
 msgstr ""
 
-#: src/termit_preferences.c:225
+#: src/termit_preferences.c:265
 msgid "Background"
 msgstr ""
 
-#: src/termit_core_api.c:310
+#: src/termit_preferences.c:281
+msgid "Background image"
+msgstr ""
+
+#: src/termit_core_api.c:321
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
 
-#: src/termit_core_api.c:270
+#: src/termit_core_api.c:254
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:178
+#: src/termit.c:165
 msgid "Edit"
 msgstr "Éditer"
 
-#: src/termit.c:161
+#: src/termit.c:148
 msgid "File"
 msgstr "Fichier"
 
-#: src/termit_preferences.c:211
+#: src/termit_preferences.c:251
 msgid "Font"
 msgstr ""
 
-#: src/termit_preferences.c:218
+#: src/termit_preferences.c:258
 msgid "Foreground"
+msgstr ""
+
+#. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
+#. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
+#: src/termit_preferences.c:288
+msgid "Image"
 msgstr ""
 
 #: src/callbacks.c:339
@@ -51,16 +62,16 @@ msgstr "Ouvrir une session"
 msgid "Save session"
 msgstr "Enregistrer la session"
 
-#: src/termit.c:218
+#: src/termit.c:205
 msgid "Scrollbar"
 msgstr ""
 
-#: src/termit.c:193
+#: src/termit.c:180
 msgid "Sessions"
 msgstr "Sessions"
 
 #. Edit menu
-#: src/termit.c:173 src/termit.c:213
+#: src/termit.c:160 src/termit.c:200
 msgid "Set tab name..."
 msgstr "Définir le nom de l'onglet..."
 
@@ -76,12 +87,12 @@ msgstr ""
 msgid "Tab name"
 msgstr "Nom de l'onglet"
 
-#: src/termit_preferences.c:204
+#: src/termit_preferences.c:244
 #, fuzzy
 msgid "Title"
 msgstr "Fichier"
 
-#: src/termit_preferences.c:233
+#: src/termit_preferences.c:296
 msgid "Transparency"
 msgstr ""
 
@@ -90,8 +101,12 @@ msgstr ""
 msgid "Unable to create directory '%s': %s"
 msgstr "Impossible de créer le dossier '%s': %s"
 
-#: src/termit_preferences.c:249
+#: src/termit_preferences.c:312
 msgid "Visible bell"
+msgstr ""
+
+#: src/termit_preferences.c:272
+msgid "images"
 msgstr ""
 
 #~ msgid "Bookmarks"
