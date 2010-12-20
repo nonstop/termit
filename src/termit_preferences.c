@@ -201,7 +201,7 @@ static void dlg_set_image_file(GtkFileChooserButton *widget, gpointer user_data)
 static gboolean dlg_clear_image_file(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
 {
     struct TermitTab* pTab = (struct TermitTab*)user_data;
-    if (event->keyval == GDK_KEY_Delete) {
+    if (event->keyval == GDK_Delete) {
         if (pTab->style.image_file) {
             gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(widget));
             termit_tab_set_background_image(pTab, NULL);
