@@ -249,7 +249,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gchar *cmd_file = NULL;
 
     pTab->command = (ti->command) ? g_strdup(ti->command) : g_strdup(configs.default_command);
-    TRACE("command=%s", pTab->command);
     if (!g_shell_parse_argv(pTab->command, NULL, &cmd_argv, &cmd_err)) {
         ERROR("%s", _("Cannot parse command. Creating tab with shell"));
         g_error_free(cmd_err);
@@ -258,15 +257,16 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         cmd_file = g_path_get_basename(cmd_argv[0]);
     }
 
+    TRACE("command=%s cmd_path=%s cmd_file=%s", pTab->command, cmd_path, cmd_file);
     if (cmd_path && cmd_file) {
         g_free(cmd_argv[0]);
-        cmd_argv[0] = g_strdup(cmd_file);
+        cmd_argv[0] = g_strdup(cmd_path);
 #if VTE_CHECK_VERSION(0, 26, 0) > 0
         if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
                 VTE_PTY_DEFAULT,
                 ti->working_dir, 
                 cmd_argv, NULL,
-                G_SPAWN_SEARCH_PATH,
+                0,
                 NULL, NULL,
                 &pTab->pid,
                 &cmd_err) != TRUE) {
@@ -278,12 +278,16 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
                 cmd_path, cmd_argv, NULL, ti->working_dir, TRUE, TRUE, TRUE);
 #endif // version >= 0.26
     } else {
+        g_free(pTab->command);
+        pTab->command = g_strdup(configs.default_command);
+        gchar* argv[] = {pTab->command, NULL};
+        TRACE("defaults: cmd=%s working_dir=%s", pTab->command, ti->working_dir);
         /* default tab */
 #if VTE_CHECK_VERSION(0, 26, 0) > 0
         if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
                     VTE_PTY_DEFAULT,
                     ti->working_dir,
-                    cmd_argv, NULL,
+                    argv, NULL,
                     G_SPAWN_SEARCH_PATH,
                     NULL, NULL,
                     &pTab->pid,
@@ -293,7 +297,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         }
 #else
         pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
-                configs.default_command, NULL, NULL, ti->working_dir, TRUE, TRUE, TRUE);
+                pTab->command, NULL, NULL, ti->working_dir, TRUE, TRUE, TRUE);
 #endif // version >= 0.26
     }
 
