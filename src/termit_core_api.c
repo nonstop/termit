@@ -139,13 +139,16 @@ void termit_reconfigure()
     termit_after_show_all();
 }
 
-void termit_set_statusbar_encoding(gint page)
+void termit_set_statusbar_encoding2(guint page)
 {
-    if (page < 0)
-        page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TRACE("%s page=%d vte=%p", __FUNCTION__, page, pTab->vte);
 
     gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+}
+void termit_set_statusbar_encoding()
+{
+    termit_set_statusbar_encoding2(gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
 }
 
 static void termit_check_single_tab()
@@ -366,7 +369,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
-    termit_set_statusbar_encoding(-1);
+    termit_set_statusbar_encoding();
     
     termit_check_single_tab();
     termit_hide_scrollbars();
@@ -387,13 +390,13 @@ void termit_append_tab()
 
 void termit_set_encoding(const gchar* encoding)
 {
-    TRACE_MSG(__FUNCTION__);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TRACE("%s tab=%p page=%d encoding=%s", __FUNCTION__, pTab, page, encoding);
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), encoding);
     g_free(pTab->encoding);
     pTab->encoding = g_strdup(encoding);
-    termit_set_statusbar_encoding(-1);
+    termit_set_statusbar_encoding();
 }
 
 void termit_tab_set_title(struct TermitTab* pTab, const gchar* title)

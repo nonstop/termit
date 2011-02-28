@@ -151,21 +151,6 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
     return FALSE;
 }
 
-void termit_on_set_encoding(GtkWidget *widget, void *data)
-{
-    termit_set_encoding((const gchar*)data);
-}
-
-void termit_on_prev_tab()
-{
-    termit_prev_tab();
-}
-
-void termit_on_next_tab()
-{
-    termit_next_tab();
-}
-
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
@@ -261,9 +246,10 @@ void termit_on_exit()
         termit_quit();
 }
 
-void termit_on_switch_page(GtkNotebook *notebook, guint page_num, gpointer user_data)
+void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpointer user_data)
 {
-    TERMIT_GET_TAB_BY_INDEX(pTab, page_num);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TRACE("%s page=%d vte=%p", __FUNCTION__, page, pTab->vte);
     // it seems that set_active eventually calls toggle callback
     /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;*/
     gpointer pHandlerId = g_object_get_data(G_OBJECT(termit.mi_show_scrollbar), "handlerId");
@@ -273,7 +259,7 @@ void termit_on_switch_page(GtkNotebook *notebook, guint page_num, gpointer user_
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), pTab->scrollbar_is_shown);
     termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, pHandlerId);
 
-    termit_set_statusbar_encoding(page_num);
+    termit_set_statusbar_encoding2(page);
     if (configs.allow_changing_title)
         termit_set_window_title(pTab->title);
 }

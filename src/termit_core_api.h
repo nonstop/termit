@@ -33,7 +33,8 @@ gchar* termit_get_selection();
 void termit_close_tab();
 void termit_toggle_menubar();
 void termit_set_window_title(const gchar* title);
-void termit_set_statusbar_encoding(gint page);
+void termit_set_statusbar_encoding();
+void termit_set_statusbar_encoding2(guint page);
 void termit_set_encoding(const gchar* encoding);
 void termit_quit();
 
