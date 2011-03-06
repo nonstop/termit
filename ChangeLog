@@ -1,3 +1,5 @@
+version 2.7.1
+	display proper encoding when switching pages
 version 2.7.0
 	refactored reading table from Lua
 	fixed working with sessions
