@@ -164,17 +164,28 @@ void termit_keys_unbind(const gchar* keybinding)
 
 int termit_parse_keys_str(const gchar* keybinding, struct KeyWithState* kws)
 {
-    gchar** tokens = g_strsplit(keybinding, "-", 2);
+    gchar *modifier = NULL, *key = NULL;
     // token[0] - modifier. Only Alt, Ctrl or Shift allowed.
-    if (!tokens[0] || !tokens[1])
-        return -1;
-    guint tmp_state = get_modifier_state(tokens[0]);
-    if (tmp_state == GDK_NOTHING) {
-        TRACE("Bad modifier: %s", keybinding);
+    gchar** tokens = g_strsplit(keybinding, "-", 2);
+    if (!tokens[0]) {
+        ERROR("failed to parse: [%s]", keybinding);
         return -1;
     }
-    // token[1] - key. Only alfabet and numeric keys allowed.
-    guint tmp_keyval = gdk_keyval_from_name(tokens[1]);
+    if (!tokens[1]) {
+        key = tokens[0];
+    } else {
+        modifier = tokens[0];
+        key = tokens[1];
+    }
+    guint tmp_state = 0;
+    if (modifier) {
+        tmp_state = get_modifier_state(modifier);
+        if (tmp_state == GDK_NOTHING) {
+            TRACE("Bad modifier: %s", keybinding);
+            return -1;
+        }
+    }
+    guint tmp_keyval = gdk_keyval_from_name(key);
     if (tmp_keyval == GDK_VoidSymbol) {
         TRACE("Bad keyval: %s", keybinding);
         return -1;
