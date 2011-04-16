@@ -24,11 +24,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:325
+#: src/termit_core_api.c:328
 msgid "Cannot create a new tab"
 msgstr "새 탭을 만들 수 없습니다"
 
-#: src/termit_core_api.c:253
+#: src/termit_core_api.c:256
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:339
+#: src/callbacks.c:325
 msgid "Open session"
 msgstr "세션 열기"
 
-#: src/callbacks.c:309
+#: src/callbacks.c:295
 msgid "Save session"
 msgstr "세션 저장"
 
@@ -83,7 +83,7 @@ msgstr ""
 "다른 탭들이 아직 열려 있습니다.\n"
 "전부 닫고 종료할까요 ?"
 
-#: src/callbacks.c:219 src/callbacks.c:228
+#: src/callbacks.c:204 src/callbacks.c:213
 msgid "Tab name"
 msgstr "탭 이름"
 

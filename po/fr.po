@@ -24,11 +24,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:325
+#: src/termit_core_api.c:328
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
 
-#: src/termit_core_api.c:253
+#: src/termit_core_api.c:256
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:339
+#: src/callbacks.c:325
 msgid "Open session"
 msgstr "Ouvrir une session"
 
-#: src/callbacks.c:309
+#: src/callbacks.c:295
 msgid "Save session"
 msgstr "Enregistrer la session"
 
@@ -83,7 +83,7 @@ msgstr ""
 "Vous êtes sur le point de fermer plusieurs onglets.\n"
 "Voulez-vous vraiment continuer ?"
 
-#: src/callbacks.c:219 src/callbacks.c:228
+#: src/callbacks.c:204 src/callbacks.c:213
 msgid "Tab name"
 msgstr "Nom de l'onglet"
 
