@@ -335,8 +335,6 @@ int main(int argc, char **argv)
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
 
-    gtk_set_locale();
-    
     gtk_init(&argc, &argv);
 
     termit_init(initFile, command);
