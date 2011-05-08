@@ -151,7 +151,6 @@ static int termit_lua_bindKey(lua_State* ls)
 
 static int termit_lua_bindMouse(lua_State* ls)
 {
-    TRACE_MSG(__FUNCTION__);
     if (lua_isnil(ls, 1)) {
         TRACE_MSG("nil args: skipping");
     } else if (!lua_isstring(ls, 1)) {
@@ -171,7 +170,6 @@ static int termit_lua_bindMouse(lua_State* ls)
 
 static int termit_lua_toggleMenubar(lua_State* ls)
 {
-    TRACE_MSG(__FUNCTION__);
     termit_toggle_menubar();
     return 0;
 }
@@ -298,7 +296,7 @@ static void menuLoader(const gchar* name, lua_State* ls, int index, void* data)
         if (termit_lua_load_table(ls, menuItemLoader, index, &umi) == TERMIT_LUA_TABLE_LOADER_OK) {
             g_array_append_val(um->items, umi);
         } else {
-            ERROR("failed to load item: %s", lua_tostring(ls, 3));
+            ERROR("failed to load item: %s.%s", name, lua_tostring(ls, 3));
         }
     } else {
         ERROR("unknown type instead if menu table: skipping");
@@ -501,7 +499,6 @@ static int termit_lua_selection(lua_State* ls)
     gchar* buff = termit_get_selection();
     if (!buff)
         return 0;
-    TRACE("buff=%s", buff);
     lua_pushstring(ls, buff);
     g_free(buff);
     return 1;
@@ -560,7 +557,7 @@ struct TermitLuaFunction
 
 int termit_get_lua_func(const char* name)
 {
-    int i = 0;
+    unsigned short i = 0;
     for (; i < sizeof(functions)/sizeof(functions[0]); ++i) {
         if (strcmp(name, functions[i].lua_func_name) == 0) {
             return functions[i].lua_func;
@@ -573,7 +570,7 @@ int termit_get_lua_func(const char* name)
 
 void termit_lua_init_api()
 {
-    int i = 0;
+    unsigned short i = 0;
     for (; i < sizeof(functions)/sizeof(functions[0]); ++i) {
         lua_pushcfunction(L, functions[i].c_func);
         functions[i].lua_func = luaL_ref(L, LUA_REGISTRYINDEX);

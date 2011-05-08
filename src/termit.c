@@ -82,7 +82,7 @@ static void menu_item_set_accel(GtkMenuItem* mi, const gchar* parentName,
 static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArray* menus)
 {
     TRACE("menus->len=%d", menus->len);
-    gint j = 0;
+    guint j = 0;
     for (; j<menus->len; ++j) {
         struct UserMenu* um = &g_array_index(menus, struct UserMenu, j);
 
@@ -93,7 +93,7 @@ static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArra
         gtk_menu_set_accel_group(GTK_MENU(menu), accel);
 
         TRACE("%s items->len=%d", um->name, um->items->len);
-        gint i=0;
+        guint i = 0;
         gtk_menu_set_accel_group(GTK_MENU(menu), accel);
         for (; i<um->items->len; ++i) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
@@ -126,7 +126,7 @@ static GtkWidget* termit_lua_menu_item_from_string(const gchar* label, const cha
     GtkWidget *mi = gtk_menu_item_new_with_label(label);
     g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
     struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
-    umi->name = gtk_menu_item_get_label(GTK_MENU_ITEM(mi));
+    umi->name = g_strdup(gtk_menu_item_get_label(GTK_MENU_ITEM(mi)));
     umi->accel = NULL;
     umi->lua_callback = termit_get_lua_func(luaFunc);
     g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
@@ -219,8 +219,8 @@ void termit_create_popup_menu()
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_exit);
 
     // User popup menus
-    TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
-    gint j = 0;
+    TRACE("user_popup_menus->len=%zd", configs.user_popup_menus->len);
+    guint j = 0;
     for (; j<configs.user_popup_menus->len; ++j) {
         struct UserMenu* um = &g_array_index(configs.user_popup_menus, struct UserMenu, j);
 
@@ -228,9 +228,8 @@ void termit_create_popup_menu()
         GtkWidget *utils_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
         
-        TRACE("%s items->len=%d", um->name, um->items->len);
-        
-        gint i = 0;
+        TRACE("%s items->len=%zd", um->name, um->items->len);
+        guint i = 0;
         for (; i<um->items->len; i++) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);

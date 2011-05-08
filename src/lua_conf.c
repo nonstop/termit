@@ -38,11 +38,11 @@ void termit_lua_close()
 static void trace_menus(GArray* menus)
 {
 #ifdef DEBUG
-    gint i = 0;
+    guint i = 0;
     for (; i<menus->len; ++i) {
         struct UserMenu* um = &g_array_index(menus, struct UserMenu, i);
         TRACE("%s items %d", um->name, um->items->len);
-        gint j = 0;
+        guint j = 0;
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
             TRACE("  %s: (%d) [%s]", umi->name, umi->lua_callback, umi->accel);
@@ -129,7 +129,7 @@ static void colormapLoader(const gchar* name, lua_State* ls, int index, void* da
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         const gchar* colorStr = lua_tostring(ls, index);
         if (!gdk_color_parse(colorStr, &(ch->colors[ch->idx]))) {
-            ERROR("failed to parse color: %d - %s", ch->idx, colorStr);
+            ERROR("failed to parse color: %s %d - %s", name, ch->idx, colorStr);
         }
     } else {
         ERROR("invalid type in colormap: skipping");
@@ -143,7 +143,7 @@ static void tabsLoader(const gchar* name, lua_State* ls, int index, void* data)
         struct TabInfo ti = {};
         if (termit_lua_load_table(ls, termit_lua_tab_loader, index, &ti)
                 != TERMIT_LUA_TABLE_LOADER_OK) {
-            ERROR("failed to load tab: %s", lua_tostring(ls, 3));
+            ERROR("failed to load tab: %s %s", name, lua_tostring(ls, 3));
         }
         termit_append_tab_with_details(&ti);
         g_free(ti.name);
@@ -230,8 +230,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         gchar* geometry_str = NULL;
         config_getstring(&geometry_str, ls, index);
         if (geometry_str) {
-            uint cols, rows;
-            int tmp1, tmp2;
+            unsigned int cols = 0, rows = 0;
+            int tmp1 = 0, tmp2 = 0;
             XParseGeometry(geometry_str, &tmp1, &tmp2, &cols, &rows);
             if ((cols != 0) && (rows != 0)) {
                 p_cfg->cols = cols;

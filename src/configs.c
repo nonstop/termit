@@ -88,10 +88,10 @@ void termit_configs_set_defaults()
 
 static void free_menu(GArray* menus)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<menus->len; ++i) {
         struct UserMenu* um = &g_array_index(menus, struct UserMenu, i);
-        gint j = 0;
+        guint j = 0;
         for (; j<um->items->len; ++j) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, j);
             g_free(umi->name);
@@ -118,7 +118,7 @@ void termit_config_deinit()
     g_array_free(configs.user_popup_menus, TRUE);
 
     // name and default_binding are static (e.g. can be in readonly mempage)
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         termit_lua_unref(&kb->lua_callback);

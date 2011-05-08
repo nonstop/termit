@@ -33,7 +33,7 @@ static Display* disp;
 void termit_keys_trace()
 {
 #ifdef DEBUG
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         TRACE("%s: %d, %d(%ld)", kb->name, kb->kws.state, kb->kws.keyval, kb->keycode);
@@ -93,11 +93,11 @@ struct TermitModifier termit_modifiers[] =
 };
 static guint TermitModsSz = sizeof(termit_modifiers)/sizeof(struct TermitModifier);
 
-static guint get_modifier_state(const gchar* token)
+static gint get_modifier_state(const gchar* token)
 {
     if (!token)
         return GDK_NOTHING;
-    gint i = 0;
+    guint i = 0;
     for (; i<TermitModsSz; ++i) {
         if (!strcmp(token, termit_modifiers[i].name))
             return termit_modifiers[i].state;
@@ -107,7 +107,7 @@ static guint get_modifier_state(const gchar* token)
 
 static gint get_kb_index(const gchar* name)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         if (!strcmp(kb->name, name))
@@ -130,17 +130,17 @@ gint get_mouse_event_type(const gchar* event_name)
 {
     if (!event_name)
         return GDK_NOTHING;
-    gint i = 0;
+    guint i = 0;
     for (; i<TermitMouseEventsSz; ++i) {
         if (!strcmp(event_name, termit_mouse_events[i].name))
             return termit_mouse_events[i].type;
     }
     return GDK_NOTHING;
-};
+}
 
 static gint get_mb_index(GdkEventType type)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.mouse_bindings->len; ++i) {
         struct MouseBinding* mb = &g_array_index(configs.mouse_bindings, struct MouseBinding, i);
         if (type == mb->type)
@@ -177,7 +177,7 @@ int termit_parse_keys_str(const gchar* keybinding, struct KeyWithState* kws)
         modifier = tokens[0];
         key = tokens[1];
     }
-    guint tmp_state = 0;
+    gint tmp_state = 0;
     if (modifier) {
         tmp_state = get_modifier_state(modifier);
         if (tmp_state == GDK_NOTHING) {
@@ -261,7 +261,7 @@ void termit_mouse_unbind(const gchar* mouse_event)
 
 static gboolean termit_key_press_use_keycode(GdkEventKey *event)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         if (kb && (event->state & kb->kws.state) == kb->kws.state) {
@@ -276,7 +276,7 @@ static gboolean termit_key_press_use_keycode(GdkEventKey *event)
 
 static gboolean termit_key_press_use_keysym(GdkEventKey *event)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
         if (kb && (event->state & kb->kws.state) == kb->kws.state)
@@ -305,7 +305,7 @@ gboolean termit_key_event(GdkEventKey* event)
 
 gboolean termit_mouse_event(GdkEventButton* event)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<configs.mouse_bindings->len; ++i) {
         struct MouseBinding* kb = &g_array_index(configs.mouse_bindings, struct MouseBinding, i);
         if (kb && (event->type & kb->type))

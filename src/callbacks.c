@@ -108,9 +108,7 @@ static int termit_cursor_under_match(const GdkEventButton* ev, char** matchedTex
 
 static struct Match* get_match_by_tag(GArray* matches, int tag)
 {
-    /*if (tag < 0)*/
-        /*return NULL;*/
-    gint i = 0;
+    guint i = 0;
     for (; i<matches->len; ++i) {
         struct Match* match = &g_array_index(matches, struct Match, i);
         if (match->tag == tag)

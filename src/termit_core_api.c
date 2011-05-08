@@ -181,7 +181,7 @@ static void termit_del_tab()
 
 static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
 {
-    gint i = 0;
+    guint i = 0;
     for (; i<matches->len; ++i) {
         struct Match* match = &g_array_index(matches, struct Match, i);
         struct Match tabMatch = {};

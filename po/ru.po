@@ -58,11 +58,11 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:325
+#: src/callbacks.c:323
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: src/callbacks.c:295
+#: src/callbacks.c:293
 msgid "Save session"
 msgstr "Сохранить сессию"
 
@@ -87,7 +87,7 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: src/callbacks.c:204 src/callbacks.c:213
+#: src/callbacks.c:202 src/callbacks.c:211
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
@@ -100,7 +100,7 @@ msgstr "Файл"
 msgid "Transparency"
 msgstr ""
 
-#: src/sessions.c:89
+#: src/sessions.c:90
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
