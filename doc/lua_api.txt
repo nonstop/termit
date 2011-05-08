@@ -37,6 +37,14 @@ _luaFunction_ - callback function
 *currentTabIndex()* - Returns current tab index.
 
 
+*forEachRow(_func_)* - For each terminal row in entire scrollback buffer executes function passing row as argument.
+_func_ - function to be called.
+
+
+*forEachVisibleRow(_func_)* - For each visible terminal row executes function passing row as argument.
+_func_ - function to be called.
+
+
 *loadSessionDlg()* - Displays "Load session" dialog.
 
 

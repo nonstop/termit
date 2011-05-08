@@ -23,6 +23,7 @@ void termit_lua_init(const gchar* initFile);
 void termit_lua_load_config();
 void termit_lua_execute(const gchar* cmd);
 int termit_lua_dofunction(int f);
+int termit_lua_dofunction2(int f, const char* arg1);
 int termit_lua_domatch(int f, const gchar* matchedText);
 void termit_lua_unref(int* lua_callback);
 gchar* termit_lua_getTitleCallback(int f, const gchar* title);

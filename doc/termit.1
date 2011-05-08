@@ -117,6 +117,18 @@ removes mouse-binding.
 .B currentTabIndex
 () - Returns current tab index.
 .P
+.B forEachRow
+(
+.I func
+) - For each terminal row in entire scrollback buffer executes function passing row as argument.
+    func - function to be called.
+.P
+.B forEachVisibleRow
+(
+.I func
+) - For each visible terminal row executes function passing row as argument.
+    func - function to be called.
+.P
 .B loadSessionDlg
 () - Displays "Load session" dialog.
 .P

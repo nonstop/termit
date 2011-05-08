@@ -12,6 +12,8 @@
     along with termit. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <string.h>
+#include <stdlib.h>
+#include <math.h>
 #include "termit.h"
 #include "configs.h"
 #include "callbacks.h"
@@ -207,6 +209,38 @@ void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), FALSE);
     }
+}
+
+static void termit_for_each_row_execute(struct TermitTab* pTab, glong row_start, glong row_end, int lua_callback)
+{
+    glong i = row_start;
+    for (; i < row_end; ++i) {
+        char* str = vte_terminal_get_text_range(VTE_TERMINAL(pTab->vte), i, 0, i, 500, NULL, &lua_callback, NULL);
+        str[strlen(str) - 1] = '\0';
+        termit_lua_dofunction2(lua_callback, str);
+        free(str);
+    }
+}
+
+void termit_for_each_row(int lua_callback)
+{
+    TRACE("%s lua_callback=%d", __FUNCTION__, lua_callback);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    GtkAdjustment* adj = gtk_range_get_adjustment(GTK_RANGE(pTab->scrollbar));
+    const glong rows_total = gtk_adjustment_get_upper(adj);
+    termit_for_each_row_execute(pTab, 0, rows_total, lua_callback);
+}
+
+void termit_for_each_visible_row(int lua_callback)
+{
+    TRACE("%s lua_callback=%d", __FUNCTION__, lua_callback);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    GtkAdjustment* adj = gtk_range_get_adjustment(GTK_RANGE(pTab->scrollbar));
+    const glong row_start = ceil(gtk_adjustment_get_value(adj));
+    const glong page_size = vte_terminal_get_row_count(VTE_TERMINAL(pTab->vte));
+    termit_for_each_row_execute(pTab, row_start, row_start + page_size, lua_callback);
 }
 
 void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell)

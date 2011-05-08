@@ -88,6 +88,22 @@ int termit_lua_dofunction(int f)
     return 0;
 }
 
+int termit_lua_dofunction2(int f, const char* arg1)
+{
+    lua_State* ls = L;
+    if(f != LUA_REFNIL) {
+        lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
+        lua_pushstring(ls, arg1);
+        if (lua_pcall(ls, 1, 0, 0)) {
+            TRACE("error running function (%d): %s", f, lua_tostring(ls, -1));
+            lua_pop(ls, 1);
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 int termit_lua_domatch(int f, const gchar* matchedText)
 {
     lua_State* ls = L;
@@ -494,6 +510,36 @@ static int termit_lua_spawn(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_forEachRow(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no function defined: skipping");
+        return 0;
+    } else if (!lua_isfunction(ls, 1)) {
+        TRACE_MSG("1 arg is not function: skipping");
+        return 0;
+    }
+    int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+    termit_for_each_row(func);
+    termit_lua_unref(&func);
+    return 0;
+}
+
+static int termit_lua_forEachVisibleRow(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no function defined: skipping");
+        return 0;
+    } else if (!lua_isfunction(ls, 1)) {
+        TRACE_MSG("1 arg is not function: skipping");
+        return 0;
+    }
+    int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+    termit_for_each_visible_row(func);
+    termit_lua_unref(&func);
+    return 0;
+}
+
 static int termit_lua_selection(lua_State* ls)
 {
     gchar* buff = termit_get_selection();
@@ -532,6 +578,8 @@ struct TermitLuaFunction
     {"copy", termit_lua_copy, 0},
     {"currentTab", termit_lua_currentTab, 0},
     {"currentTabIndex", termit_lua_currentTabIndex, 0},
+    {"forEachRow", termit_lua_forEachRow, 0},
+    {"forEachVisibleRow", termit_lua_forEachVisibleRow, 0},
     {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
     {"nextTab", termit_lua_nextTab, 0},
     {"openTab", termit_lua_openTab, 0},

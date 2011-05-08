@@ -24,11 +24,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:328
+#: src/termit_core_api.c:362
 msgid "Cannot create a new tab"
 msgstr "Impossible de créer un nouvel onglet"
 
-#: src/termit_core_api.c:256
+#: src/termit_core_api.c:290
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 

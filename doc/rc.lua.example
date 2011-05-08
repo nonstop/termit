@@ -91,6 +91,16 @@ mi.name = 'Selection'
 mi.action = function () print(selection()) end
 table.insert(userMenu, mi)
 
+function dumpToFile(func)
+    io.output(io.open('/tmp/termit.dump', 'w+'))
+    callback = function (str) io.write(str..'\n') end
+    func(callback)
+    io.close()
+end
+
+table.insert(userMenu, {name='dumpAllRows', action=function () forEachRow(print) end})
+table.insert(userMenu, {name='dumpVisibleRowsToFile', action=function () dumpToFile(forEachVisibleRow) end})
+
 mi = {}
 mi.name = 'Get tab info'
 mi.action = function ()
@@ -140,5 +150,4 @@ for i, e in pairs(encodings) do
 end
 addMenu(encMenu, "Encodings")
 addPopupMenu(encMenu, "Encodings")
-
 
