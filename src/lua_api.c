@@ -553,6 +553,26 @@ static int termit_lua_forEachVisibleRow(lua_State* ls)
     return 0;
 }
 
+#ifdef TERMIT_ENABLE_SEARCH
+static int termit_lua_findNext(lua_State* ls)
+{
+    termit_search_find_next();
+    return 0;
+}
+
+static int termit_lua_findPrev(lua_State* ls)
+{
+    termit_search_find_prev();
+    return 0;
+}
+
+static int termit_lua_findDlg(lua_State* ls)
+{
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(termit.b_toggle_search), TRUE);
+    return 0;
+}
+#endif // TERMIT_ENABLE_SEARCH
+
 static int termit_lua_selection(lua_State* ls)
 {
     gchar* buff = termit_get_selection();
@@ -591,6 +611,11 @@ struct TermitLuaFunction
     {"copy", termit_lua_copy, 0},
     {"currentTab", termit_lua_currentTab, 0},
     {"currentTabIndex", termit_lua_currentTabIndex, 0},
+#ifdef TERMIT_ENABLE_SEARCH
+    {"findDlg", termit_lua_findDlg, 0},
+    {"findNext", termit_lua_findNext, 0},
+    {"findPrev", termit_lua_findPrev, 0},
+#endif // TERMIT_ENABLE_SEARCH
     {"forEachRow", termit_lua_forEachRow, 0},
     {"forEachVisibleRow", termit_lua_forEachVisibleRow, 0},
     {"loadSessionDlg", termit_lua_loadSessionDialog, 0},

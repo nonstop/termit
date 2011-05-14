@@ -66,6 +66,66 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
 
+#ifdef TERMIT_ENABLE_SEARCH
+gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+    switch (event->keyval) {
+    case GDK_Return: {
+        if (event->state == GDK_CONTROL_MASK) {
+            termit_on_find_prev(NULL, NULL);
+        } else {
+            termit_on_find_next(NULL, NULL);
+        }
+        return TRUE;
+    }
+    case GDK_Escape: {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(termit.b_toggle_search), FALSE);
+        return TRUE;
+    }
+    default:
+        return FALSE;
+    }
+    return FALSE;
+}
+
+static void termit_search_prepare_regex(const gchar* searchRegex)
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    if (strlen(searchRegex) == 0) {
+        vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), NULL);
+    } else {
+        GRegex* currSearchRegex = vte_terminal_search_get_gregex(VTE_TERMINAL(pTab->vte));
+        if (!currSearchRegex || strcmp(searchRegex, g_regex_get_pattern(currSearchRegex)) != 0) {
+            GError* err = NULL;
+            GRegex* regex = g_regex_new(searchRegex, 0, 0, &err);
+            if (err) {
+                TRACE("failed to compile regex [%s]: skipping", searchRegex);
+                return;
+            }
+            vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), regex);
+        }
+    }
+}
+
+void termit_on_find_next(GtkButton* btn, gpointer user_data)
+{
+    termit_search_prepare_regex(gtk_entry_get_text(GTK_ENTRY(termit.search_entry)));
+    termit_search_find_next();
+}
+
+void termit_on_find_prev(GtkButton* btn, gpointer user_data)
+{
+    termit_search_prepare_regex(gtk_entry_get_text(GTK_ENTRY(termit.search_entry)));
+    termit_search_find_prev();
+}
+
+void termit_on_toggle_search(GtkToggleButton* tb, gpointer user_data)
+{
+    termit_toggle_search();
+}
+#endif // TERMIT_ENABLE_SEARCH
+
 void termit_on_toggle_scrollbar()
 {
     TRACE_MSG(__FUNCTION__);

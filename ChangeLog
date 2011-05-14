@@ -1,6 +1,8 @@
+	search in vte buffer
 	new Lua functions
 		forEachRow
 		forEachVisibleRow
+		findDlg findNext findPrev
 	new options
 		backspaceBinding
 		deleteBinding

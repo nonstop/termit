@@ -47,11 +47,40 @@ static GtkWidget* create_statusbar()
     return statusbar;
 }
 
+static void create_search(struct TermitData* termit)
+{
+#ifdef TERMIT_ENABLE_SEARCH
+    termit->b_toggle_search = gtk_toggle_button_new();
+    gtk_button_set_image(GTK_BUTTON(termit->b_toggle_search),
+            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
+    g_signal_connect(G_OBJECT(termit->b_toggle_search), "toggled", G_CALLBACK(termit_on_toggle_search), NULL);
+
+    termit->b_find_next = gtk_button_new();
+    gtk_button_set_image(GTK_BUTTON(termit->b_find_next),
+            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON));
+    g_signal_connect(G_OBJECT(termit->b_find_next), "clicked", G_CALLBACK(termit_on_find_next), NULL);
+
+    termit->b_find_prev = gtk_button_new();
+    gtk_button_set_image(GTK_BUTTON(termit->b_find_prev),
+            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_BUTTON));
+    g_signal_connect(G_OBJECT(termit->b_find_prev), "clicked", G_CALLBACK(termit_on_find_prev), NULL);
+
+    termit->search_entry = gtk_entry_new();
+    g_signal_connect(G_OBJECT(termit->search_entry), "key-press-event", G_CALLBACK(termit_on_search_keypress), NULL);
+#endif // TERMIT_ENABLE_SEARCH
+}
+
 static void pack_widgets()
 {
     GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
     termit.hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
+#ifdef TERMIT_ENABLE_SEARCH
+    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
+    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
+    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_prev, FALSE, 0, 0);
+    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_next, FALSE, 0, 0);
+#endif // TERMIT_ENABLE_SEARCH
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.statusbar, TRUE, 1, 0);
 
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
@@ -252,6 +281,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
 
     termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     termit.statusbar = create_statusbar();
+    create_search(&termit);
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
 

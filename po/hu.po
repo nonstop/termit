@@ -23,20 +23,20 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:362
+#: src/termit_core_api.c:408
 msgid "Cannot create a new tab"
 msgstr "Nem sikerült új fület létrehozni"
 
-#: src/termit_core_api.c:290
+#: src/termit_core_api.c:336
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
 
-#: src/termit.c:165
+#: src/termit.c:194
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: src/termit.c:148
+#: src/termit.c:177
 msgid "File"
 msgstr "Fájl"
 
@@ -54,24 +54,24 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:323
+#: src/callbacks.c:383
 msgid "Open session"
 msgstr "Megnyitás"
 
-#: src/callbacks.c:293
+#: src/callbacks.c:353
 msgid "Save session"
 msgstr "Mentés"
 
-#: src/termit.c:205
+#: src/termit.c:234
 msgid "Scrollbar"
 msgstr "Gördítősáv"
 
-#: src/termit.c:180
+#: src/termit.c:209
 msgid "Sessions"
 msgstr "Munkamenetek"
 
 #. Edit menu
-#: src/termit.c:160 src/termit.c:200
+#: src/termit.c:189 src/termit.c:229
 msgid "Set tab name..."
 msgstr "Fül átnevezése..."
 
@@ -83,7 +83,7 @@ msgstr ""
 "Több fül is nyitva van.\n"
 "Bezárja mind?"
 
-#: src/callbacks.c:202 src/callbacks.c:211
+#: src/callbacks.c:262 src/callbacks.c:271
 msgid "Tab name"
 msgstr "Fül neve"
 

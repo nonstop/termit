@@ -28,19 +28,19 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:362
+#: src/termit_core_api.c:408
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: src/termit_core_api.c:290
+#: src/termit_core_api.c:336
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:165
+#: src/termit.c:194
 msgid "Edit"
 msgstr "Правка"
 
-#: src/termit.c:148
+#: src/termit.c:177
 msgid "File"
 msgstr "Файл"
 
@@ -58,24 +58,24 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:323
+#: src/callbacks.c:383
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: src/callbacks.c:293
+#: src/callbacks.c:353
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: src/termit.c:205
+#: src/termit.c:234
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: src/termit.c:180
+#: src/termit.c:209
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: src/termit.c:160 src/termit.c:200
+#: src/termit.c:189 src/termit.c:229
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
@@ -87,7 +87,7 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: src/callbacks.c:202 src/callbacks.c:211
+#: src/callbacks.c:262 src/callbacks.c:271
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 

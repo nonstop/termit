@@ -24,19 +24,19 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:362
+#: src/termit_core_api.c:408
 msgid "Cannot create a new tab"
 msgstr "새 탭을 만들 수 없습니다"
 
-#: src/termit_core_api.c:290
+#: src/termit_core_api.c:336
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
-#: src/termit.c:165
+#: src/termit.c:194
 msgid "Edit"
 msgstr "편집"
 
-#: src/termit.c:148
+#: src/termit.c:177
 msgid "File"
 msgstr "파일"
 
@@ -54,24 +54,24 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/callbacks.c:323
+#: src/callbacks.c:383
 msgid "Open session"
 msgstr "세션 열기"
 
-#: src/callbacks.c:293
+#: src/callbacks.c:353
 msgid "Save session"
 msgstr "세션 저장"
 
-#: src/termit.c:205
+#: src/termit.c:234
 msgid "Scrollbar"
 msgstr "스크롤 바"
 
-#: src/termit.c:180
+#: src/termit.c:209
 msgid "Sessions"
 msgstr "세션"
 
 #. Edit menu
-#: src/termit.c:160 src/termit.c:200
+#: src/termit.c:189 src/termit.c:229
 msgid "Set tab name..."
 msgstr "탭 이름 바꾸기"
 
@@ -83,7 +83,7 @@ msgstr ""
 "다른 탭들이 아직 열려 있습니다.\n"
 "전부 닫고 종료할까요 ?"
 
-#: src/callbacks.c:202 src/callbacks.c:211
+#: src/callbacks.c:262 src/callbacks.c:271
 msgid "Tab name"
 msgstr "탭 이름"
 

@@ -115,12 +115,32 @@ void termit_toggle_menubar()
     menubar_visible = !menubar_visible;
 }
 
+void termit_toggle_search()
+{
+#ifdef TERMIT_ENABLE_SEARCH
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(termit.b_toggle_search))) {
+        gtk_widget_show(termit.search_entry);
+        gtk_widget_show(termit.b_find_prev);
+        gtk_widget_show(termit.b_find_next);
+        gtk_window_set_focus(GTK_WINDOW(termit.main_window), termit.search_entry);
+    } else {
+        gtk_widget_hide(termit.search_entry);
+        gtk_widget_hide(termit.b_find_prev);
+        gtk_widget_hide(termit.b_find_next);
+        gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+        TERMIT_GET_TAB_BY_INDEX(pTab, page);
+        gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
+    }
+#endif // TERMIT_ENABLE_SEARCH
+}
+
 void termit_after_show_all()
 {
     termit_set_fonts();
     termit_hide_scrollbars();
     termit_set_colors();
     termit_toggle_menubar();
+    termit_toggle_search();
 }
 
 void termit_reconfigure()
@@ -153,7 +173,6 @@ void termit_set_statusbar_message(guint page)
     } else {
         gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
     }
-    
 }
 
 static void termit_check_single_tab()
@@ -197,6 +216,24 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
         g_array_append_val(pTab->matches, tabMatch);
     }
 }
+
+#ifdef TERMIT_ENABLE_SEARCH
+void termit_search_find_next()
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TRACE("%s tab=%p page=%d", __FUNCTION__, pTab, page);
+    vte_terminal_search_find_next(VTE_TERMINAL(pTab->vte));
+}
+
+void termit_search_find_prev()
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TRACE("%s tab=%p page=%d", __FUNCTION__, pTab, page);
+    vte_terminal_search_find_previous(VTE_TERMINAL(pTab->vte));
+}
+#endif // TERMIT_ENABLE_SEARCH
 
 void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
 {
@@ -284,6 +321,9 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
     vte_terminal_set_backspace_binding(VTE_TERMINAL(pTab->vte), pTab->bksp_binding);
     vte_terminal_set_delete_binding(VTE_TERMINAL(pTab->vte), pTab->delete_binding);
+#ifdef TERMIT_ENABLE_SEARCH
+    vte_terminal_search_set_wrap_around(VTE_TERMINAL(pTab->vte), TRUE);
+#endif // TERMIT_ENABLE_SEARCH
 
     /* parse command */
     gchar **cmd_argv;

@@ -30,10 +30,15 @@ void termit_next_tab();
 void termit_paste();
 void termit_copy();
 gchar* termit_get_selection();
+#ifdef TERMIT_ENABLE_SEARCH
+void termit_search_find_next();
+void termit_search_find_prev();
+#endif // TERMIT_ENABLE_SEARCH
 void termit_for_each_row(int lua_callback);
 void termit_for_each_visible_row(int lua_callback);
 void termit_close_tab();
 void termit_toggle_menubar();
+void termit_toggle_search();
 void termit_set_window_title(const gchar* title);
 void termit_set_statusbar_message(guint page);
 void termit_set_encoding(const gchar* encoding);

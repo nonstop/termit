@@ -42,6 +42,7 @@ setOptions(defaults)
 
 bindKey('Alt-Right', nextTab)
 bindKey('Alt-Left', prevTab)
+bindKey('Ctrl-F', findDlg)
 bindKey('Ctrl-2', function () print('Hello2!') end)
 bindKey('Ctrl-3', function () print('Hello3!') end)
 bindKey('Ctrl-3', nil) -- remove previous binding
@@ -126,6 +127,8 @@ end
 
 table.insert(userMenu, {name='dumpAllRows', action=function () forEachRow(print) end})
 table.insert(userMenu, {name='dumpVisibleRowsToFile', action=function () dumpToFile(forEachVisibleRow) end})
+table.insert(userMenu, {name='findNext', action=findNext, accel='Alt-n'})
+table.insert(userMenu, {name='findPrev', action=findPrev, accel='Alt-p'})
 
 mi = {}
 mi.name = 'Get tab info'
