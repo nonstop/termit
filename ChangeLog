@@ -1,6 +1,10 @@
 	new Lua functions
 		forEachRow
 		forEachVisibleRow
+	new options
+		backspaceBinding
+		deleteBinding
+		setStatusbar
 	extra warnings when compiling in DEBUG mode
 version 2.7.1
 	display proper encoding when switching pages

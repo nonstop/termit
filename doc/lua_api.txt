@@ -134,6 +134,16 @@ _command_ - string with command and arguments.
 
 h4. Types
 
+*TermitEraseBinding* - one of those string values:
+
+* Auto - VTE_ERASE_AUTO
+* AsciiBksp - VTE_ERASE_ASCII_BACKSPACE
+* AsciiDel - VTE_ERASE_ASCII_DELETE
+* EraseDel - VTE_ERASE_DELETE_SEQUENCE
+* EraseTty - VTE_ERASE_TTY
+
+For detailed description look into Vte docs.
+
 *TermitKeybindings* - table with predefined keybindings.
 
 * prevTab - 'Alt-Left'
@@ -165,6 +175,9 @@ pre. Example: enable Gnome-like tab switching
 * font - font name
 * foregroundColor
 * backgroundColor
+* backspaceBinding - reaction on backspace key (one of TermitEraseBinding)
+* deleteBinding - reaction on delete key (one of TermitEraseBinding)
+* setStatusbar - lua function to generate new statusbar message
 * imageFile - path to image to be set on the background
 * showScrollbar
 * fillTabbar - expand tabs' titles to fill whole tabbar

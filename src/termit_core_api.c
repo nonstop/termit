@@ -141,16 +141,19 @@ void termit_reconfigure()
     termit_after_show_all();
 }
 
-void termit_set_statusbar_encoding2(guint page)
+void termit_set_statusbar_message(guint page)
 {
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    TRACE("%s page=%d vte=%p", __FUNCTION__, page, pTab->vte);
-
-    gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
-}
-void termit_set_statusbar_encoding()
-{
-    termit_set_statusbar_encoding2(gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook)));
+    TRACE("%s page=%d get_statusbar_callback=%d", __FUNCTION__, page, configs.get_statusbar_callback);
+    if (configs.get_statusbar_callback) {
+        gchar* statusbarMessage = termit_lua_getStatusbarCallback(configs.get_statusbar_callback, page);
+        TRACE("statusbarMessage=[%s]", statusbarMessage);
+        gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, statusbarMessage);
+        g_free(statusbarMessage);
+    } else {
+        gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
+    }
+    
 }
 
 static void termit_check_single_tab()
@@ -270,7 +273,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         pTab->custom_tab_name = FALSE;
     }
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
-
+    pTab->bksp_binding = ti->bksp_binding;
+    pTab->delete_binding = ti->delete_binding;
     pTab->hbox = gtk_hbox_new(FALSE, 0);
     pTab->vte = vte_terminal_new();
 
@@ -278,6 +282,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     if (configs.default_word_chars)
         vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
+    vte_terminal_set_backspace_binding(VTE_TERMINAL(pTab->vte), pTab->bksp_binding);
+    vte_terminal_set_delete_binding(VTE_TERMINAL(pTab->vte), pTab->delete_binding);
 
     /* parse command */
     gchar **cmd_argv;
@@ -384,6 +390,9 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     }
     g_object_set_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA, pTab);
 
+    if (index == 0) { // there is no "switch-page" signal on the first page
+        termit_set_statusbar_message(index);
+    }
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
     
@@ -403,8 +412,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
-    termit_set_statusbar_encoding();
-    
     termit_check_single_tab();
     termit_hide_scrollbars();
 }
@@ -412,6 +419,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 void termit_append_tab_with_command(const gchar* command)
 {
     struct TabInfo ti = {};
+    ti.bksp_binding = configs.default_bksp;
+    ti.delete_binding = configs.default_delete;
     ti.command = g_strdup(command);
     termit_append_tab_with_details(&ti);
     g_free(ti.command);
@@ -430,7 +439,7 @@ void termit_set_encoding(const gchar* encoding)
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), encoding);
     g_free(pTab->encoding);
     pTab->encoding = g_strdup(encoding);
-    termit_set_statusbar_encoding();
+    termit_set_statusbar_message(page);
 }
 
 void termit_tab_set_title(struct TermitTab* pTab, const gchar* title)

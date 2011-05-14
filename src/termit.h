@@ -50,6 +50,8 @@ struct TermitTab
     gboolean custom_tab_name;
     gboolean audible_bell;
     gboolean visible_bell;
+    VteTerminalEraseBinding bksp_binding;
+    VteTerminalEraseBinding delete_binding;
     gchar *encoding;
     gchar *command;
     gchar *title;
@@ -64,6 +66,8 @@ struct TabInfo
     gchar* command;
     gchar* working_dir;
     gchar* encoding;
+    VteTerminalEraseBinding bksp_binding;
+    VteTerminalEraseBinding delete_binding;
 };
 
 struct TermitTab* termit_get_tab_by_index(guint index);

@@ -122,6 +122,21 @@ void termit_save_session(const gchar* sessionFile)
         g_fprintf(fd, "%s.workingDir = \"%s\"\n", groupName, working_dir);
         g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->command);
         g_fprintf(fd, "%s.encoding = \"%s\"\n", groupName, pTab->encoding);
+        GValue val = {};
+        g_value_init(&val, g_type_from_name("VteTerminalEraseBinding"));
+        g_object_get_property(G_OBJECT(pTab->vte), "backspace-binding", &val);
+        VteTerminalEraseBinding eb = g_value_get_enum(&val);
+        if (eb != VTE_ERASE_AUTO) {
+            g_fprintf(fd, "%s.backspaceBinding = \"%s\"\n", groupName, termit_erase_binding_to_string(eb));
+        }
+        g_value_unset(&val);
+        g_value_init(&val, g_type_from_name("VteTerminalEraseBinding"));
+        g_object_get_property(G_OBJECT(pTab->vte), "delete-binding", &val);
+        eb = g_value_get_enum(&val);
+        if (eb != VTE_ERASE_AUTO) {
+            g_fprintf(fd, "%s.deleteBinding = \"%s\"\n", groupName, termit_erase_binding_to_string(eb));
+        }
+        g_value_unset(&val);
         g_fprintf(fd, "openTab(%s)\n\n", groupName);
         g_free(groupName);
         g_free(working_dir);

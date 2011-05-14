@@ -128,6 +128,23 @@ void termit_lua_unref(int* lua_callback)
     }
 }
 
+gchar* termit_lua_getStatusbarCallback(int f, guint page)
+{
+    lua_State* ls = L;
+    if(f != LUA_REFNIL) {
+        lua_rawgeti(ls, LUA_REGISTRYINDEX, f);
+        lua_pushnumber(ls, page);
+        if (lua_pcall(ls, 1, 1, 0)) {
+            TRACE("error running function: %s", lua_tostring(ls, -1));
+            lua_pop(ls, 1);
+            return NULL;
+        }
+        if (lua_isstring(ls, -1))
+            return g_strdup(lua_tostring(ls, -1));
+    }
+    return NULL;
+}
+
 gchar* termit_lua_getTitleCallback(int f, const gchar* title)
 {
     lua_State* ls = L;
@@ -193,22 +210,18 @@ static int termit_lua_toggleMenubar(lua_State* ls)
 void termit_lua_tab_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct TabInfo* ti = (struct TabInfo*)data;
-    if (!strcmp(name, "title") && lua_isstring(ls, index)) {
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->name = g_strdup(value);
-    } else if (!strcmp(name, "command") && lua_isstring(ls, index)) {
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->command = g_strdup(value);
-    } else if (!strcmp(name, "encoding") && lua_isstring(ls, index)) {
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->encoding = g_strdup(value);
-    } else if (!strcmp(name, "workingDir") && lua_isstring(ls, index)) {
-        const gchar* value = lua_tostring(ls, index);
-        TRACE("  %s - %s", name, value);
-        ti->working_dir = g_strdup(value);
+    if (strcmp(name, "title") == 0) {
+        termit_config_get_string(&ti->name, ls, index);
+    } else if (strcmp(name, "command") == 0) {
+        termit_config_get_string(&ti->command, ls, index);
+    } else if (strcmp(name, "encoding") == 0) {
+        termit_config_get_string(&ti->encoding, ls, index);
+    } else if (strcmp(name, "backspaceBinding") == 0) {
+        termit_config_get_erase_binding(&ti->bksp_binding, ls, index);
+    } else if (strcmp(name, "deleteBinding") == 0) {
+        termit_config_get_erase_binding(&ti->delete_binding, ls, index);
+    } else if (strcmp(name, "workingDir") == 0) {
+        termit_config_get_string(&ti->working_dir, ls, index);
     }
 }
 

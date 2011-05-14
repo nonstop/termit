@@ -51,7 +51,7 @@ static void trace_menus(GArray* menus)
 #endif
 }
 
-static void config_getstring(gchar** opt, lua_State* ls, int index)
+void termit_config_get_string(gchar** opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         if (*opt)
@@ -59,33 +59,33 @@ static void config_getstring(gchar** opt, lua_State* ls, int index)
         *opt = g_strdup(lua_tostring(ls, index));
     }
 }
-static void config_getdouble(double* opt, lua_State* ls, int index)
+void termit_config_get_double(double* opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isnumber(ls, index))
         *opt = lua_tonumber(ls, index);
 }
 
-static void config_getuint(guint* opt, lua_State* ls, int index)
+void termit_config_getuint(guint* opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isnumber(ls, index))
         *opt = lua_tointeger(ls, index);
 }
-static void config_getboolean(gboolean* opt, lua_State* ls, int index)
+void termit_config_get_boolean(gboolean* opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isboolean(ls, index))
         *opt = lua_toboolean(ls, index);
 }
-static void config_getfunction(int* opt, lua_State* ls, int index)
+void termit_config_get_function(int* opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isfunction(ls, index)) {
         *opt = luaL_ref(ls, LUA_REGISTRYINDEX); // luaL_ref pops value so we restore stack size
         lua_pushnil(ls);
     }
 }
-static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
+void termit_config_get_color(GdkColor* opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
-    config_getstring(&color_str, ls, index);
+    termit_config_get_string(&color_str, ls, index);
     TRACE("color_str=%s", color_str);
     if (color_str) {
         GdkColor color = {};
@@ -94,6 +94,13 @@ static void config_getcolor(GdkColor* opt, lua_State* ls, int index)
         }
     }
     g_free(color_str);
+}
+void termit_config_get_erase_binding(VteTerminalEraseBinding* opt, lua_State* ls, int index)
+{
+    gchar* str = NULL;
+    termit_config_get_string(&str, ls, index);
+    *opt = termit_erase_binding_from_string(str);
+    g_free(str);
 }
 
 static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index, void* data)
@@ -113,7 +120,7 @@ static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index,
     }
     match.flags = 0;
     match.pattern = g_strdup(pattern);
-    config_getfunction(&match.lua_callback, ls, index);
+    termit_config_get_function(&match.lua_callback, ls, index);
     g_array_append_val(matches, match);
 }
 
@@ -160,45 +167,51 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
 {
     struct Configs* p_cfg = (struct Configs*)data;
     if (!strcmp(name, "tabName"))
-        config_getstring(&(p_cfg->default_tab_name), ls, index);
+        termit_config_get_string(&(p_cfg->default_tab_name), ls, index);
     else if (!strcmp(name, "windowTitle"))
-        config_getstring(&(p_cfg->default_window_title), ls, index);
+        termit_config_get_string(&(p_cfg->default_window_title), ls, index);
     else if (!strcmp(name, "encoding"))
-        config_getstring(&(p_cfg->default_encoding), ls, index);
+        termit_config_get_string(&(p_cfg->default_encoding), ls, index);
     else if (!strcmp(name, "wordChars"))
-        config_getstring(&(p_cfg->default_word_chars), ls, index);
+        termit_config_get_string(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
-        config_getstring(&(p_cfg->style.font_name), ls, index);
+        termit_config_get_string(&(p_cfg->style.font_name), ls, index);
     else if (!strcmp(name, "foregroundColor")) 
-        config_getcolor(&(p_cfg->style.foreground_color), ls, index);
+        termit_config_get_color(&(p_cfg->style.foreground_color), ls, index);
     else if (!strcmp(name, "backgroundColor")) 
-        config_getcolor(&(p_cfg->style.background_color), ls, index);
+        termit_config_get_color(&(p_cfg->style.background_color), ls, index);
     else if (!strcmp(name, "showScrollbar"))
-        config_getboolean(&(p_cfg->show_scrollbar), ls, index);
+        termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
     else if (!strcmp(name, "transparency"))
-        config_getdouble(&(p_cfg->style.transparency), ls, index);
+        termit_config_get_double(&(p_cfg->style.transparency), ls, index);
     else if (!strcmp(name, "imageFile"))
-        config_getstring(&(p_cfg->style.image_file), ls, index);
+        termit_config_get_string(&(p_cfg->style.image_file), ls, index);
     else if (!strcmp(name, "fillTabbar"))
-        config_getboolean(&(p_cfg->fill_tabbar), ls, index);
+        termit_config_get_boolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
-        config_getboolean(&(p_cfg->hide_single_tab), ls, index);
+        termit_config_get_boolean(&(p_cfg->hide_single_tab), ls, index);
     else if (!strcmp(name, "hideMenubar"))
-        config_getboolean(&(p_cfg->hide_menubar), ls, index);
+        termit_config_get_boolean(&(p_cfg->hide_menubar), ls, index);
     else if (!strcmp(name, "scrollbackLines"))
-        config_getuint(&(p_cfg->scrollback_lines), ls, index);
+        termit_config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))
-        config_getboolean(&(p_cfg->allow_changing_title), ls, index);
+        termit_config_get_boolean(&(p_cfg->allow_changing_title), ls, index);
     else if (!strcmp(name, "audibleBell"))
-        config_getboolean(&(p_cfg->audible_bell), ls, index);
+        termit_config_get_boolean(&(p_cfg->audible_bell), ls, index);
     else if (!strcmp(name, "visibleBell"))
-        config_getboolean(&(p_cfg->visible_bell), ls, index);
+        termit_config_get_boolean(&(p_cfg->visible_bell), ls, index);
     else if (!strcmp(name, "urgencyOnBell"))
-        config_getboolean(&(p_cfg->urgency_on_bell), ls, index);
+        termit_config_get_boolean(&(p_cfg->urgency_on_bell), ls, index);
     else if (!strcmp(name, "getWindowTitle"))
-        config_getfunction(&(p_cfg->get_window_title_callback), ls, index);
+        termit_config_get_function(&(p_cfg->get_window_title_callback), ls, index);
     else if (!strcmp(name, "getTabTitle"))
-        config_getfunction(&(p_cfg->get_tab_title_callback), ls, index);
+        termit_config_get_function(&(p_cfg->get_tab_title_callback), ls, index);
+    else if (!strcmp(name, "setStatusbar"))
+        termit_config_get_function(&(p_cfg->get_statusbar_callback), ls, index);
+    else if (!strcmp(name, "backspaceBinding"))
+        termit_config_get_erase_binding(&(p_cfg->default_bksp), ls, index);
+    else if (!strcmp(name, "deleteBinding"))
+        termit_config_get_erase_binding(&(p_cfg->default_delete), ls, index);
     else if (!strcmp(name, "colormap")) {
         if (!lua_isnil(ls, index) && lua_istable(ls, index)) {
             const int size = lua_objlen(ls, index);
@@ -228,7 +241,7 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         }
     } else if (!strcmp(name, "geometry")) {
         gchar* geometry_str = NULL;
-        config_getstring(&geometry_str, ls, index);
+        termit_config_get_string(&geometry_str, ls, index);
         if (geometry_str) {
             unsigned int cols = 0, rows = 0;
             int tmp1 = 0, tmp2 = 0;
@@ -278,8 +291,7 @@ static void load_init(const gchar* initFile)
 
 int termit_lua_fill_tab(int tab_index, lua_State* ls)
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX2(pTab, tab_index, 0);
     lua_newtable(ls);
     TERMIT_TAB_ADD_STRING("title", pTab->title);
     TERMIT_TAB_ADD_STRING("command", pTab->command);
@@ -290,6 +302,8 @@ int termit_lua_fill_tab(int tab_index, lua_State* ls)
     TERMIT_TAB_ADD_NUMBER("pid", pTab->pid);
     TERMIT_TAB_ADD_STRING("font", pTab->style.font_name);
     TERMIT_TAB_ADD_NUMBER("fontSize", pango_font_description_get_size(pTab->style.font)/PANGO_SCALE);
+    TERMIT_TAB_ADD_STRING("backspaceBinding", termit_erase_binding_to_string(pTab->bksp_binding));
+    TERMIT_TAB_ADD_STRING("deleteBinding", termit_erase_binding_to_string(pTab->delete_binding));
     return 1;
 }
 
@@ -299,7 +313,7 @@ static int termit_lua_tabs_index(lua_State* ls)
         TRACE_MSG("index is not number: skipping");
         return 0;
     }
-    int tab_index =  lua_tointeger(ls, 1);
+    int tab_index =  lua_tointeger(ls, -1);
     TRACE("tab_index:%d", tab_index);
     return termit_lua_fill_tab(tab_index, ls);
 }

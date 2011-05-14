@@ -257,7 +257,7 @@ void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpoi
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), pTab->scrollbar_is_shown);
     termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, pHandlerId);
 
-    termit_set_statusbar_encoding2(page);
+    termit_set_statusbar_message(page);
     if (configs.allow_changing_title)
         termit_set_window_title(pTab->title);
 }

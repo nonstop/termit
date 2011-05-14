@@ -16,6 +16,16 @@ defaults.fillTabbar = true
 defaults.scrollbackLines = 4096
 defaults.geometry = '80x24'
 defaults.allowChangingTitle = false
+--defaults.backspaceBinding = 'AsciiBksp'
+--defaults.deleteBinding = 'AsciiDel'
+defaults.setStatusbar = function (tabInd)
+    tab = tabs[tabInd]
+    if tab then
+        return tab.encoding..'  Bksp: '..tab.backspaceBinding..'  Del: '..tab.deleteBinding
+    end
+    return ''
+end
+
 --defaults.changeTitle = function (title)
 --    print('title='..title)
 --    newTitle = 'Termit: '..title
@@ -40,14 +50,28 @@ setKbPolicy('keycode')
 
 bindMouse('DoubleClick', openTab)
 
+function pairsByKeys(t, f)
+    local a = {}
+    for n in pairs(t) do table.insert(a, n) end
+    table.sort(a, f)
+    local i = 0      -- iterator variable
+    local iter = function ()   -- iterator function
+        i = i + 1
+        if a[i] == nil then return nil
+        else return a[i], t[a[i]]
+        end
+    end
+    return iter
+end
+
 function printTable(tbl, indent)
-    for p in pairs(tbl) do
-        if type(tbl[p]) == 'table' then
-            print(indent..p..':')
+    for k, v in pairsByKeys(tbl) do
+        if type(v) == 'table' then
+            print(indent..k..':')
             local_indent = indent..'  '
-            printTable(tbl[p], local_indent)
+            printTable(v, local_indent)
         else
-            print(indent..tostring(p)..'='..tostring(tbl[p]))
+            print(indent..tostring(k)..'='..tostring(v))
         end
     end
 end
@@ -71,6 +95,8 @@ mi.action = function ()
     tabInfo.command = 'zsh'
     tabInfo.encoding = 'UTF-8'
     tabInfo.workingDir = '/tmp'
+    tabInfo.backspaceBinding = 'AsciiBksp'
+    tabInfo.deleteBinding = 'EraseDel'
     openTab(tabInfo)
 end
 table.insert(userMenu, mi)
@@ -106,8 +132,7 @@ mi.name = 'Get tab info'
 mi.action = function ()
     tab = tabs[currentTabIndex()]
     if tab then
-        print(tab)
-        printTable(tab, '')
+        printTable(tab, '  ')
     end
 end
 table.insert(userMenu, mi)

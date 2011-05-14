@@ -11,6 +11,7 @@
     You should have received a copy of the GNU General Public License
     along with termit. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include <string.h>
 #include <gdk/gdk.h>
 
 #include "termit.h"
@@ -19,6 +20,34 @@
 #include "lua_api.h"
 
 struct Configs configs = {};
+
+static struct {
+    const char* name;
+    VteTerminalEraseBinding val;
+} erase_bindings[] = {
+    {"Auto", VTE_ERASE_AUTO},
+    {"AsciiBksp", VTE_ERASE_ASCII_BACKSPACE},
+    {"AsciiDel", VTE_ERASE_ASCII_DELETE},
+    {"EraseDel", VTE_ERASE_DELETE_SEQUENCE},
+    {"EraseTty", VTE_ERASE_TTY}
+};
+static guint EraseBindingsSz = sizeof(erase_bindings)/sizeof(erase_bindings[0]);
+
+const char* termit_erase_binding_to_string(VteTerminalEraseBinding val)
+{
+    return erase_bindings[val].name;
+}
+VteTerminalEraseBinding termit_erase_binding_from_string(const char* str)
+{
+    guint i = 0;
+    for (; i < EraseBindingsSz; ++i) {
+        if (strcmp(str, erase_bindings[i].name) == 0) {
+            return erase_bindings[i].val;
+        }
+    }
+    ERROR("not found binding for [%s], using Auto", str);
+    return VTE_ERASE_AUTO;
+}
 
 void termit_config_trace()
 {
@@ -34,11 +63,14 @@ void termit_config_trace()
     TRACE("     hide_single_tab         = %d", configs.hide_single_tab);
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
+    TRACE("     backspace               = %s", termit_erase_binding_to_string(configs.default_bksp));
+    TRACE("     delete                  = %s", termit_erase_binding_to_string(configs.default_delete));
     TRACE("     allow_changing_title    = %d", configs.allow_changing_title);
     TRACE("     audible_bell            = %d", configs.audible_bell);
     TRACE("     visible_bell            = %d", configs.visible_bell);
     TRACE("     get_window_title_callback= %d", configs.get_window_title_callback);
     TRACE("     get_tab_title_callback  = %d", configs.get_tab_title_callback);
+    TRACE("     get_statusbar_callback  = %d", configs.get_statusbar_callback);
     TRACE("     style:");
     TRACE("       font_name             = %s", configs.style.font_name);
     TRACE("       foreground_color      = (%d,%d,%d)", 
@@ -66,6 +98,8 @@ void termit_configs_set_defaults()
     configs.scrollback_lines = 4096;
     configs.cols = 80;
     configs.rows = 24;
+    configs.default_bksp = VTE_ERASE_AUTO;
+    configs.default_delete = VTE_ERASE_AUTO;
 
     configs.user_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
     configs.user_popup_menus = g_array_new(FALSE, TRUE, sizeof(struct UserMenu));
@@ -83,6 +117,7 @@ void termit_configs_set_defaults()
     configs.urgency_on_bell = FALSE;
     configs.get_window_title_callback = 0;
     configs.get_tab_title_callback = 0;
+    configs.get_statusbar_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;
 }
 
@@ -142,5 +177,6 @@ void termit_config_deinit()
     
     termit_lua_unref(&configs.get_window_title_callback);
     termit_lua_unref(&configs.get_tab_title_callback);
+    termit_lua_unref(&configs.get_statusbar_callback);
 }
 
