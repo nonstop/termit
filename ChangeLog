@@ -1,4 +1,5 @@
-	search in vte buffer
+version 2.8.0
+	search in vte buffer (only for vte >= 0.26)
 	new Lua functions
 		forEachRow
 		forEachVisibleRow
@@ -8,6 +9,7 @@
 		deleteBinding
 		setStatusbar
 	extra warnings when compiling in DEBUG mode
+	fixed docs
 version 2.7.1
 	display proper encoding when switching pages
 version 2.7.0
