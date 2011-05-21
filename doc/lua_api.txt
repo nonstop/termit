@@ -155,12 +155,12 @@ For detailed description look into Vte docs.
 
 *TermitKeybindings* - table with predefined keybindings.
 
-* prevTab - 'Alt-Left'
-* nextTab - 'Alt-Right'
-* openTab - 'Ctrl-t'
 * closeTab - 'Ctrl-w'
 * copy - 'Ctrl-Insert'
+* nextTab - 'Alt-Right'
+* openTab - 'Ctrl-t'
 * paste - 'Shift-Insert'
+* prevTab - 'Alt-Left'
 
 pre. Example: enable Gnome-like tab switching
     keys = {}
@@ -171,51 +171,50 @@ pre. Example: enable Gnome-like tab switching
 
 *TermitMenuItem* - table for menuitems.
 
-* name - name for menuitem
-* action - lua-function to execute when item activated
 * accel - accelerator for menuitem. String with keybinding
+* action - lua-function to execute when item activated
+* name - name for menuitem
 
 
 *TermitOptions* - table with termit options.
 
-* tabName - default tab name
-* encoding - default encoding
-* wordChars - word characters (double click selects word)
-* font - font name
-* foregroundColor
-* backgroundColor
-* backspaceBinding - reaction on backspace key (one of TermitEraseBinding)
-* deleteBinding - reaction on delete key (one of TermitEraseBinding)
-* setStatusbar - lua function to generate new statusbar message
-* imageFile - path to image to be set on the background
-* showScrollbar
-* fillTabbar - expand tabs' titles to fill whole tabbar
 * allowChangingTitle - auto change title (similar to xterm)
 * audibleBell - enables audible bell
+* backgroundColor - background color
+* backspaceBinding - reaction on backspace key (one of TermitEraseBinding)
+* colormap - array with 8 or 16 or 24 colors
+* deleteBinding - reaction on delete key (one of TermitEraseBinding)
+* encoding - default encoding
+* fillTabbar - expand tabs' titles to fill whole tabbar
+* font - font name
+* foregroundColor - foreground color
+* geometry - cols x rows to start with
+* getTabTitle - lua function to generate new tab title
+* getWindowTitle - lua function to generate new window title
+* hideMenubar - hide menubar
+* hideSingleTab - hide menubar when only 1 tab present
+* imageFile - path to image to be set on the background
+* matches - table with items of TermitMatch type
+* scrollbackLines - the length of scrollback buffer
+* setStatusbar - lua function to generate new statusbar message
+* showScrollbar - display scrollbar
+* tabName - default tab name
+* tabs - table with items of TermitTabInfo type
+* transparency - use transparency level [0,1]
 * visibleBell - enables visible bell
 * urgencyOnBell - set WM-hint 'urgent' on termit window when bell
-* getWindowTitle - lua function to generate new window title
-* getTabTitle - lua function to generate new tab title
-* transparentBackground - use transparency
-* transparentSaturation - level of saturation [0,1]
-* hideSingleTab
-* hideMenubar
-* scrollbackLines
-* geometry - cols x rows to start with
-* colormap - array with 8 or 16 or 24 colors.
-* matches - table with items of TermitMatch type
-* tabs - table with items of TermitTabInfo type
+* wordChars - word characters (double click selects word)
 
 
 *TermitTabInfo* - table with tab settings:
 
-* title
 * command
 * encoding
-* workingDir
-* pid - process id
 * font - font string
 * fontSize - font size
+* pid - process id
+* title
+* workingDir
 
 
 h4. Globals
