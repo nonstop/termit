@@ -3,14 +3,15 @@ Name: termit
 Version: @TERMIT_PACKAGE_VERSION@
 Release: 1%{?dist}
 License: GPLv2
-URL: http://code.google.com/p/termit/wiki/TermIt
+URL: http://wiki.github.com/nonstop/termit/
 Group: System Environment/Base
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: vte, gtk2, gettext
-BuildRequires: cmake, gettext
-BuildRequires: vte-devel, gtk2-devel
-Prefix: /usr
+
+BuildRequires:  gtk2-devel
+BuildRequires:  vte-devel >= 0.17.4
+BuildRequires:  lua-devel >= 5.1
+BuildRequires:  cmake desktop-file-utils gettext
 
 %description
 Small terminal emulator. The only dependencies are Vte and Gtk2 libs.
@@ -21,30 +22,28 @@ Termit supports tabs, bookmarks, encoding switching and sessions.
 
 %build
 find . -type f -name CMakeCache.txt -exec rm -rf {} \;
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
-	cmake -DCMAKE_INSTALL_PREFIX=%{prefix} .
+%cmake DCMAKE_INSTALL_DOCDIR=%{_docdir} .
+make VERBOSE=1 %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir} install
-rm -rf $RPM_BUILD_ROOT/%{prefix}/share/doc
-
+make install DESTDIR=$RPM_BUILD_ROOT
+desktop-file-install                                       \
+  --delete-original                                        \
+  --remove-category=Utility                                \
+  --add-category=System                                    \
+  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
+  ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
 %find_lang %{name}
+rm -rf ${RPM_BUILD_ROOT}%{_datadir}/doc/termit/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
-%defattr(-,root,root)
-%doc BUGS
-%doc COPYING
-%doc TODO
-%doc doc/README
-%doc doc/termit.example
-%doc doc/session.example
-%{prefix}/bin/termit
-%{prefix}/share/applications/termit.desktop
-
-%changelog
-* Tue Sep  2 2008 SeonKon Choi <bushi at mizi dot com>
-- initial
+%defattr(-,root,root,-)
+%doc ChangeLog COPYING TODO
+%doc doc/README doc/rc.lua.example doc/lua_api.txt doc/termit.svg
+%{_bindir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_mandir}/man1/%{name}.1.*

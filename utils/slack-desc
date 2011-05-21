@@ -5,5 +5,5 @@ termit: Small terminal emulator configurable via Lua.
 termit: Other dependencies are Vte and Gtk2 libs.
 termit: Termit supports multiple tabs, encoding switching and sessions.
 termit: 
-termit: http://code.google.com/p/termit/wiki/TermIt
+termit: http://wiki.github.com/nonstop/termit/
 termit: 
