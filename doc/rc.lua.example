@@ -1,3 +1,6 @@
+require("termit.colormaps")
+require("termit.utils")
+
 defaults = {}
 defaults.windowTitle = 'Termit'
 defaults.tabName = 'Terminal'
@@ -25,23 +28,19 @@ defaults.setStatusbar = function (tabInd)
     end
     return ''
 end
-
 --defaults.changeTitle = function (title)
 --    print('title='..title)
 --    newTitle = 'Termit: '..title
 --    return newTitle
 --end
--- Tango Color Theme
-defaults.colormap = {'#2e2e34343636', '#cccc00000000', '#4e4e9a9a0606', '#c4c4a0a00000', '#34346565a4a4', '#757550507b7b', '#060698209a9a', '#d3d3d7d7cfcf', '#555557575353', '#efef29292929', '#8a8ae2e23434', '#fcfce9e94f4f', '#72729f9fcfcf', '#adad7f7fa8a8', '#3434e2e2e2e2', '#eeeeeeeeecec'}
--- Zenburn Color Theme
-defaults.colormap={'#1e2320', '#705050', '#60b48a', '#dfaf8f', '#b8c2cb', '#dc8cc3', '#486858', '#dcdccc', '#709080' ,'#dca3a3', '#c3bf9f', '#f0dfaf', '#94bff3', '#ec93d3', '#93e0e3', '#ffffff'}
+defaults.colormap = termit.colormaps.delicate
 defaults.matches = {['http.*'] = function (url) print('Matching url: '..url) end}
 --defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
     --{title = 'Test new tab 2'; workingDir = '/tmp'}}
 setOptions(defaults)
 
-bindKey('Alt-Right', nextTab)
-bindKey('Alt-Left', prevTab)
+bindKey('Ctrl-Page_Up', prevTab)
+bindKey('Ctrl-Page_Down', nextTab)
 bindKey('Ctrl-F', findDlg)
 bindKey('Ctrl-2', function () print('Hello2!') end)
 bindKey('Ctrl-3', function () print('Hello3!') end)
@@ -51,42 +50,10 @@ setKbPolicy('keycode')
 
 bindMouse('DoubleClick', openTab)
 
-function pairsByKeys(t, f)
-    local a = {}
-    for n in pairs(t) do table.insert(a, n) end
-    table.sort(a, f)
-    local i = 0      -- iterator variable
-    local iter = function ()   -- iterator function
-        i = i + 1
-        if a[i] == nil then return nil
-        else return a[i], t[a[i]]
-        end
-    end
-    return iter
-end
-
-function printTable(tbl, indent)
-    for k, v in pairsByKeys(tbl) do
-        if type(v) == 'table' then
-            print(indent..k..':')
-            local_indent = indent..'  '
-            printTable(v, local_indent)
-        else
-            print(indent..tostring(k)..'='..tostring(v))
-        end
-    end
-end
 -- 
 userMenu = {}
-mi = {}
-mi.name = 'Close tab'
-mi.action = closeTab
-table.insert(userMenu, mi)
-
-mi = {}
-mi.name = 'New tab name'
-mi.action = function () setTabTitle('New tab name') end
-table.insert(userMenu, mi)
+table.insert(userMenu, {name='Close tab', action=closeTab})
+table.insert(userMenu, {name='New tab name', action=function () setTabTitle('New tab name') end})
 
 mi = {}
 mi.name = 'Zsh tab'
@@ -102,31 +69,12 @@ mi.action = function ()
 end
 table.insert(userMenu, mi)
 
-mi = {}
-mi.name = 'set red color'
-mi.action = function () setTabForegroundColor('red') end
-table.insert(userMenu, mi)
-
-mi = {}
-mi.name = 'Reconfigure'
-mi.action = reconfigure
-mi.accel = 'Ctrl-r'
-table.insert(userMenu, mi)
-
-mi = {}
-mi.name = 'Selection'
-mi.action = function () print(selection()) end
-table.insert(userMenu, mi)
-
-function dumpToFile(func)
-    io.output(io.open('/tmp/termit.dump', 'w+'))
-    callback = function (str) io.write(str..'\n') end
-    func(callback)
-    io.close()
-end
-
+table.insert(userMenu, {name='set red color', action=function () setTabForegroundColor('red') end})
+table.insert(userMenu, {name='Reconfigure', action=reconfigure, accel='Ctrl-r'})
+table.insert(userMenu, {name='Selection', action=function () print(selection()) end})
 table.insert(userMenu, {name='dumpAllRows', action=function () forEachRow(print) end})
-table.insert(userMenu, {name='dumpVisibleRowsToFile', action=function () dumpToFile(forEachVisibleRow) end})
+table.insert(userMenu, {name='dumpVisibleRowsToFile',
+    action=function () termit.utils.dumpToFile(forEachVisibleRow, '/tmp/termit.dump') end})
 table.insert(userMenu, {name='findNext', action=findNext, accel='Alt-n'})
 table.insert(userMenu, {name='findPrev', action=findPrev, accel='Alt-p'})
 
@@ -135,7 +83,7 @@ mi.name = 'Get tab info'
 mi.action = function ()
     tab = tabs[currentTabIndex()]
     if tab then
-        printTable(tab, '  ')
+        termit.utils.printTable(tab, '  ')
     end
 end
 table.insert(userMenu, mi)
@@ -145,37 +93,13 @@ function changeTabFontSize(delta)
     setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(tab.fontSize + delta))
 end
 
-mi = {}
-mi.name = 'Increase font size'
-mi.action = function () changeTabFontSize(1) end
-table.insert(userMenu, mi)
-
-mi = {}
-mi.name = 'Decrease font size'
-mi.action = function () changeTabFontSize(-1) end
-table.insert(userMenu, mi)
-
-mi = {}
-mi.name = 'User quit'
-mi.action = function () quit() end
-table.insert(userMenu, mi)
-
---printTable(userMenu, '')
-
--- list of available encodings
-encodings = {'UTF-8', 'KOI8-R', 'CP1251', 'CP866'}
+table.insert(userMenu, {name='Increase font size', action=function () changeTabFontSize(1) end})
+table.insert(userMenu, {name='Decrease font size', action=function () changeTabFontSize(-1) end})
+table.insert(userMenu, {name='User quit', action=quit})
 
 addMenu(userMenu, "User menu")
 addPopupMenu(userMenu, "User menu")
 
-encMenu = {}
-
-for i, e in pairs(encodings) do 
-    mi = {}
-    mi.name = e
-    mi.action = function () setEncoding(e) end
-    table.insert(encMenu, mi)
-end
-addMenu(encMenu, "Encodings")
-addPopupMenu(encMenu, "Encodings")
+addMenu(termit.utils.encMenu(), "Encodings")
+addPopupMenu(termit.utils.encMenu(), "Encodings")
 

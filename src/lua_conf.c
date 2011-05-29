@@ -265,28 +265,69 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     }
 }
 
+static void termit_lua_add_package_path(const gchar* path)
+{
+    gchar* luaCmd = g_strdup_printf("package.path = package.path .. \";%s/?.lua\"", path);
+    int s = luaL_dostring(L, luaCmd);
+    termit_lua_report_error(__FILE__, __LINE__, s);
+    g_free(luaCmd);
+}
+
+static gchar* termit_system_path()
+{
+    const gchar *configSystem = g_getenv("XDG_CONFIG_DIR");
+    if (configSystem)
+        return g_strdup(configSystem);
+    else
+        return g_strdup("/etc/xdg");
+}
+
+static gchar* termit_user_path()
+{
+    const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
+    if (configHome)
+        return g_strdup(configHome);
+    else
+        return g_strdup_printf("%s/.config", g_getenv("HOME"));
+}
+
 static void load_init(const gchar* initFile)
 {
+    const gchar *configFile = "rc.lua";
+    gchar* systemPath = termit_system_path();
+    termit_lua_add_package_path(systemPath);
+    gchar* userPath = termit_user_path();
+    termit_lua_add_package_path(userPath);
+
     gchar* fullPath = NULL;
     if (initFile) {
         fullPath = g_strdup(initFile);
     } else {
-        const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
-        gchar* path = NULL;
-        if (configHome)
-            path = g_strdup_printf("%s/termit", configHome);
-        else
-            path = g_strdup_printf("%s/.config/termit", g_getenv("HOME"));
-        fullPath = g_strdup_printf("%s/rc.lua", path);
-        g_free(path);
+        fullPath = g_strdup_printf("%s/termit/%s", userPath, configFile);
+        if (g_file_test(fullPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR) == FALSE) {
+            TRACE("%s not found", fullPath);
+            g_free(fullPath);
+            fullPath = g_strdup_printf("%s/termit/%s", systemPath, configFile);
+            if (g_file_test(fullPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR) == FALSE) {
+                TRACE("%s not found", fullPath);
+                g_free(fullPath);
+                fullPath = NULL;
+            }
+        }
     }
-    TRACE("config: %s", fullPath);
-    int s = luaL_loadfile(L, fullPath);
-    termit_lua_report_error(__FILE__, __LINE__, s);
-    g_free(fullPath);
+    g_free(systemPath);
+    g_free(userPath);
+    if (fullPath) {
+        TRACE("config: %s", fullPath);
+        int s = luaL_loadfile(L, fullPath);
+        termit_lua_report_error(__FILE__, __LINE__, s);
+        g_free(fullPath);
 
-    s = lua_pcall(L, 0, LUA_MULTRET, 0);
-    termit_lua_report_error(__FILE__, __LINE__, s);
+        s = lua_pcall(L, 0, LUA_MULTRET, 0);
+        termit_lua_report_error(__FILE__, __LINE__, s);
+    } else {
+        ERROR("config file %s not found", configFile);
+    }
 }
 
 int termit_lua_fill_tab(int tab_index, lua_State* ls)
