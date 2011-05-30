@@ -273,13 +273,18 @@ static void termit_lua_add_package_path(const gchar* path)
     g_free(luaCmd);
 }
 
-static gchar* termit_system_path()
+static gchar** termit_system_path()
 {
-    const gchar *configSystem = g_getenv("XDG_CONFIG_DIR");
-    if (configSystem)
-        return g_strdup(configSystem);
-    else
-        return g_strdup("/etc/xdg");
+    const gchar *configSystem = g_getenv("XDG_CONFIG_DIRS");
+    gchar* xdgConfigDirs = NULL;
+    if (configSystem) {
+        xdgConfigDirs = g_strdup_printf("%s:/etc/xdg", configSystem);
+    } else {
+        xdgConfigDirs = g_strdup("/etc/xdg");
+    }
+    gchar** systemPaths = g_strsplit(xdgConfigDirs, ":", 0);
+    g_free(xdgConfigDirs);
+    return systemPaths;
 }
 
 static gchar* termit_user_path()
@@ -294,8 +299,15 @@ static gchar* termit_user_path()
 static void load_init(const gchar* initFile)
 {
     const gchar *configFile = "rc.lua";
-    gchar* systemPath = termit_system_path();
-    termit_lua_add_package_path(systemPath);
+    gchar** systemPaths = termit_system_path();
+    guint i = 0;
+    gchar* systemPath = systemPaths[i];
+    while (systemPath) {
+        if (g_file_test(systemPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR) == TRUE) {
+            termit_lua_add_package_path(systemPath);
+        }
+        systemPath = systemPaths[++i];
+    }
     gchar* userPath = termit_user_path();
     termit_lua_add_package_path(userPath);
 
@@ -307,15 +319,23 @@ static void load_init(const gchar* initFile)
         if (g_file_test(fullPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR) == FALSE) {
             TRACE("%s not found", fullPath);
             g_free(fullPath);
-            fullPath = g_strdup_printf("%s/termit/%s", systemPath, configFile);
-            if (g_file_test(fullPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR) == FALSE) {
-                TRACE("%s not found", fullPath);
-                g_free(fullPath);
-                fullPath = NULL;
+
+            i = 0;
+            gchar* systemPath = systemPaths[i];
+            while (systemPath) {
+                fullPath = g_strdup_printf("%s/termit/%s", systemPath, configFile);
+                if (g_file_test(fullPath, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR) == FALSE) {
+                    TRACE("%s not found", fullPath);
+                    g_free(fullPath);
+                    fullPath = NULL;
+                } else {
+                    break;
+                }
+                systemPath = systemPaths[++i];
             }
         }
     }
-    g_free(systemPath);
+    g_strfreev(systemPaths);
     g_free(userPath);
     if (fullPath) {
         TRACE("config: %s", fullPath);
