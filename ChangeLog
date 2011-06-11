@@ -1,3 +1,5 @@
+	new Lua functions:
+		setColormap
 	added support for system-wide rc.lua
 	added support for using modules in rc.lua
 	added several predefined colormaps

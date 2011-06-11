@@ -374,6 +374,15 @@ static int termit_lua_addPopupMenu(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_setColormap(lua_State* ls)
+{
+    const gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_lua_load_colormap(ls, 1, &pTab->style.colors, &pTab->style.colors_size);
+    termit_tab_apply_colors(pTab);
+    return 0;
+}
+
 static int termit_lua_setEncoding(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -628,6 +637,7 @@ struct TermitLuaFunction
     {"reconfigure", termit_lua_reconfigure, 0},
     {"saveSessionDlg", termit_lua_saveSessionDialog, 0},
     {"selection", termit_lua_selection, 0},
+    {"setColormap", termit_lua_setColormap, 0},
     {"setEncoding", termit_lua_setEncoding, 0},
     {"setKbPolicy", termit_lua_setKbPolicy, 0},
     {"setOptions", termit_lua_setOptions, 0},

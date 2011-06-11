@@ -22,18 +22,8 @@ void termit_style_init(struct TermitStyle* style)
 {
     style->font_name = g_strdup("Monospace 10");
     style->font = pango_font_description_from_string(style->font_name);
-    {
-        GdkColor color = {};
-        if (gdk_color_parse("gray", &color) == TRUE) {
-            style->foreground_color = color;
-        }
-    }
-    {
-        GdkColor color = {};
-        if (gdk_color_parse("black", &color) == TRUE) {
-            style->background_color = color;
-        }
-    }
+    style->foreground_color = NULL;
+    style->background_color = NULL;
     style->colors = NULL;
     style->image_file = NULL;
     style->colors_size = 0;
@@ -50,6 +40,12 @@ void termit_style_free(struct TermitStyle* style)
     if (style->image_file) {
         g_free(style->image_file);
     }
+    if (style->background_color) {
+        gdk_color_free(style->background_color);
+    }
+    if (style->foreground_color) {
+        gdk_color_free(style->foreground_color);
+    }
     struct TermitStyle tmp = {};
     *style = tmp;
 }
@@ -57,9 +53,17 @@ void termit_style_free(struct TermitStyle* style)
 void termit_style_copy(struct TermitStyle* dest, const struct TermitStyle* src)
 {
     dest->font_name = g_strdup(src->font_name);
-    dest->foreground_color = src->foreground_color;
-    dest->background_color = src->background_color;
     dest->font = pango_font_description_from_string(src->font_name);
+    if (src->background_color) {
+        dest->background_color = gdk_color_copy(src->background_color);
+    } else {
+        dest->background_color = NULL;
+    }
+    if (src->foreground_color) {
+        dest->foreground_color = gdk_color_copy(src->foreground_color);
+    } else {
+        dest->foreground_color = NULL;
+    }
     dest->transparency = src->transparency;
     dest->image_file = g_strdup(src->image_file);
     if (src->colors_size) {

@@ -73,14 +73,16 @@ void termit_config_trace()
     TRACE("     get_statusbar_callback  = %d", configs.get_statusbar_callback);
     TRACE("     style:");
     TRACE("       font_name             = %s", configs.style.font_name);
-    TRACE("       foreground_color      = (%d,%d,%d)", 
-                configs.style.foreground_color.red,
-                configs.style.foreground_color.green,
-                configs.style.foreground_color.blue);
-    TRACE("       background_color      = (%d,%d,%d)", 
-                configs.style.background_color.red,
-                configs.style.background_color.green,
-                configs.style.background_color.blue);
+    if (configs.style.foreground_color) {
+        gchar* tmpStr = gdk_color_to_string(configs.style.foreground_color);
+        TRACE("       foreground_color      = %s", tmpStr);
+        g_free(tmpStr);
+    }
+    if (configs.style.background_color) {
+        gchar* tmpStr = gdk_color_to_string(configs.style.background_color);
+        TRACE("       background_color      = %s", tmpStr);
+        g_free(tmpStr);
+    }
     TRACE("       transparency          = %f", configs.style.transparency);
     TRACE("       image_file            = %s", configs.style.image_file);
     TRACE_MSG("");

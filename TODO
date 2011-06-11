@@ -1,4 +1,6 @@
 -- names for sessions
 -- encode displayed buffer (hmmm it seems vte doesn't support that)
--- get displayed buffer
--- get history, scrollback lines
+-- store in TermitTap only flags: SET_NAME, SET_FG_FONT, SET_BG_FONT, etc
+values are already stored in VteTerminal, so we can simply read VteTerminal properties on demand
+thus we can achieve smaller memory usage
+-- setting in /etc/xdg/termit/rc.lua must be the same as in default config

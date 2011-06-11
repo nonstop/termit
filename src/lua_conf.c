@@ -82,15 +82,15 @@ void termit_config_get_function(int* opt, lua_State* ls, int index)
         lua_pushnil(ls);
     }
 }
-void termit_config_get_color(GdkColor* opt, lua_State* ls, int index)
+void termit_config_get_color(GdkColor** opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
     termit_config_get_string(&color_str, ls, index);
-    TRACE("color_str=%s", color_str);
     if (color_str) {
         GdkColor color = {};
         if (gdk_color_parse(color_str, &color) == TRUE) {
-            *opt = color;
+            *opt = gdk_color_copy(&color);
+            TRACE("color_str=%s", color_str);
         }
     }
     g_free(color_str);
@@ -163,6 +163,32 @@ static void tabsLoader(const gchar* name, lua_State* ls, int index, void* data)
     }
 }
 
+void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong* sz)
+{
+    if (lua_isnil(ls, index) || !lua_istable(ls, index)) {
+        ERROR("invalid colormap type");
+        return;
+    }
+    const int size = lua_objlen(ls, index);
+    if ((size != 8) && (size != 16) && (size != 24)) {
+        ERROR("bad colormap length: %d", size);
+        return;
+    }
+    struct ColormapHelper ch = {};
+    ch.colors = g_malloc0(size * sizeof(GdkColor));
+    if (termit_lua_load_table(ls, colormapLoader, index, &ch)
+            == TERMIT_LUA_TABLE_LOADER_OK) {
+        if (*colors) {
+            g_free(*colors);
+        }
+        *colors = ch.colors;
+        *sz = size;
+    } else {
+        ERROR("failed to load colormap");
+        return;
+    }
+}
+
 void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
@@ -177,9 +203,9 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     else if (!strcmp(name, "font"))
         termit_config_get_string(&(p_cfg->style.font_name), ls, index);
     else if (!strcmp(name, "foregroundColor")) 
-        termit_config_get_color(&(p_cfg->style.foreground_color), ls, index);
+        termit_config_get_color(&p_cfg->style.foreground_color, ls, index);
     else if (!strcmp(name, "backgroundColor")) 
-        termit_config_get_color(&(p_cfg->style.background_color), ls, index);
+        termit_config_get_color(&p_cfg->style.background_color, ls, index);
     else if (!strcmp(name, "showScrollbar"))
         termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
     else if (!strcmp(name, "transparency"))
@@ -213,27 +239,7 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     else if (!strcmp(name, "deleteBinding"))
         termit_config_get_erase_binding(&(p_cfg->default_delete), ls, index);
     else if (!strcmp(name, "colormap")) {
-        if (!lua_isnil(ls, index) && lua_istable(ls, index)) {
-            const int size = lua_objlen(ls, index);
-            if ((size != 8) && (size != 16) && (size != 24)) {
-                ERROR("bad colormap length: %d", size);
-                return;
-            }
-            struct ColormapHelper ch = {};
-            ch.colors = g_malloc0(size * sizeof(GdkColor));
-            if (termit_lua_load_table(ls, colormapLoader, index, &ch)
-                    == TERMIT_LUA_TABLE_LOADER_OK) {
-                if (configs.style.colors) {
-                    g_free(configs.style.colors);
-                }
-                configs.style.colors = ch.colors;
-                configs.style.colors_size = size;
-            } else {
-                ERROR("failed to load colormap");
-            }
-        } else {
-            ERROR("invalid type in colormap");
-        }
+        termit_lua_load_colormap(ls, index, &configs.style.colors, &configs.style.colors_size);
     } else if (!strcmp(name, "matches")) {
         if (termit_lua_load_table(ls, matchesLoader, index, configs.matches)
                 != TERMIT_LUA_TABLE_LOADER_OK) {
@@ -338,7 +344,7 @@ static void load_init(const gchar* initFile)
     g_strfreev(systemPaths);
     g_free(userPath);
     if (fullPath) {
-        TRACE("config: %s", fullPath);
+        TRACE("using config: %s", fullPath);
         int s = luaL_loadfile(L, fullPath);
         termit_lua_report_error(__FILE__, __LINE__, s);
         g_free(fullPath);

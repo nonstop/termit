@@ -38,14 +38,31 @@ static void termit_hide_scrollbars()
 
 void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkColor* p_color)
 {
-    pTab->style.foreground_color = *p_color;
-    vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), &pTab->style.foreground_color);
+    if (p_color) {
+        pTab->style.foreground_color = gdk_color_copy(p_color);
+        vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+    }
 }
 
 void termit_tab_set_color_background(struct TermitTab* pTab, const GdkColor* p_color)
 {
-    pTab->style.background_color = *p_color;
-    vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), &pTab->style.background_color);
+    if (p_color) {
+        pTab->style.background_color = gdk_color_copy(p_color);
+        vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), pTab->style.background_color);
+    }
+}
+
+void termit_tab_apply_colors(struct TermitTab* pTab)
+{
+    if (pTab->style.colors) {
+        vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, pTab->style.colors, pTab->style.colors_size);
+    }
+    if (pTab->style.foreground_color) {
+        vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+    }
+    if (pTab->style.background_color) {
+        vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), pTab->style.background_color);
+    }
 }
 
 static void termit_set_colors()
@@ -54,12 +71,7 @@ static void termit_set_colors()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i);
-        if (configs.style.colors) {
-            termit_tab_set_colormap(pTab, configs.style.colors, configs.style.colors_size);
-        } else {
-            termit_tab_set_color_foreground(pTab, &configs.style.foreground_color);
-            termit_tab_set_color_background(pTab, &configs.style.background_color);
-        }
+        termit_tab_apply_colors(pTab);
     }
 }
 
@@ -297,7 +309,6 @@ void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell)
 
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
-    TRACE("%s", __FUNCTION__);
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));
     termit_style_copy(&pTab->style, &configs.style);
     if (ti->name) {
@@ -441,12 +452,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     } else {
         vte_terminal_set_background_image_file(VTE_TERMINAL(pTab->vte), pTab->style.image_file);
     }
-    if (configs.style.colors) {
-        termit_tab_set_colormap(pTab, configs.style.colors, configs.style.colors_size);
-    } else {
-        termit_tab_set_color_foreground(pTab, &pTab->style.foreground_color);
-        termit_tab_set_color_background(pTab, &pTab->style.background_color);
-    }
+    termit_tab_apply_colors(pTab);
 
     gtk_notebook_set_current_page(GTK_NOTEBOOK(termit.notebook), index);
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
@@ -575,11 +581,6 @@ void termit_tab_set_color_foreground_by_index(gint tab_index, const GdkColor* p_
 void termit_tab_set_color_background_by_index(gint tab_index, const GdkColor* p_color)
 {
     termit_set_color__(tab_index, p_color, termit_tab_set_color_background);
-}
-
-void termit_tab_set_colormap(struct TermitTab* pTab, const GdkColor* colors, glong colors_size)
-{
-    vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, colors, colors_size);
 }
 
 void termit_paste()

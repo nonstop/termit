@@ -41,12 +41,13 @@ int termit_lua_fill_tab(int tab_index, struct lua_State* ls);
 void termit_lua_options_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_lua_keys_loader(const gchar* name, struct lua_State* ls, int index, void* data);
 void termit_lua_tab_loader(const gchar* name, struct lua_State* ls, int index, void* data);
+void termit_lua_load_colormap(struct lua_State* ls, int index, GdkColor** colors, glong* sz);
 void termit_config_get_string(gchar** opt, struct lua_State* ls, int index);
 void termit_config_get_double(double* opt, struct lua_State* ls, int index);
 void termit_config_getuint(guint* opt, struct lua_State* ls, int index);
 void termit_config_get_boolean(gboolean* opt, struct lua_State* ls, int index);
 void termit_config_get_function(int* opt, struct lua_State* ls, int index);
-void termit_config_get_color(GdkColor* opt, struct lua_State* ls, int index);
+void termit_config_get_color(GdkColor** opt, struct lua_State* ls, int index);
 void termit_config_get_erase_binding(VteTerminalEraseBinding* opt, struct lua_State* ls, int index);
 
 #define TERMIT_TAB_ADD_NUMBER(name, value) {\

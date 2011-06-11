@@ -23,8 +23,8 @@ struct TermitStyle
 {
     gchar* font_name;
     PangoFontDescription* font;
-    GdkColor foreground_color;
-    GdkColor background_color;
+    GdkColor* foreground_color;
+    GdkColor* background_color;
     gchar *image_file;
     GdkColor* colors;
     glong colors_size;

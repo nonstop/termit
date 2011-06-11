@@ -101,11 +101,7 @@ struct TermitDlgHelper
     struct TermitTab* pTab;
     gchar* tab_title;
     gboolean handmade_tab_title;
-    gdouble transparency;
-    gchar* font_name;
-    gchar* image_file;
-    GdkColor foreground_color;
-    GdkColor background_color;
+    struct TermitStyle style;
     gboolean au_bell;
     gboolean vi_bell;
     // widgets with values
@@ -130,14 +126,7 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
     } else {
         hlp->tab_title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
     }
-    // TODO: copy style
-    hlp->font_name = g_strdup(pTab->style.font_name);
-    hlp->foreground_color = pTab->style.foreground_color;
-    hlp->background_color = pTab->style.background_color;
-    if (pTab->style.image_file) {
-        hlp->image_file = g_strdup(pTab->style.image_file);
-    }
-    hlp->transparency = pTab->style.transparency;
+    termit_style_copy(&hlp->style, &pTab->style);
     hlp->au_bell = pTab->audible_bell;
     hlp->vi_bell = pTab->visible_bell;
     return hlp;
@@ -146,10 +135,7 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
 static void termit_dlg_helper_free(struct TermitDlgHelper* hlp)
 {
     g_free(hlp->tab_title);
-    g_free(hlp->font_name);
-    if (hlp->image_file) {
-        g_free(hlp->image_file);
-    }
+    termit_style_free(&hlp->style);
     g_free(hlp);
 }
 
@@ -157,29 +143,34 @@ static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgH
 {
     if (hlp->tab_title)
         termit_tab_set_title(pTab, hlp->tab_title);
-    termit_tab_set_font(pTab, hlp->font_name);
-    termit_tab_set_background_image(pTab, hlp->image_file);
-    termit_tab_set_color_foreground(pTab, &hlp->foreground_color);
-    termit_tab_set_color_background(pTab, &hlp->background_color);
-    termit_tab_set_transparency(pTab, hlp->transparency);
+    vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
+    termit_tab_set_font(pTab, hlp->style.font_name);
+    termit_tab_set_background_image(pTab, hlp->style.image_file);
+    termit_tab_set_color_foreground(pTab, hlp->style.foreground_color);
+    termit_tab_set_color_background(pTab, hlp->style.background_color);
+    termit_tab_set_transparency(pTab, hlp->style.transparency);
     termit_tab_set_audible_bell(pTab, hlp->au_bell);
     termit_tab_set_visible_bell(pTab, hlp->vi_bell);
-    if (hlp->image_file) {
-        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->image_file);
+    if (hlp->style.image_file) {
+        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->style.image_file);
     }
 }
 
 static void dlg_set_default_values(struct TermitDlgHelper* hlp)
 {
     gtk_entry_set_text(GTK_ENTRY(hlp->entry_title), hlp->tab_title);
-    gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->font_name);
-    gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), &hlp->foreground_color);
-    gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), &hlp->background_color);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->transparency);
+    gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->style.font_name);
+    if (hlp->style.foreground_color) {
+        gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_foreground), hlp->style.foreground_color);
+    }
+    if (hlp->style.background_color) {
+        gtk_color_button_set_color(GTK_COLOR_BUTTON(hlp->btn_background), hlp->style.background_color);
+    }
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(hlp->scale_transparency), hlp->style.transparency);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->audible_bell), hlp->au_bell);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->visible_bell), hlp->vi_bell);
-    if (hlp->image_file) {
-        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->image_file);
+    if (hlp->style.image_file) {
+        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(hlp->btn_image_file), hlp->style.image_file);
     } else {
         gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(hlp->btn_image_file));
     }
@@ -252,14 +243,18 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     }
     
     { // foreground
-        GtkWidget* btn_foreground = gtk_color_button_new_with_color(&pTab->style.foreground_color);
+        GtkWidget* btn_foreground = (pTab->style.foreground_color)
+            ? gtk_color_button_new_with_color(pTab->style.foreground_color)
+            : gtk_color_button_new();
         g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
     
         TERMIT_PREFERENCE_ROW(_("Foreground"), btn_foreground);
     }
     
     { // background
-        GtkWidget* btn_background = gtk_color_button_new_with_color(&pTab->style.background_color);
+        GtkWidget* btn_background = (pTab->style.background_color)
+            ? gtk_color_button_new_with_color(pTab->style.background_color)
+            : gtk_color_button_new();
         g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
         
         TERMIT_PREFERENCE_ROW(_("Background"), btn_background);
