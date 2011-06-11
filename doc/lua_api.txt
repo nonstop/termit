@@ -13,11 +13,12 @@ _menu_ - table of TermitMenuItem type.
 
 
 *bindKey(_keys_, _luaFunction_)* - Sets new keybinding. If luaFunction is nil removes keybinding.
-_keys_ - string with keybinding
+_keys_ - string with keybinding. Available modifiers are Alt Ctrl Shift in any combination.
 _luaFunction_ - callback function
 
-pre. Example: don't close tab with Ctrl-w
+pre. Example: don't close tab with Ctrl-w, use CtrlShift-w
     bindKey('Ctrl-w', nil)
+    bindKey('CtrlShift-w', closeTab)
 
 
 *bindMouse(_event_, _luaFunction_)* - Sets new mouse-binding. If luaFunction is nilremoves mouse-binding.

@@ -46,6 +46,10 @@ bindKey('Ctrl-2', function () print('Hello2!') end)
 bindKey('Ctrl-3', function () print('Hello3!') end)
 bindKey('Ctrl-3', nil) -- remove previous binding
 
+-- don't close tab with Ctrl-w, use CtrlShift-w
+bindKey('Ctrl-w', nil)
+bindKey('CtrlShift-w', closeTab)
+
 setKbPolicy('keycode')
 
 bindMouse('DoubleClick', openTab)
