@@ -147,16 +147,14 @@ static void colormapLoader(const gchar* name, lua_State* ls, int index, void* da
 static void tabsLoader(const gchar* name, lua_State* ls, int index, void* data)
 {
     if (lua_istable(ls, index)) {
+        GArray* tabs = (GArray*)data;
         struct TabInfo ti = {};
         if (termit_lua_load_table(ls, termit_lua_tab_loader, index, &ti)
                 != TERMIT_LUA_TABLE_LOADER_OK) {
             ERROR("failed to load tab: %s %s", name, lua_tostring(ls, 3));
+        } else {
+            g_array_append_val(tabs, ti);
         }
-        termit_append_tab_with_details(&ti);
-        g_free(ti.name);
-        g_free(ti.command);
-        g_free(ti.encoding);
-        g_free(ti.working_dir);
     } else {
         ERROR("unknown type instead if tab table: skipping");
         lua_pop(ls, 1);
@@ -187,6 +185,7 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong
         ERROR("failed to load colormap");
         return;
     }
+    TRACE("colormap loaded: size=%ld", *sz);
 }
 
 void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
@@ -260,8 +259,11 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         g_free(geometry_str);
     } else if (!strcmp(name, "tabs")) {
         if (lua_istable(ls, index)) {
-            TRACE("tabs at index: %d", index);
-            if (termit_lua_load_table(ls, tabsLoader, index, NULL)
+            if (!configs.default_tabs) {
+                configs.default_tabs = g_array_new(FALSE, TRUE, sizeof(struct TabInfo));
+            }
+            TRACE("tabs at index: %d tabs.size=%zd", index, configs.default_tabs->len);
+            if (termit_lua_load_table(ls, tabsLoader, index, configs.default_tabs)
                     != TERMIT_LUA_TABLE_LOADER_OK) {
                 ERROR("openTab failed");
             }

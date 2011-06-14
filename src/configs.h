@@ -52,6 +52,7 @@ struct Configs
     int get_statusbar_callback;
     enum TermitKbPolicy kb_policy;
     struct TermitStyle style;
+    GArray* default_tabs;       // TabInfo
 };
 
 struct Match

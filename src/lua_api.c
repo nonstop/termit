@@ -70,6 +70,19 @@ static int termit_lua_setOptions(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
     termit_lua_load_table(ls, termit_lua_options_loader, 1, &configs);
+    if (configs.default_tabs) {
+        guint i = 0;
+        for (; i < configs.default_tabs->len; ++i) {
+            struct TabInfo* ti = &g_array_index(configs.default_tabs, struct TabInfo, i);
+            termit_append_tab_with_details(ti);
+            g_free(ti->name);
+            g_free(ti->command);
+            g_free(ti->encoding);
+            g_free(ti->working_dir);
+        }
+        g_array_free(configs.default_tabs, TRUE);
+        configs.default_tabs = NULL;
+    }
     return 0;
 }
 
