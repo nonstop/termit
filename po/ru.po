@@ -16,23 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/termit_preferences.c:304
+#: src/termit_preferences.c:299
 msgid "Audible bell"
 msgstr ""
 
-#: src/termit_preferences.c:265
+#: src/termit_preferences.c:260
 msgid "Background"
 msgstr ""
 
-#: src/termit_preferences.c:281
+#: src/termit_preferences.c:276
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:408
+#: src/termit_core_api.c:419
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: src/termit_core_api.c:336
+#: src/termit_core_api.c:347
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
@@ -44,17 +44,17 @@ msgstr "Правка"
 msgid "File"
 msgstr "Файл"
 
-#: src/termit_preferences.c:251
+#: src/termit_preferences.c:242
 msgid "Font"
 msgstr ""
 
-#: src/termit_preferences.c:258
+#: src/termit_preferences.c:251
 msgid "Foreground"
 msgstr ""
 
 #. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
 #. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
-#: src/termit_preferences.c:288
+#: src/termit_preferences.c:283
 msgid "Image"
 msgstr ""
 
@@ -91,12 +91,12 @@ msgstr ""
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: src/termit_preferences.c:244
+#: src/termit_preferences.c:235
 #, fuzzy
 msgid "Title"
 msgstr "Файл"
 
-#: src/termit_preferences.c:296
+#: src/termit_preferences.c:291
 msgid "Transparency"
 msgstr ""
 
@@ -105,11 +105,11 @@ msgstr ""
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
 
-#: src/termit_preferences.c:312
+#: src/termit_preferences.c:307
 msgid "Visible bell"
 msgstr ""
 
-#: src/termit_preferences.c:272
+#: src/termit_preferences.c:267
 msgid "images"
 msgstr ""
 
