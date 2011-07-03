@@ -94,6 +94,10 @@ pre. Example:
 *selection()* - Returns selected text from current tab.
 
 
+*setColormap(_colormap_)* - Changes colormap for active tab.
+_colormap_ - array with 8 or 16 or 24 colors.
+
+
 *setEncoding(_encoding_)* - Changes encoding for active tab.
 _encoding_ - string with encoding name.
 
