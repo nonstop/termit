@@ -366,6 +366,7 @@ int main(int argc, char **argv)
 
     gtk_init(&argc, &argv);
 
+    signal(SIGCHLD, SIG_IGN);
     termit_init(initFile, command);
     g_free(command);
     g_free(initFile);
