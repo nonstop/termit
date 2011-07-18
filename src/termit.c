@@ -365,8 +365,9 @@ int main(int argc, char **argv)
     textdomain(PACKAGE);
 
     gtk_init(&argc, &argv);
-
+#ifdef __linux__
     signal(SIGCHLD, SIG_IGN);
+#endif /* LINUX */
     termit_init(initFile, command);
     g_free(command);
     g_free(initFile);
