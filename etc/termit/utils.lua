@@ -1,6 +1,7 @@
 local io = io
 local pairs, print = pairs, print
 local table, tostring, type = table, tostring, type
+local setEncoding = setEncoding
 
 module('termit.utils')
 
