@@ -1,3 +1,4 @@
+	added Japanese translation (by Nobuhiro Iwamatsu)
 version 2.9.1
 	fixed setEncoding in termit.utils module
 	fixed possible zombie process
