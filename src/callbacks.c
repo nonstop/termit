@@ -213,10 +213,18 @@ static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer us
 {
     switch (event->keyval) {
     case GDK_KEY_Return:
+        #if ( GTK_MAJOR_VERSION < 3 )
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_ACCEPT, NULL);
+        #else
+        g_signal_emit_by_name(widget, "response", GTK_RESPONSE_ACCEPT, NULL);
+        #endif
         break;
     case GDK_KEY_Escape:
+        #if ( GTK_MAJOR_VERSION < 3 )
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_REJECT, NULL);
+        #else
+        g_signal_emit_by_name(widget, "response", GTK_RESPONSE_REJECT, NULL);
+        #endif
         break;
     default:
         return FALSE;
