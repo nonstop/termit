@@ -70,7 +70,7 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
 gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
-    case GDK_Return: {
+    case GDK_KEY_Return: {
         if (event->state == GDK_CONTROL_MASK) {
             termit_on_find_prev(NULL, NULL);
         } else {
@@ -78,7 +78,7 @@ gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpoint
         }
         return TRUE;
     }
-    case GDK_Escape: {
+    case GDK_KEY_Escape: {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(termit.b_toggle_search), FALSE);
         return TRUE;
     }
@@ -212,10 +212,10 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
-    case GDK_Return:
+    case GDK_KEY_Return:
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_ACCEPT, NULL);
         break;
-    case GDK_Escape:
+    case GDK_KEY_Escape:
         g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_REJECT, NULL);
         break;
     default:
