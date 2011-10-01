@@ -1,5 +1,4 @@
 # Copyright (c) 2011 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-
 msgid ""
 msgstr ""
 "Project-Id-Version: termit japanese translate\n"
@@ -73,8 +72,7 @@ msgid "Sessions"
 msgstr "セッション"
 
 #. Edit menu
-#: src/termit.c:189
-#: src/termit.c:229
+#: src/termit.c:189 src/termit.c:229
 msgid "Set tab name..."
 msgstr "タブ名を設定する"
 
@@ -84,8 +82,7 @@ msgid ""
 "Close anyway?"
 msgstr "終了しますか?"
 
-#: src/callbacks.c:262
-#: src/callbacks.c:271
+#: src/callbacks.c:262 src/callbacks.c:271
 msgid "Tab name"
 msgstr "タブ名"
 
@@ -109,4 +106,3 @@ msgstr "可視ベル"
 #: src/termit_preferences.c:267
 msgid "images"
 msgstr "画像"
-
