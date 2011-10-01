@@ -186,7 +186,7 @@ int termit_parse_keys_str(const gchar* keybinding, struct KeyWithState* kws)
         }
     }
     guint tmp_keyval = gdk_keyval_from_name(key);
-    if (tmp_keyval == GDK_VoidSymbol) {
+    if (tmp_keyval == GDK_KEY_VoidSymbol) {
         TRACE("Bad keyval: %s", keybinding);
         return -1;
     }
