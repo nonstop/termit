@@ -22,11 +22,11 @@
 static gboolean dlg_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
-    case GDK_Return:
-        g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_OK, NULL);
+    case GDK_KEY_Return:
+        g_signal_emit_by_name(widget, "response", GTK_RESPONSE_OK, NULL);
         break;
-    case GDK_Escape:
-        g_signal_emit_by_name(GTK_OBJECT(widget), "response", GTK_RESPONSE_NONE, NULL);
+    case GDK_KEY_Escape:
+        g_signal_emit_by_name(widget, "response", GTK_RESPONSE_NONE, NULL);
         break;
     default:
         return FALSE;
@@ -192,7 +192,7 @@ static void dlg_set_image_file(GtkFileChooserButton *widget, gpointer user_data)
 static gboolean dlg_clear_image_file(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
 {
     struct TermitTab* pTab = (struct TermitTab*)user_data;
-    if (event->keyval == GDK_Delete) {
+    if (event->keyval == GDK_KEY_Delete) {
         if (pTab->style.image_file) {
             gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(widget));
             termit_tab_set_background_image(pTab, NULL);
