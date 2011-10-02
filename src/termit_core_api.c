@@ -65,6 +65,16 @@ void termit_tab_apply_colors(struct TermitTab* pTab)
     }
 }
 
+void termit_tab_feed(struct TermitTab* pTab, const gchar* data)
+{
+    vte_terminal_feed(VTE_TERMINAL(pTab->vte), data, strlen(data));
+}
+
+void termit_tab_feed_child(struct TermitTab* pTab, const gchar* data)
+{
+    vte_terminal_feed_child(VTE_TERMINAL(pTab->vte), data, strlen(data));
+}
+
 static void termit_set_colors()
 {
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));

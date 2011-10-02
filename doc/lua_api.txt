@@ -21,7 +21,7 @@ pre. Example: don't close tab with Ctrl-w, use CtrlShift-w
     bindKey('CtrlShift-w', closeTab)
 
 
-*bindMouse(_event_, _luaFunction_)* - Sets new mouse-binding. If luaFunction is nilremoves mouse-binding.
+*bindMouse(_event_, _luaFunction_)* - Sets new mouse-binding. If luaFunction is nil removes mouse-binding.
 _event_ - string with one of those values: DoubleClick
 _luaFunction_ - callback function
 
@@ -36,6 +36,12 @@ _luaFunction_ - callback function
 
 
 *currentTabIndex()* - Returns current tab index.
+
+
+*feed(data)* - Interprets data as if it were data received from a terminal process.
+
+
+*feedChild(data)* - Sends a data to the terminal as if it were data entered by the user at the keyboard. 
 
 
 *findDlg()* - Opens find entry. (Enabled when build with vte version >= 0.26)

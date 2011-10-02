@@ -117,6 +117,18 @@ removes mouse-binding.
 .B currentTabIndex
 () - Returns current tab index.
 .P
+.B feed
+(
+.I
+data
+) - Interprets data as if it were data received from a terminal process.
+.P
+.B feedChild
+(
+.I
+data
+) - Sends a data to the terminal as if it were data entered by the user at the keyboard.
+.P
 .B findDlg
 () - Opens search entry. (Enabled when build with vte version >= 0.26)
 .P

@@ -23,11 +23,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:419
+#: src/termit_core_api.c:429
 msgid "Cannot create a new tab"
 msgstr "Nem sikerült új fület létrehozni"
 
-#: src/termit_core_api.c:347
+#: src/termit_core_api.c:357
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"

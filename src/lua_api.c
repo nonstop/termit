@@ -303,7 +303,7 @@ static int termit_lua_setKbPolicy(lua_State* ls)
         TRACE_MSG("kbPolicy is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     TRACE("setKbPolicy: %s", val);
     if (!strcmp(val, "keycode"))
         termit_set_kb_policy(TermitKbUseKeycode);
@@ -405,7 +405,7 @@ static int termit_lua_setEncoding(lua_State* ls)
         TRACE_MSG("encoding is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     termit_set_encoding(val);
     return 0;
 }
@@ -468,7 +468,7 @@ static int termit_lua_setTabTitle(lua_State* ls)
         TRACE_MSG("tabName is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
     termit_tab_set_title(pTab, val);
@@ -485,7 +485,7 @@ static int termit_lua_setWindowTitle(lua_State* ls)
         TRACE_MSG("title is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     termit_set_window_title(val);
     return 0;
 }
@@ -499,7 +499,7 @@ static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const 
         TRACE_MSG("color is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     GdkColor color;
     if (gdk_color_parse(val, &color) == TRUE)
         callback(-1, &color);
@@ -525,7 +525,7 @@ static int termit_lua_setTabFont(lua_State* ls)
         TRACE_MSG("font is not string: skipping");
         return 0;
     }
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     termit_tab_set_font_by_index(-1, val);
     return 0;
 }
@@ -540,7 +540,7 @@ static int termit_lua_spawn(lua_State* ls)
         return 0;
     }
     GError *err = NULL;
-    const gchar* val =  lua_tostring(ls, 1);
+    const gchar* val = lua_tostring(ls, 1);
     g_spawn_command_line_async(val, &err);
     return 0;
 }
@@ -572,6 +572,38 @@ static int termit_lua_forEachVisibleRow(lua_State* ls)
     int func = luaL_ref(ls, LUA_REGISTRYINDEX);
     termit_for_each_visible_row(func);
     termit_lua_unref(&func);
+    return 0;
+}
+
+static int termit_lua_feed(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no data defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("data is not string: skipping");
+        return 0;
+    }
+    const gchar* val = lua_tostring(ls, 1);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_tab_feed(pTab, val);
+    return 0;
+}
+
+static int termit_lua_feedChild(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no data defined: skipping");
+        return 0;
+    } else if (!lua_isstring(ls, 1)) {
+        TRACE_MSG("data is not string: skipping");
+        return 0;
+    }
+    const gchar* val = lua_tostring(ls, 1);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_tab_feed_child(pTab, val);
     return 0;
 }
 
@@ -633,6 +665,8 @@ struct TermitLuaFunction
     {"copy", termit_lua_copy, 0},
     {"currentTab", termit_lua_currentTab, 0},
     {"currentTabIndex", termit_lua_currentTabIndex, 0},
+    {"feed", termit_lua_feed, 0},
+    {"feedChild", termit_lua_feedChild, 0},
 #ifdef TERMIT_ENABLE_SEARCH
     {"findDlg", termit_lua_findDlg, 0},
     {"findNext", termit_lua_findNext, 0},

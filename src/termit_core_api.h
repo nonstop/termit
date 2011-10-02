@@ -44,6 +44,8 @@ void termit_set_statusbar_message(guint page);
 void termit_set_encoding(const gchar* encoding);
 void termit_quit();
 
+void termit_tab_feed(struct TermitTab* pTab, const gchar* data);
+void termit_tab_feed_child(struct TermitTab* pTab, const gchar* data);
 void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name);
 void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name);
 void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency);

@@ -100,6 +100,8 @@ end
 
 table.insert(userMenu, {name='Increase font size', action=function () changeTabFontSize(1) end})
 table.insert(userMenu, {name='Decrease font size', action=function () changeTabFontSize(-1) end})
+table.insert(userMenu, {name='feed example', action=function () feed('example') end})
+table.insert(userMenu, {name='feedChild example', action=function () feedChild('date\n') end})
 table.insert(userMenu, {name='User quit', action=quit})
 
 addMenu(userMenu, "User menu")
