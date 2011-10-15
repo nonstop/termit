@@ -78,6 +78,9 @@ struct TermitModifier termit_modifiers[] =
     {"Alt", GDK_MOD1_MASK}, 
     {"Ctrl", GDK_CONTROL_MASK},
     {"Shift", GDK_SHIFT_MASK},
+    {"Meta", GDK_META_MASK},
+    {"Super", GDK_SUPER_MASK},
+    {"Hyper", GDK_HYPER_MASK}
 };
 static guint TermitModsSz = sizeof(termit_modifiers)/sizeof(struct TermitModifier);
 
