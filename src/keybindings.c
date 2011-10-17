@@ -78,31 +78,39 @@ struct TermitModifier termit_modifiers[] =
     {"Alt", GDK_MOD1_MASK}, 
     {"Ctrl", GDK_CONTROL_MASK},
     {"Shift", GDK_SHIFT_MASK},
-    {"AltCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK},
-    {"CtrlAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK},
-    {"ShiftCtrl", GDK_CONTROL_MASK | GDK_SHIFT_MASK},
-    {"CtrlShift", GDK_CONTROL_MASK | GDK_SHIFT_MASK},
-    {"AltShift", GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"ShiftAlt", GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"AltCtrlShift", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"AltShiftCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"CtrlAltShift", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"CtrlShiftAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"ShiftAltCtrl", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK},
-    {"ShiftCtrlAlt", GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_SHIFT_MASK}
+    {"Meta", GDK_META_MASK},
+    {"Super", GDK_SUPER_MASK},
+    {"Hyper", GDK_HYPER_MASK}
 };
 static guint TermitModsSz = sizeof(termit_modifiers)/sizeof(struct TermitModifier);
 
 static gint get_modifier_state(const gchar* token)
 {
+    size_t modifier_len;
+    size_t step;
+
     if (!token)
         return GDK_NOTHING;
     guint i = 0;
-    for (; i<TermitModsSz; ++i) {
-        if (!strcmp(token, termit_modifiers[i].name))
-            return termit_modifiers[i].state;
+    guint state = 0;
+    while (strlen(token) > 0) {
+        step = 0;
+        for (; i<TermitModsSz; ++i) {
+            modifier_len = strlen(termit_modifiers[i].name);
+            if (!strncmp(token, termit_modifiers[i].name, modifier_len)) {
+                state |= termit_modifiers[i].state;
+                step = modifier_len;
+                break;
+            }
+        }
+        if (step == 0)
+            return GDK_NOTHING;
+        token += step;
     }
-    return GDK_NOTHING;
+    if (state == 0)
+        return GDK_NOTHING;
+    else
+        return state;
 }
 
 static gint get_kb_index(const gchar* name)
