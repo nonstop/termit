@@ -1,3 +1,6 @@
+version xxx
+	Meta, Super and Hyper in keybindings (patch by Artur Frysiak)
+	project language set to C
 	new Lua functions:
 	    feed feedChild
 	compilation with Gtk+3 fixed

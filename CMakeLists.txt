@@ -11,7 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with termit. If not, see <http://www.gnu.org/licenses/>.
 
-PROJECT(TERMIT)
+PROJECT(TERMIT C)
 
 cmake_minimum_required(VERSION 2.6.1 FATAL_ERROR)
 SET(CMAKE_VERSION "${CMAKE_CACHE_MAJOR_VERSION}.${CMAKE_CACHE_MINOR_VERSION}.${CMAKE_CACHE_RELEASE_VERSION}")
