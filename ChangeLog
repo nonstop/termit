@@ -1,4 +1,5 @@
 version xxx
+	fix build with --as-needed linker flags enabled (patch by Artur Frysiak)
 	Meta, Super and Hyper in keybindings (patch by Artur Frysiak)
 	project language set to C
 	new Lua functions:
