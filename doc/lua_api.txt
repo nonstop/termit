@@ -13,7 +13,7 @@ _menu_ - table of TermitMenuItem type.
 
 
 *bindKey(_keys_, _luaFunction_)* - Sets new keybinding. If luaFunction is nil removes keybinding.
-_keys_ - string with keybinding. Available modifiers are Alt Ctrl Shift in any combination.
+_keys_ - string with keybinding. Available modifiers are Alt Ctrl Shift Meta Super Hyper.
 _luaFunction_ - callback function
 
 pre. Example: don't close tab with Ctrl-w, use CtrlShift-w
