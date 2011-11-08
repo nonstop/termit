@@ -1,10 +1,10 @@
-version xxx
+version 2.9.2
 	fix build with --as-needed linker flags enabled (patch by Artur Frysiak)
 	Meta, Super and Hyper in keybindings (patch by Artur Frysiak)
 	project language set to C
 	new Lua functions:
 	    feed feedChild
-	compilation with Gtk+3 fixed
+	fixed some compilation issues when using Gtk+3
 	added Japanese translation (by Nobuhiro Iwamatsu)
 version 2.9.1
 	fixed setEncoding in termit.utils module
