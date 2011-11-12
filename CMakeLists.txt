@@ -20,12 +20,25 @@ INCLUDE(UsePkgConfig)
 
 ADD_DEFINITIONS(-Wall)
 
+SET(DEFAULT_XDG_DIR "/etc/xdg")
+string(REPLACE ":" ";" XDG_DIRS "$ENV{XDG_CONFIG_DIRS}")
+FOREACH(xdgDir ${XDG_DIRS})
+  SET(XDG_DIR ${xdgDir})
+  BREAK()
+ENDFOREACH()
+
+IF(NOT XDG_DIR)
+  SET(XDG_DIR "/etc/xdg")
+ENDIF(NOT XDG_DIR)
+
 SET(DEBUG FALSE CACHE BOOL "debug info")
 SET(ENABLE_NLS TRUE CACHE BOOL "enable translation")
+SET(XDG_DIR ${XDG_DIR} CACHE STRING "default xdg dir")
 
 SET(TERMIT_PACKAGE "termit")
 SET(TERMIT_PACKAGE_VERSION "2.9.2")
 SET(TERMIT_LOCALE_DIR "${CMAKE_INSTALL_PREFIX}/share/locale")
+SET(TERMIT_XDG_DIR "${XDG_DIR}/termit")
 SET(TERMIT_PACKAGE_NAME "termit - terminal emulator")
 SET(TERMIT_PACKAGE_STRING "${TERMIT_PACKAGE} ${TERMIT_PACKAGE_VERSION}")
 SET(TERMIT_PACKAGE_BUGREPORT "ratnikov.ev@gmail.com")
@@ -52,6 +65,7 @@ MESSAGE("Prefix dir:.......... ${CMAKE_INSTALL_PREFIX}")
 IF(ENABLE_NLS)
   MESSAGE("Locales dir:......... ${TERMIT_LOCALE_DIR}")
 ENDIF(ENABLE_NLS)
+MESSAGE("Xdg dir:............. ${TERMIT_XDG_DIR}")
 MESSAGE("Debug:............... ${DEBUG}")
 MESSAGE("\n")
 

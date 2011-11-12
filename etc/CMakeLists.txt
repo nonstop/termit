@@ -13,5 +13,5 @@
 
 SET(TERMIT_ETC termit/rc.lua termit/colormaps.lua termit/utils.lua)
 
-INSTALL(FILES ${TERMIT_ETC} DESTINATION /etc/xdg/termit)
+INSTALL(FILES ${TERMIT_ETC} DESTINATION ${TERMIT_XDG_DIR})
 
