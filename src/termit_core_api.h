@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,6 +49,7 @@ void termit_tab_feed_child(struct TermitTab* pTab, const gchar* data);
 void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name);
 void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name);
 void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency);
+void termit_tab_set_opacity(struct TermitTab* pTab, gdouble opacity);
 void termit_tab_set_style(gint tab_index, const struct TermitStyle*);
 void termit_tab_apply_colors(struct TermitTab* pTab);
 void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkColor* p_color);

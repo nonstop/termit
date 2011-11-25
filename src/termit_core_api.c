@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -104,7 +104,7 @@ static void termit_set_fonts()
     }
     gint oldWidth, oldHeight;
     gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);
-    
+
     gint width = (minWidth > oldWidth) ? minWidth : oldWidth;
     gint height = (minHeight > oldHeight) ? minHeight : oldHeight;
     gtk_window_resize(GTK_WINDOW(termit.main_window), width, height);
@@ -174,7 +174,7 @@ void termit_reconfigure()
     termit_configs_set_defaults();
     termit_keys_set_defaults();
     termit_lua_load_config();
-    
+
     termit_create_popup_menu();
     termit_create_menubar();
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
@@ -211,7 +211,7 @@ static void termit_check_single_tab()
 static void termit_del_tab()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-            
+
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
     g_array_free(pTab->matches, TRUE);
@@ -271,6 +271,13 @@ void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
         vte_terminal_set_background_saturation(VTE_TERMINAL(pTab->vte), pTab->style.transparency);
         vte_terminal_set_background_transparent(VTE_TERMINAL(pTab->vte), FALSE);
     }
+}
+
+/* Sets the opacity of the terminal background, were 1.0 means completely
+ * transparent and 0.0 means completely opaque. */
+void termit_tab_set_opacity(struct TermitTab* pTab, gdouble opacity)
+{
+    vte_terminal_set_opacity(VTE_TERMINAL(pTab->vte), (1 - opacity) * 65535);
 }
 
 static void termit_for_each_row_execute(struct TermitTab* pTab, glong row_start, glong row_end, int lua_callback)
@@ -368,7 +375,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 #if VTE_CHECK_VERSION(0, 26, 0) > 0
         if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
                 VTE_PTY_DEFAULT,
-                ti->working_dir, 
+                ti->working_dir,
                 cmd_argv, NULL,
                 0,
                 NULL, NULL,
@@ -416,12 +423,13 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
 //    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
-    
+
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
     termit_tab_add_matches(pTab, configs.matches);
     termit_tab_set_transparency(pTab, pTab->style.transparency);
+    termit_tab_set_opacity(pTab, pTab->style.opacity);
     vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
@@ -456,7 +464,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     }
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
-    
+
     if (pTab->style.image_file == NULL) {
         vte_terminal_set_background_image(VTE_TERMINAL(pTab->vte), NULL);
     } else {
@@ -671,7 +679,7 @@ void termit_quit()
 {
     while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
         termit_del_tab();
-    
+
     gtk_main_quit();
 }
 

@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -86,7 +86,7 @@ static void pack_widgets()
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, 1, 0);
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
-    
+
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
         termit_append_tab();
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_on_switch_page), NULL);
@@ -223,7 +223,7 @@ void termit_create_menubar()
 void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
-    
+
     GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
     GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
     GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
@@ -256,7 +256,7 @@ void termit_create_popup_menu()
         GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
         GtkWidget *utils_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
-        
+
         TRACE("%s items->len=%zd", um->name, um->items->len);
         guint i = 0;
         for (; i<um->items->len; i++) {
@@ -264,7 +264,7 @@ void termit_create_popup_menu()
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
             g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
-            g_signal_connect(G_OBJECT(mi_tmp), "activate", 
+            g_signal_connect(G_OBJECT(mi_tmp), "activate",
                 G_CALLBACK(termit_on_menu_item_selected), NULL);
         }
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
@@ -280,6 +280,8 @@ static void termit_init(const gchar* initFile, const gchar* command)
     termit.tab_max_number = 1;
 
     termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_widget_set_colormap(termit.main_window, gdk_screen_get_rgba_colormap(gtk_widget_get_screen(termit.main_window)));
+
     termit.statusbar = create_statusbar();
     create_search(&termit);
     termit.notebook = gtk_notebook_new();
@@ -291,7 +293,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
         TRACE("using command: %s", command);
         termit_append_tab_with_command(command);
     }
-    
+
     termit_create_menubar();
     pack_widgets();
     termit_create_popup_menu();
@@ -385,10 +387,10 @@ int main(int argc, char **argv)
 
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
-    
+
     // actions after display
     termit_after_show_all();
-  
+
     gtk_main();
     termit_config_deinit();
     termit_lua_close();

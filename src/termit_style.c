@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,8 @@ void termit_style_init(struct TermitStyle* style)
     style->colors = NULL;
     style->image_file = NULL;
     style->colors_size = 0;
-    style->transparency = 0;    
+    style->transparency = 0.0;
+    style->opacity = 0.0;
 }
 
 void termit_style_free(struct TermitStyle* style)
@@ -65,6 +66,7 @@ void termit_style_copy(struct TermitStyle* dest, const struct TermitStyle* src)
         dest->foreground_color = NULL;
     }
     dest->transparency = src->transparency;
+    dest->opacity = src->opacity;
     dest->image_file = g_strdup(src->image_file);
     if (src->colors_size) {
         dest->colors = g_memdup(src->colors, src->colors_size * sizeof(GdkColor));
