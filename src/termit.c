@@ -313,22 +313,29 @@ static void termit_print_usage()
 "For more information about these matters, see the file named COPYING.\n"
 "\n"
 "Options:\n"
-"    --help             - print this help message\n"
-"    --version          - print version number\n"
-"    --execute          - execute command\n"
-"    --init=init_file   - use init_file instead of standart rc.lua\n", PACKAGE_VERSION);
+"  -h, --help             - print this help message\n"
+"  -v, --version          - print version number\n"
+"  -e, --execute          - execute command\n"
+"  -i, --init=init_file   - use init_file instead of standart rc.lua\n"
+"      --name=name        - set window name hint\n"
+"      --class=name       - set window class hint\n"
+"", PACKAGE_VERSION);
 }
 
 int main(int argc, char **argv)
 {
     gchar* initFile = NULL;
     gchar* command = NULL;
+    gchar* window_class_name = NULL;
+    gchar* window_class_upper = NULL;
     while (1) {
         static struct option long_options[] = {
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
             {"execute", required_argument, 0, 'e'},
             {"init", required_argument, 0, 'i'},
+            {"name", required_argument, 0, TERMIT_GETOPT_NAME},
+            {"class", required_argument, 0, TERMIT_GETOPT_CLASS},
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
@@ -357,6 +364,12 @@ int main(int argc, char **argv)
         case '?':
         /* getopt_long already printed an error message. */
             break;
+        case TERMIT_GETOPT_NAME:
+            window_class_name = g_strdup(optarg);
+            break;
+        case TERMIT_GETOPT_CLASS:
+            window_class_upper = g_strdup(optarg);
+            break;
         default:
             return 1;
         }
@@ -384,6 +397,12 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT (termit.main_window), "delete_event", G_CALLBACK (termit_on_delete_event), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
+
+    if (!window_class_name)
+        window_class_name = TERMIT_PROGRAM_NAME;
+    if (!window_class_upper)
+        window_class_upper = TERMIT_PROGRAM_NAME_UPPER;
+    gtk_window_set_wmclass(GTK_WINDOW(termit.main_window), window_class_name, window_class_upper);
 
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
