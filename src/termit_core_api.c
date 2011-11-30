@@ -41,6 +41,7 @@ void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkColor* p_c
     if (p_color) {
         pTab->style.foreground_color = gdk_color_copy(p_color);
         vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+        vte_terminal_set_color_bold(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
     }
 }
 
@@ -59,6 +60,7 @@ void termit_tab_apply_colors(struct TermitTab* pTab)
     }
     if (pTab->style.foreground_color) {
         vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+        vte_terminal_set_color_bold(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
     }
     if (pTab->style.background_color) {
         vte_terminal_set_color_background(VTE_TERMINAL(pTab->vte), pTab->style.background_color);
