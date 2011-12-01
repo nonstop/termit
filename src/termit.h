@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,6 +14,12 @@
 #ifndef TERMIT_H
 #define TERMIT_H
 
+#define TERMIT_PROGRAM_NAME "termit"
+#define TERMIT_PROGRAM_NAME_UPPER "Termit"
+enum {
+TERMIT_GETOPT_NAME = 0,
+TERMIT_GETOPT_CLASS
+};
 
 #include <config.h>
 
