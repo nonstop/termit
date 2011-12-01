@@ -41,6 +41,9 @@ void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkColor* p_c
     if (p_color) {
         pTab->style.foreground_color = gdk_color_copy(p_color);
         vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+        if (pTab->style.foreground_color) {
+            vte_terminal_set_color_bold(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+        }
     }
 }
 
@@ -56,6 +59,9 @@ void termit_tab_apply_colors(struct TermitTab* pTab)
 {
     if (pTab->style.colors) {
         vte_terminal_set_colors(VTE_TERMINAL(pTab->vte), NULL, NULL, pTab->style.colors, pTab->style.colors_size);
+        if (pTab->style.foreground_color) {
+            vte_terminal_set_color_bold(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
+        }
     }
     if (pTab->style.foreground_color) {
         vte_terminal_set_color_foreground(VTE_TERMINAL(pTab->vte), pTab->style.foreground_color);
@@ -112,8 +118,6 @@ static void termit_set_fonts()
     GdkGeometry geom;
     geom.min_width = minWidth;
     geom.min_height = minHeight;
-    TRACE("width=%d height=%d", width, height);
-    TRACE("minWidth=%d minHeight=%d", minWidth, minHeight);
     gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
 }
 
