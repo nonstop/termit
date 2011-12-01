@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -86,7 +86,7 @@ static void pack_widgets()
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, 1, 0);
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
-    
+
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
         termit_append_tab();
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_on_switch_page), NULL);
@@ -223,7 +223,7 @@ void termit_create_menubar()
 void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
-    
+
     GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
     GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
     GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
@@ -256,7 +256,7 @@ void termit_create_popup_menu()
         GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
         GtkWidget *utils_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
-        
+
         TRACE("%s items->len=%zd", um->name, um->items->len);
         guint i = 0;
         for (; i<um->items->len; i++) {
@@ -264,7 +264,7 @@ void termit_create_popup_menu()
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
             g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
             gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
-            g_signal_connect(G_OBJECT(mi_tmp), "activate", 
+            g_signal_connect(G_OBJECT(mi_tmp), "activate",
                 G_CALLBACK(termit_on_menu_item_selected), NULL);
         }
         gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
@@ -291,7 +291,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
         TRACE("using command: %s", command);
         termit_append_tab_with_command(command);
     }
-    
+
     termit_create_menubar();
     pack_widgets();
     termit_create_popup_menu();
@@ -299,6 +299,16 @@ static void termit_init(const gchar* initFile, const gchar* command)
     if (!configs.allow_changing_title)
         termit_set_window_title(configs.default_window_title);
 }
+
+enum {
+    TERMIT_GETOPT_HELP = 'h',
+    TERMIT_GETOPT_VERSION = 'v',
+    TERMIT_GETOPT_EXEC = 'e',
+    TERMIT_GETOPT_INIT = 'i',
+    TERMIT_GETOPT_NAME = 'n',
+    TERMIT_GETOPT_CLASS = 'c',
+    TERMIT_GETOPT_ROLE = 'r'
+};
 
 static void termit_print_usage()
 {
@@ -311,52 +321,69 @@ static void termit_print_usage()
 "For more information about these matters, see the file named COPYING.\n"
 "\n"
 "Options:\n"
-"    --help             - print this help message\n"
-"    --version          - print version number\n"
-"    --execute          - execute command\n"
-"    --init=init_file   - use init_file instead of standart rc.lua\n", PACKAGE_VERSION);
+"  -h, --help             - print this help message\n"
+"  -v, --version          - print version number\n"
+"  -e, --execute          - execute command\n"
+"  -i, --init=init_file   - use init_file instead of standart rc.lua\n"
+"  -n, --name=name        - set window name hint\n"
+"  -c, --class=class      - set window class hint\n"
+"  -r, --role=role        - set window role (Gtk hint)\n"
+"", PACKAGE_VERSION);
 }
 
 int main(int argc, char **argv)
 {
     gchar* initFile = NULL;
     gchar* command = NULL;
+    gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL;
     while (1) {
         static struct option long_options[] = {
-            {"help", no_argument, 0, 'h'},
-            {"version", no_argument, 0, 'v'},
-            {"execute", required_argument, 0, 'e'},
-            {"init", required_argument, 0, 'i'},
+            {"help", no_argument, 0, TERMIT_GETOPT_HELP},
+            {"version", no_argument, 0, TERMIT_GETOPT_VERSION},
+            {"execute", required_argument, 0, TERMIT_GETOPT_EXEC},
+            {"init", required_argument, 0, TERMIT_GETOPT_INIT},
+            {"name", required_argument, 0, TERMIT_GETOPT_NAME},
+            {"class", required_argument, 0, TERMIT_GETOPT_CLASS},
+            {"role", required_argument, 0, TERMIT_GETOPT_ROLE},
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "hvi:e:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvi:e:n:c:r:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
             break;
 
         switch (flag) {
-        case 'h':
+        case TERMIT_GETOPT_HELP:
             termit_print_usage();
             return 0;
-        case 'v':
+        case TERMIT_GETOPT_VERSION:
             g_printf(PACKAGE_VERSION);
             g_printf("\n");
             return 0;
-        case 'e':
+        case TERMIT_GETOPT_EXEC:
             command = g_strdup(optarg);
             break;
-        case 'i':
+        case TERMIT_GETOPT_INIT:
             initFile = g_strdup(optarg);
             break;
-        case '?':
-        /* getopt_long already printed an error message. */
+        case TERMIT_GETOPT_NAME:
+            windowName = g_strdup(optarg);
             break;
+        case TERMIT_GETOPT_CLASS:
+            windowClass = g_strdup(optarg);
+            break;
+        case TERMIT_GETOPT_ROLE:
+            windowRole = g_strdup(optarg);
+            break;
+        case '?':
+            break;
+        /* getopt_long already printed an error message. */
         default:
-            return 1;
+            break;
         }
     }
 
@@ -383,12 +410,23 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
 
+    TRACE("windowName=%s windowClass=%s windowRole=%s", windowName, windowClass, windowRole);
+    if (windowName || windowClass) {
+        gtk_window_set_wmclass(GTK_WINDOW(termit.main_window), windowName, windowClass);
+        g_free(windowName);
+        g_free(windowClass);
+    }
+    if (windowRole) {
+        gtk_window_set_role(GTK_WINDOW(termit.main_window), windowRole);
+        g_free(windowRole);
+    }
+
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
-    
+
     // actions after display
     termit_after_show_all();
-  
+
     gtk_main();
     termit_config_deinit();
     termit_lua_close();

@@ -2,6 +2,7 @@ version
 	fixed installing as non-root
 	added German translation (by Dennis Ploeger)
 	apply foreground color for bold fonts
+	added several WM-specific commandline options: --name, --class, --role
 version 2.9.2
 	fix build with --as-needed linker flags enabled (patch by Artur Frysiak)
 	Meta, Super and Hyper in keybindings (patch by Artur Frysiak)
