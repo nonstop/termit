@@ -1,6 +1,7 @@
 version 
 	fixed installing as non-root
 	added German translation (by Dennis Ploeger)
+	updated Hungarian translation (by Peter Polonkai)
 	apply foreground color for bold fonts
 	added several WM-specific commandline options: --name, --class, --role
 version 2.9.2
