@@ -5,110 +5,108 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-12-19 21:23+0100\n"
-"Last-Translator: Peter Polonkai <polesz@nedudu.hu>\n"
-"Language-Team: hu\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Martintxo <martintxo@sindominio.net>\n"
+"Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/termit_preferences.c:299
 msgid "Audible bell"
-msgstr "Hallható figyelmeztetés"
+msgstr "Timbre audible"
 
 #: src/termit_preferences.c:260
 msgid "Background"
-msgstr "Háttér"
+msgstr "Fondo"
 
 #: src/termit_preferences.c:276
 msgid "Background image"
-msgstr "Háttérkép"
+msgstr "Imagen de fondo"
 
 #: src/termit_core_api.c:433
 msgid "Cannot create a new tab"
-msgstr "Nem sikerült új fület létrehozni"
+msgstr "No se puede crear una nueva pestaña"
 
 #: src/termit_core_api.c:361
 msgid "Cannot parse command. Creating tab with shell"
-msgstr ""
-"Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
+msgstr "El comando no se entiende. Creando una nueva pestaña con shell"
 
 #: src/termit.c:194
 msgid "Edit"
-msgstr "Szerkesztés"
+msgstr "Editar"
 
 #: src/termit.c:177
 msgid "File"
-msgstr "Fájl"
+msgstr "Archivo"
 
 #: src/termit_preferences.c:242
 msgid "Font"
-msgstr "Betűtípus"
+msgstr "Tipografía"
 
 #: src/termit_preferences.c:251
 msgid "Foreground"
-msgstr "Előtér"
+msgstr "Frente"
 
 #. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
 #. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
 #: src/termit_preferences.c:283
 msgid "Image"
-msgstr "Kép"
+msgstr "Imagen"
 
 #: src/callbacks.c:383
 msgid "Open session"
-msgstr "Megnyitás"
+msgstr "Abrir sesión"
 
 #: src/callbacks.c:353
 msgid "Save session"
-msgstr "Mentés"
+msgstr "Guardar sesión"
 
 #: src/termit.c:234
 msgid "Scrollbar"
-msgstr "Gördítősáv"
+msgstr "Barra de desplazamiento"
 
 #: src/termit.c:209
 msgid "Sessions"
-msgstr "Munkamenetek"
+msgstr "Sesiones"
 
 #. Edit menu
 #: src/termit.c:189 src/termit.c:229
 msgid "Set tab name..."
-msgstr "Fül átnevezése..."
+msgstr "Establece el nombre de la pestaña"
 
 #: src/callbacks.c:37
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
 msgstr ""
-"Több fül is nyitva van.\n"
-"Bezárja mind?"
+"Hay varias pestañas abiertas.\n"
+"¿Cerrarlas todas?"
 
 #: src/callbacks.c:262 src/callbacks.c:271
 msgid "Tab name"
-msgstr "Fül neve"
+msgstr "Nombre de la pestaña"
 
 #: src/termit_preferences.c:235
 msgid "Title"
-msgstr "Cím"
+msgstr "Título"
 
 #: src/termit_preferences.c:291
 msgid "Transparency"
-msgstr "Átlátszóság"
+msgstr "Transparencia"
 
 #: src/sessions.c:90
 #, c-format
 msgid "Unable to create directory '%s': %s"
-msgstr "A könyvtár létrehozása sikertelen '%s': %s"
+msgstr "No se puede crear el directorio '%s': %s."
 
 #: src/termit_preferences.c:307
 msgid "Visible bell"
-msgstr "Látható figyelmeztetés"
+msgstr "Timbre visible"
 
 #: src/termit_preferences.c:267
 msgid "images"
-msgstr "képek"
+msgstr "imágenes"

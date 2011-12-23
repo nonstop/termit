@@ -1,5 +1,6 @@
-version 
+version 2.9.3
 	fixed installing as non-root
+	added Spanish translation (by Martintxo)
 	added German translation (by Dennis Ploeger)
 	updated Hungarian translation (by Peter Polonkai)
 	apply foreground color for bold fonts

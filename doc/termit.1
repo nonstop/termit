@@ -4,16 +4,13 @@
 .TH TERMIT 30 "NOV 2008" Linux "User Manuals"
 .SH NAME
 termit \- lightweight terminal emulator
-
 .SH SYNOPSIS
 .B termit [-option ...]
-
 .SH DESCRIPTION
 .B termit
 is a vte-based lightweight terminal emulator. All configuration
 is done via Lua-scripts. The only other dependencies are 
 Gtk+ and Vte.
-
 .SH OPTIONS
 .BR -h
 or
@@ -35,9 +32,6 @@ or
 Use
 .I cmd
 as shell
-.P
-termit --execute=zsh
-.P
 .RE
 .BR -i
 or
@@ -47,8 +41,36 @@ or
 Use
 .I file
 instead of default rc.lua
+.RE
+.BR -n
+or
+.BR --name
+.I name
+.RS
+Use
+.I name
+in window name hint
+.RE
+.BR -c
+or
+.BR --class
+.I class
+.RS
+Use
+.I class
+in window class hint
+.RE
+.BR -r
+or
+.BR --role
+.I role
+.RS
+Use
+.I role
+in window role Gtk-hint
+.RE
 .P
-termit --init=session.lua
+termit --execute=zsh --init=session.lua --name=TermitName --class=TermitClass --role=TermitRole
 .P
 .RE
 .SH FILES

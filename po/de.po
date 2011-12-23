@@ -1,3 +1,21 @@
+# Termit translation file.
+# Copyright (C) 2007
+# This file is distributed under the same license as the termit package.
+# Evgeny Ratnikov ratnikov.ev@gmail.com 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2011-12-19 21:23+0100\n"
+"Last-Translator: Dennis Ploeger <develop@dieploegers.de>\n"
+"Language-Team: de\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 #: src/termit_preferences.c:299
 msgid "Audible bell"
 msgstr "Glocke"
@@ -10,13 +28,14 @@ msgstr "Hintergrund"
 msgid "Background image"
 msgstr "Hintergrundbild"
 
-#: src/termit_core_api.c:429
+#: src/termit_core_api.c:433
 msgid "Cannot create a new tab"
 msgstr "Konnte keinen neuen Tab erzeugen"
 
-#: src/termit_core_api.c:357
+#: src/termit_core_api.c:361
 msgid "Cannot parse command. Creating tab with shell"
-msgstr "Konnte Befehl nicht untersuchen. Erstelle einen Tab mit der Kommandozeile"
+msgstr ""
+"Konnte Befehl nicht untersuchen. Erstelle einen Tab mit der Kommandozeile"
 
 #: src/termit.c:194
 msgid "Edit"

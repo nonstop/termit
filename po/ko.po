@@ -24,11 +24,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:429
+#: src/termit_core_api.c:433
 msgid "Cannot create a new tab"
 msgstr "새 탭을 만들 수 없습니다"
 
-#: src/termit_core_api.c:357
+#: src/termit_core_api.c:361
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
