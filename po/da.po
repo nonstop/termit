@@ -1,0 +1,95 @@
+#: src/termit_preferences.c:299
+msgid "Audible bell"
+msgstr "Hørbar klokke"
+
+#: src/termit_preferences.c:260
+msgid "Background"
+msgstr "Baggrund"
+
+#: src/termit_preferences.c:276
+msgid "Background image"
+msgstr "Baggrunds billede"
+
+#: src/termit_core_api.c:433
+msgid "Cannot create a new tab"
+msgstr "Kan ikke oprette ny fane"
+
+#: src/termit_core_api.c:361
+msgid "Cannot parse command. Creating tab with shell"
+msgstr "Kan ikke tolke kommando. Opretter fane med skal"
+
+#: src/termit.c:194
+msgid "Edit"
+msgstr "Redigér"
+
+#: src/termit.c:177
+msgid "File"
+msgstr "Fil"
+
+#: src/termit_preferences.c:242
+msgid "Font"
+msgstr "Skrifttype"
+
+#: src/termit_preferences.c:251
+msgid "Foreground"
+msgstr "Forgrund"
+
+#. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
+#. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
+#: src/termit_preferences.c:283
+msgid "Image"
+msgstr "Billede"
+
+#: src/callbacks.c:383
+msgid "Open session"
+msgstr "Åben session"
+
+#: src/callbacks.c:353
+msgid "Save session"
+msgstr "Gem session"
+
+#: src/termit.c:234
+msgid "Scrollbar"
+msgstr "Rullebjælke"
+
+#: src/termit.c:209
+msgid "Sessions"
+msgstr "Sessioner"
+
+#. Edit menu
+#: src/termit.c:189 src/termit.c:229
+msgid "Set tab name..."
+msgstr "Angiv fanenavn..."
+
+#: src/callbacks.c:37
+msgid ""
+"Several tabs are opened.\n"
+"Close anyway?"
+msgstr ""
+"Adskillige faner åbne.\n"
+"Luk alligevel?"
+
+#: src/callbacks.c:262 src/callbacks.c:271
+msgid "Tab name"
+msgstr "Fanenavn"
+
+#: src/termit_preferences.c:235
+msgid "Title"
+msgstr "Titel"
+
+#: src/termit_preferences.c:291
+msgid "Transparency"
+msgstr "Gennemsigtighed"
+
+#: src/sessions.c:90
+#, c-format
+msgid "Unable to create directory '%s': %s"
+msgstr "Kan ikke oprette sti '%s': %s"
+
+#: src/termit_preferences.c:307
+msgid "Visible bell"
+msgstr "Synlige klokke"
+
+#: src/termit_preferences.c:267
+msgid "images"
+msgstr "billeder"
