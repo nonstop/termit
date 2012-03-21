@@ -167,7 +167,11 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong
         ERROR("invalid colormap type");
         return;
     }
+#if LUA_VERSION_NUM > 501
+    const int size = lua_rawlen(ls, index);
+#else
     const int size = lua_objlen(ls, index);
+#endif // LUA_VERSION_NUM
     if ((size != 8) && (size != 16) && (size != 24)) {
         ERROR("bad colormap length: %d", size);
         return;
@@ -402,7 +406,7 @@ static void termit_lua_init_tabs()
     lua_pushcfunction(L, termit_lua_tabs_newindex);
     lua_setfield(L, -2, "__newindex");
     lua_setmetatable(L, -2);
-    lua_setfield(L, LUA_GLOBALSINDEX, "tabs");
+    lua_setglobal(L, "tabs");
 }
 
 static const gchar* termit_init_file = NULL;

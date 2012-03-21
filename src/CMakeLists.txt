@@ -23,10 +23,15 @@ IF(NOT VTE_FOUND)
   message(FATAL_ERROR "vte library not found")
 ENDIF(NOT VTE_FOUND)
 
-INCLUDE(FindLua51)
-IF(NOT LUA51_FOUND)
-  message(FATAL_ERROR "lua 5.1 not found")
-ENDIF(NOT LUA51_FOUND)
+SET(LUA_INCLUDE_DIR "/usr/include" CACHE STRING "Lua include dir")
+SET(LUA_LIBRARIES "/usr/lib/liblua.a" CACHE STRING "Lua libraries")
+
+IF(NOT LUA_INCLUDE_DIR OR NOT LUA_LIBRARIES)
+  INCLUDE(FindLua51)
+  IF(NOT LUA51_FOUND)
+    message(FATAL_ERROR "lua 5.1 not found")
+  ENDIF(NOT LUA51_FOUND)
+ENDIF(NOT LUA_INCLUDE_DIR OR NOT LUA_LIBRARIES)
 
 INCLUDE(Sources.cmake)
 
