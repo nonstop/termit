@@ -435,6 +435,12 @@ static int termit_lua_currentTabIndex(lua_State* ls)
     return 1;
 }
 
+static int termit_lua_lastTabIndex(lua_State* ls)
+{
+    lua_pushinteger(ls, termit_get_last_tab_index());
+    return 1;
+}
+
 static int termit_lua_loadSessionDialog(lua_State* ls)
 {
     termit_on_load_session();
@@ -675,6 +681,7 @@ struct TermitLuaFunction
     {"forEachRow", termit_lua_forEachRow, 0},
     {"forEachVisibleRow", termit_lua_forEachVisibleRow, 0},
     {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
+    {"lastTabIndex", termit_lua_lastTabIndex, 0},
     {"nextTab", termit_lua_nextTab, 0},
     {"openTab", termit_lua_openTab, 0},
     {"paste", termit_lua_paste, 0},

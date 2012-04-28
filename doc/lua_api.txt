@@ -61,6 +61,8 @@ _func_ - function to be called.
 _func_ - function to be called.
 
 
+*lastTabIndex()* - Returns the index of the last tab -- same as the number of tabs.
+
 *loadSessionDlg()* - Displays "Load session" dialog.
 
 
