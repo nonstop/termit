@@ -28,11 +28,11 @@ msgstr ""
 msgid "Background image"
 msgstr ""
 
-#: src/termit_core_api.c:433
+#: src/termit_core_api.c:445
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: src/termit_core_api.c:361
+#: src/termit_core_api.c:373
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 

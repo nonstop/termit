@@ -28,11 +28,11 @@ msgstr "Hintergrund"
 msgid "Background image"
 msgstr "Hintergrundbild"
 
-#: src/termit_core_api.c:433
+#: src/termit_core_api.c:445
 msgid "Cannot create a new tab"
 msgstr "Konnte keinen neuen Tab erzeugen"
 
-#: src/termit_core_api.c:361
+#: src/termit_core_api.c:373
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Konnte Befehl nicht untersuchen. Erstelle einen Tab mit der Kommandozeile"
