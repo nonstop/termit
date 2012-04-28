@@ -38,6 +38,7 @@ void termit_for_each_row(int lua_callback);
 void termit_for_each_visible_row(int lua_callback);
 void termit_close_tab();
 void termit_toggle_menubar();
+void termit_toggle_tabbar();
 void termit_toggle_search();
 void termit_set_window_title(const gchar* title);
 void termit_set_statusbar_message(guint page);

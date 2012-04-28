@@ -166,6 +166,7 @@ void termit_after_show_all()
     termit_hide_scrollbars();
     termit_set_colors();
     termit_toggle_menubar();
+    termit_toggle_tabbar();
     termit_toggle_search();
 }
 
@@ -203,13 +204,24 @@ void termit_set_statusbar_message(guint page)
 
 static void termit_check_single_tab()
 {
-    if (configs.hide_single_tab)
+    if (configs.hide_single_tab && !configs.hide_tabbar)
     {
         if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1)
             gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
         else
             gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
     }
+}
+
+void termit_toggle_tabbar()
+{
+    static int tabbar_visible = TRUE;
+    tabbar_visible = !configs.hide_tabbar;
+    if (tabbar_visible)
+      termit_check_single_tab();
+    else
+      gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
+    tabbar_visible = !tabbar_visible;
 }
 
 static void termit_del_tab()

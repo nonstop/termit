@@ -13,6 +13,7 @@ defaults.showScrollbar = true
 defaults.transparency = 0.7
 --defaults.imageFile = '/tmp/img.png'
 defaults.hideSingleTab = false
+defaults.hideTabbar = false
 defaults.hideMenubar = false
 --defaults.fillTabbar = false
 defaults.fillTabbar = true
