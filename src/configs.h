@@ -42,6 +42,7 @@ struct Configs
     gboolean hide_single_tab;
     gboolean show_scrollbar;
     gboolean hide_menubar;
+    gboolean hide_tabbar;
     gboolean fill_tabbar;
     gboolean urgency_on_bell;
     gboolean allow_changing_title;

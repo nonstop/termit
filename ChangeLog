@@ -1,3 +1,6 @@
+	new option hideTabbar (by Anurag Priyam)
+	new Lua function toggleTabbar
+	fixed toggleMenubar
 	added Polish translation (by Miś Uszatek)
 	added Danish translation
 	added support for Lua 5.2

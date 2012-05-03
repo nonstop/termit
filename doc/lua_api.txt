@@ -152,6 +152,8 @@ _command_ - string with command and arguments.
 
 *toggleMenubar()* - Displays or hides menubar.
 
+*toggleTabbar()* - Displays or hides tabbar.
+
 h4. Types
 
 *TermitEraseBinding* - one of those string values:
@@ -203,6 +205,7 @@ pre. Example: enable Gnome-like tab switching
 * getTabTitle - lua function to generate new tab title
 * getWindowTitle - lua function to generate new window title
 * hideMenubar - hide menubar
+* hideTabbar - hide tabbar
 * hideSingleTab - hide menubar when only 1 tab present
 * imageFile - path to image to be set on the background
 * matches - table with items of TermitMatch type

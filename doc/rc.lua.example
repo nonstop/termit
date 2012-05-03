@@ -13,6 +13,7 @@ defaults.showScrollbar = true
 defaults.transparency = 0.7
 --defaults.imageFile = '/tmp/img.png'
 defaults.hideSingleTab = false
+defaults.hideTabbar = false
 defaults.hideMenubar = false
 --defaults.fillTabbar = false
 defaults.fillTabbar = true
@@ -82,6 +83,8 @@ table.insert(userMenu, {name='dumpVisibleRowsToFile',
 table.insert(userMenu, {name='findNext', action=findNext, accel='Alt-n'})
 table.insert(userMenu, {name='findPrev', action=findPrev, accel='Alt-p'})
 table.insert(userMenu, {name='new colormap', action=function () setColormap(termit.colormaps.mikado) end})
+table.insert(userMenu, {name='toggle menubar', action=function () toggleMenubar() end})
+table.insert(userMenu, {name='toggle tabbar', action=function () toggleTabbar()  end})
 
 mi = {}
 mi.name = 'Get tab info'

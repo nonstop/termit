@@ -132,13 +132,33 @@ gchar* termit_get_pid_dir(pid_t pid)
 
 void termit_toggle_menubar()
 {
-    static int menubar_visible = TRUE;
-    menubar_visible = !configs.hide_menubar;
-    if (menubar_visible)
-        gtk_widget_show(GTK_WIDGET(termit.hbox));
-    else
+    if (configs.hide_menubar) {
         gtk_widget_hide(GTK_WIDGET(termit.hbox));
-    menubar_visible = !menubar_visible;
+    } else {
+        gtk_widget_show(GTK_WIDGET(termit.hbox));
+    }
+    configs.hide_menubar = !configs.hide_menubar;
+}
+
+static void termit_check_single_tab()
+{
+    if (configs.hide_single_tab && !configs.hide_tabbar) {
+        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1)
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
+        else
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+    }
+}
+
+void termit_toggle_tabbar()
+{
+    if (configs.hide_tabbar) {
+        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
+    } else {
+        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+        termit_check_single_tab();
+    }
+    configs.hide_tabbar = !configs.hide_tabbar;
 }
 
 void termit_toggle_search()
@@ -166,6 +186,7 @@ void termit_after_show_all()
     termit_hide_scrollbars();
     termit_set_colors();
     termit_toggle_menubar();
+    termit_toggle_tabbar();
     termit_toggle_search();
 }
 
@@ -198,17 +219,6 @@ void termit_set_statusbar_message(guint page)
         g_free(statusbarMessage);
     } else {
         gtk_statusbar_push(GTK_STATUSBAR(termit.statusbar), 0, vte_terminal_get_encoding(VTE_TERMINAL(pTab->vte)));
-    }
-}
-
-static void termit_check_single_tab()
-{
-    if (configs.hide_single_tab)
-    {
-        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1)
-            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
-        else
-            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
     }
 }
 
