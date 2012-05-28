@@ -35,7 +35,7 @@ end
 --    return newTitle
 --end
 defaults.colormap = termit.colormaps.delicate
-defaults.matches = {['http.*'] = function (url) print('Matching url: '..url) end}
+defaults.matches = {['http[^ ]+'] = function (url) print('Matching url: '..url) end}
 --defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
     --{title = 'Test new tab 2'; workingDir = '/tmp'}}
 setOptions(defaults)
