@@ -12,7 +12,7 @@
     
     Command-line arguments:
         * --version (-v) - prints version info
-        * --init=init_file - use init_file instead of standart rc.lua
+        * --init=init_file - use init_file instead of standard rc.lua
         * --execute=cmd - execute command (also -e)
 
     Keybindings can be configured via rc.lua.
