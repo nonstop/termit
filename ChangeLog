@@ -1,7 +1,9 @@
+version 2.9.4
 	fix hyphen-used-as-minus-sign in manpage (by Thomas Koch)
-	new option hideTabbar (by Anurag Priyam)
-	new Lua function toggleTabbar
-	fixed toggleMenubar
+	new options:
+		hideTabbar (by Anurag Priyam)
+	new Lua functions:
+		toggleTabbar
 	added Polish translation (by Miś Uszatek)
 	added Danish translation
 	added support for Lua 5.2
