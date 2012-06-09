@@ -324,7 +324,7 @@ static void termit_print_usage()
 "  -h, --help             - print this help message\n"
 "  -v, --version          - print version number\n"
 "  -e, --execute          - execute command\n"
-"  -i, --init=init_file   - use init_file instead of standart rc.lua\n"
+"  -i, --init=init_file   - use init_file instead of standard rc.lua\n"
 "  -n, --name=name        - set window name hint\n"
 "  -c, --class=class      - set window class hint\n"
 "  -r, --role=role        - set window role (Gtk hint)\n"

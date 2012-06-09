@@ -5,6 +5,7 @@
 	added Polish translation (by Miś Uszatek)
 	added Danish translation
 	added support for Lua 5.2
+	fixed docs
 version 2.9.3
 	fixed installing as non-root
 	added Spanish translation (by Martintxo)
