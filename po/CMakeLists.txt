@@ -7,6 +7,7 @@ SET(PO_FILES
   ko.po
   pl.po
   ru.po
+  sv.po
   zh_TW.po)
 
 SET(COPYRIGHT_HOLDER "Evgeny Ratnikov")
