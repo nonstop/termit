@@ -8,7 +8,7 @@ TryExec=termit
 Exec=termit
 Icon=utilities-terminal
 Type=Application
-Categories=GTK;Utility;TerminalEmulator;
+Categories=GTK;System;TerminalEmulator;
 Terminal=false
 Keywords=Run;
 
