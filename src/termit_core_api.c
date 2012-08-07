@@ -140,24 +140,22 @@ void termit_toggle_menubar()
     configs.hide_menubar = !configs.hide_menubar;
 }
 
-static void termit_check_single_tab()
+static void termit_check_tabbar()
 {
-    if (configs.hide_single_tab && !configs.hide_tabbar) {
-        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1)
+    if (!configs.hide_tabbar) {
+        if (configs.hide_single_tab && gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 1) {
             gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
-        else
+        } else {
             gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+        }
+    } else {
+        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
     }
 }
 
 void termit_toggle_tabbar()
 {
-    if (configs.hide_tabbar) {
-        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), FALSE);
-    } else {
-        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
-        termit_check_single_tab();
-    }
+    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), configs.hide_tabbar);
     configs.hide_tabbar = !configs.hide_tabbar;
 }
 
@@ -186,7 +184,7 @@ void termit_after_show_all()
     termit_hide_scrollbars();
     termit_set_colors();
     termit_toggle_menubar();
-    termit_toggle_tabbar();
+    termit_check_tabbar();
     termit_toggle_search();
 }
 
@@ -199,7 +197,7 @@ void termit_reconfigure()
     termit_configs_set_defaults();
     termit_keys_set_defaults();
     termit_lua_load_config();
-    
+
     termit_create_popup_menu();
     termit_create_menubar();
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
@@ -225,7 +223,7 @@ void termit_set_statusbar_message(guint page)
 static void termit_del_tab()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-            
+
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
     g_array_free(pTab->matches, TRUE);
@@ -236,7 +234,7 @@ static void termit_del_tab()
     g_free(pTab);
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
 
-    termit_check_single_tab();
+    termit_check_tabbar();
 }
 
 static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
@@ -482,7 +480,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(termit.notebook), pTab->hbox, TRUE);
     gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
 
-    termit_check_single_tab();
+    termit_check_tabbar();
     termit_hide_scrollbars();
 }
 
