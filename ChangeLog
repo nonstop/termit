@@ -1,4 +1,6 @@
 	fixed bug with hideTabbar and hideSingleTab
+	tabs indexes start with 1 (Lua-indexing)
+	fixed desktop file
 	added Swedish translation (by Tomas Fasth)
 version 2.9.4
 	fix hyphen-used-as-minus-sign in manpage (by Thomas Koch)

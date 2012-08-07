@@ -390,7 +390,7 @@ static int termit_lua_tabs_index(lua_State* ls)
     }
     int tab_index =  lua_tointeger(ls, -1);
     TRACE("tab_index:%d", tab_index);
-    return termit_lua_fill_tab(tab_index, ls);
+    return termit_lua_fill_tab(tab_index - 1, ls);
 }
 
 static int termit_lua_tabs_newindex(lua_State* ls)

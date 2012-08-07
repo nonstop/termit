@@ -437,7 +437,7 @@ static int termit_lua_currentTab(lua_State* ls)
 
 static int termit_lua_currentTabIndex(lua_State* ls)
 {
-    lua_pushinteger(ls, termit_get_current_tab_index());
+    lua_pushinteger(ls, termit_get_current_tab_index() + 1);
     return 1;
 }
 
