@@ -10,11 +10,11 @@ msgstr "Bakgrund"
 msgid "Background image"
 msgstr "Bakgrundsbild"
 
-#: src/termit_core_api.c:443
+#: src/termit_core_api.c:441
 msgid "Cannot create a new tab"
 msgstr "Kan inte skapa ny flik"
 
-#: src/termit_core_api.c:371
+#: src/termit_core_api.c:369
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "Kan inte tolka kommando. Skapar interaktiv flik."
 

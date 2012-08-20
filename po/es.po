@@ -27,11 +27,11 @@ msgstr "Fondo"
 msgid "Background image"
 msgstr "Imagen de fondo"
 
-#: src/termit_core_api.c:443
+#: src/termit_core_api.c:441
 msgid "Cannot create a new tab"
 msgstr "No se puede crear una nueva pestaña"
 
-#: src/termit_core_api.c:371
+#: src/termit_core_api.c:369
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "El comando no se entiende. Creando una nueva pestaña con shell"
 

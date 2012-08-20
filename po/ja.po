@@ -25,11 +25,11 @@ msgstr "背景"
 msgid "Background image"
 msgstr "背景画像"
 
-#: src/termit_core_api.c:443
+#: src/termit_core_api.c:441
 msgid "Cannot create a new tab"
 msgstr "新しいタブを作成できません"
 
-#: src/termit_core_api.c:371
+#: src/termit_core_api.c:369
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "コマンドを解析できません。シェル経由でタブを作成します"
 
