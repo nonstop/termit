@@ -213,6 +213,7 @@ pre. Example: enable Gnome-like tab switching
 * setStatusbar - lua function to generate new statusbar message
 * showScrollbar - display scrollbar
 * tabName - default tab name
+* tabPos - tabbar position (Top, Bottom, Left, Right)
 * tabs - table with items of TermitTabInfo type
 * transparency - use transparency level [0,1]
 * visibleBell - enables visible bell

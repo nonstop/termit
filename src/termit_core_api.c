@@ -342,6 +342,11 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         g_free(label_text);
         pTab->custom_tab_name = FALSE;
     }
+    if (configs.tab_pos == GTK_POS_RIGHT) {
+        gtk_label_set_angle(GTK_LABEL(pTab->tab_name), 270);
+    } else if (configs.tab_pos == GTK_POS_LEFT) {
+        gtk_label_set_angle(GTK_LABEL(pTab->tab_name), 90);
+    }
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
     pTab->bksp_binding = ti->bksp_binding;
     pTab->delete_binding = ti->delete_binding;

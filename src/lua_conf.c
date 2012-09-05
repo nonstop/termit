@@ -192,6 +192,24 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong
     TRACE("colormap loaded: size=%ld", *sz);
 }
 
+static void termit_config_get_position(GtkPositionType* pos, lua_State* ls, int index)
+{
+    if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
+        const char* str = lua_tostring(ls, index);
+        if (strcmp(str, "Top") == 0) {
+            *pos = GTK_POS_TOP;
+        } else if (strcmp(str, "Bottom") == 0) {
+            *pos = GTK_POS_BOTTOM;
+        } else if (strcmp(str, "Left") == 0) {
+            *pos = GTK_POS_LEFT;
+        } else if (strcmp(str, "Right") == 0) {
+            *pos = GTK_POS_RIGHT;
+        } else {
+            ERROR("unknown pos: [%s]", str);
+        }
+    }
+}
+
 void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
@@ -235,6 +253,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_boolean(&(p_cfg->urgency_on_bell), ls, index);
     else if (!strcmp(name, "getWindowTitle"))
         termit_config_get_function(&(p_cfg->get_window_title_callback), ls, index);
+    else if (!strcmp(name, "tabPos"))
+        termit_config_get_position(&(p_cfg->tab_pos), ls, index);
     else if (!strcmp(name, "getTabTitle"))
         termit_config_get_function(&(p_cfg->get_tab_title_callback), ls, index);
     else if (!strcmp(name, "setStatusbar"))

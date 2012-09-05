@@ -1,3 +1,7 @@
+	
+	scrollable tabs in tabbar
+	new options:
+		tabPos - set tabbar position
 version 2.9.5
 	fixed bug with hideTabbar and hideSingleTab
 	tabs indexes start with 1 (Lua-indexing)

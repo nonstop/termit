@@ -21,7 +21,6 @@
 
 enum TermitKbPolicy {TermitKbUseKeycode = 1, TermitKbUseKeysym = 2};
 
-
 struct Configs
 {
     gchar* default_window_title;
@@ -52,6 +51,7 @@ struct Configs
     int get_tab_title_callback;
     int get_statusbar_callback;
     enum TermitKbPolicy kb_policy;
+    GtkPositionType tab_pos;
     struct TermitStyle style;
     GArray* default_tabs;       // TabInfo
 };
