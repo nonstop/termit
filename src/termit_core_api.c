@@ -110,9 +110,8 @@ static void termit_set_fonts()
     }
     gint oldWidth, oldHeight;
     gtk_window_get_size(GTK_WINDOW(termit.main_window), &oldWidth, &oldHeight);
-    
-    gint width = (minWidth > oldWidth) ? minWidth : oldWidth;
-    gint height = (minHeight > oldHeight) ? minHeight : oldHeight;
+    const gint width = (minWidth > oldWidth) ? minWidth : oldWidth;
+    const gint height = (minHeight > oldHeight) ? minHeight : oldHeight;
     gtk_window_resize(GTK_WINDOW(termit.main_window), width, height);
 
     GdkGeometry geom;
@@ -353,6 +352,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->hbox = gtk_hbox_new(FALSE, 0);
     pTab->vte = vte_terminal_new();
 
+    vte_terminal_set_size(VTE_TERMINAL(pTab->vte), configs.cols, configs.rows);
     vte_terminal_set_scrollback_lines(VTE_TERMINAL(pTab->vte), configs.scrollback_lines);
     if (configs.default_word_chars)
         vte_terminal_set_word_chars(VTE_TERMINAL(pTab->vte), configs.default_word_chars);
@@ -433,7 +433,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
 //    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
-    
+
     vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding);
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
@@ -473,7 +473,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     }
     pTab->scrollbar_is_shown = configs.show_scrollbar;
     gtk_widget_show_all(termit.notebook);
-    
+
     if (pTab->style.image_file == NULL) {
         vte_terminal_set_background_image(VTE_TERMINAL(pTab->vte), NULL);
     } else {
