@@ -1,4 +1,5 @@
 	
+	added support to choose libraries while configuring termit build
 	scrollable tabs in tabbar
 	new options:
 		tabPos - set tabbar position
