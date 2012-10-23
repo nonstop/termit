@@ -61,6 +61,7 @@ void termit_config_trace()
     TRACE("     hide_menubar            = %d", configs.hide_menubar);
     TRACE("     hide_tabbar             = %d", configs.hide_tabbar);
     TRACE("     fill_tabbar             = %d", configs.fill_tabbar);
+    TRACE("     show_border             = %d", configs.show_border);
     TRACE("     hide_single_tab         = %d", configs.hide_single_tab);
     TRACE("     scrollback_lines        = %d", configs.scrollback_lines);
     TRACE("     cols x rows             = %d x %d", configs.cols, configs.rows);
@@ -117,6 +118,7 @@ void termit_configs_set_defaults()
     configs.fill_tabbar = FALSE;
     configs.hide_menubar = FALSE;
     configs.hide_tabbar = FALSE;
+    configs.show_border = TRUE;
     configs.allow_changing_title = FALSE;
     configs.visible_bell = FALSE;
     configs.audible_bell = FALSE;
