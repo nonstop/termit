@@ -301,6 +301,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
 
     if (!configs.allow_changing_title)
         termit_set_window_title(configs.default_window_title);
+    gtk_notebook_set_show_border(GTK_NOTEBOOK(termit.notebook), configs.show_border);
 }
 
 enum {
