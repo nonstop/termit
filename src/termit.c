@@ -298,7 +298,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
     create_search(&termit);
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(termit.notebook), TRUE);
-    //gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
 
     termit_lua_init(initFile);
 
