@@ -52,17 +52,17 @@ static void create_search(struct TermitData* termit)
 #ifdef TERMIT_ENABLE_SEARCH
     termit->b_toggle_search = gtk_toggle_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_toggle_search),
-            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_toggle_search), "toggled", G_CALLBACK(termit_on_toggle_search), NULL);
 
     termit->b_find_next = gtk_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_find_next),
-            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_find_next), "clicked", G_CALLBACK(termit_on_find_next), NULL);
 
     termit->b_find_prev = gtk_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_find_prev),
-            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_find_prev), "clicked", G_CALLBACK(termit_on_find_prev), NULL);
 
     termit->search_entry = gtk_entry_new();
@@ -298,7 +298,7 @@ static void termit_init(const gchar* initFile, const gchar* command)
     create_search(&termit);
     termit.notebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(termit.notebook), TRUE);
-    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
+    //gtk_notebook_set_show_tabs(GTK_NOTEBOOK(termit.notebook), TRUE);
 
     termit_lua_init(initFile);
 
