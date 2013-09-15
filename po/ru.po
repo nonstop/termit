@@ -36,11 +36,11 @@ msgstr "Ошибка открытия новой вкладки"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:194
+#: src/termit.c:195
 msgid "Edit"
 msgstr "Правка"
 
-#: src/termit.c:177
+#: src/termit.c:178
 msgid "File"
 msgstr "Файл"
 
@@ -66,16 +66,16 @@ msgstr "Открыть сессию"
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: src/termit.c:234
+#: src/termit.c:235
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: src/termit.c:209
+#: src/termit.c:210
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: src/termit.c:189 src/termit.c:229
+#: src/termit.c:190 src/termit.c:230
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 

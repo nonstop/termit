@@ -18,11 +18,11 @@ msgstr "Kan inte skapa ny flik"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "Kan inte tolka kommando. Skapar interaktiv flik."
 
-#: src/termit.c:194
+#: src/termit.c:195
 msgid "Edit"
 msgstr "Redigera"
 
-#: src/termit.c:177
+#: src/termit.c:178
 msgid "File"
 msgstr "Arkiv"
 
@@ -32,7 +32,7 @@ msgstr "Teckensnitt"
 
 #: src/termit_preferences.c:251
 msgid "Foreground"
-msgstr "Förgrund"
+msgstr "Frgrund"
 
 #. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
 #. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
@@ -42,22 +42,22 @@ msgstr "Avbild"
 
 #: src/callbacks.c:383
 msgid "Open session"
-msgstr "Öppna arbetspass"
+msgstr "ppna arbetspass"
 
 #: src/callbacks.c:353
 msgid "Save session"
 msgstr "Spara arbetspass"
 
-#: src/termit.c:234
+#: src/termit.c:235
 msgid "Scrollbar"
 msgstr "Rullningslist"
 
-#: src/termit.c:209
+#: src/termit.c:210
 msgid "Sessions"
 msgstr "Arbetspass"
 
 #. Edit menu
-#: src/termit.c:189 src/termit.c:229
+#: src/termit.c:190 src/termit.c:230
 msgid "Set tab name..."
 msgstr "Namnge fliken..."
 

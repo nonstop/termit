@@ -74,7 +74,7 @@ static void pack_widgets()
 {
     GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
     termit.hbox = gtk_hbox_new(FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
+    //gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
 #ifdef TERMIT_ENABLE_SEARCH
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
@@ -83,6 +83,7 @@ static void pack_widgets()
 #endif // TERMIT_ENABLE_SEARCH
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.statusbar, TRUE, 1, 0);
 
+    gtk_box_pack_start(GTK_BOX(vbox), termit.menu_bar, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, 1, 0);
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);

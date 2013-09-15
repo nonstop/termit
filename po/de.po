@@ -37,11 +37,11 @@ msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Konnte Befehl nicht untersuchen. Erstelle einen Tab mit der Kommandozeile"
 
-#: src/termit.c:194
+#: src/termit.c:195
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: src/termit.c:177
+#: src/termit.c:178
 msgid "File"
 msgstr "Datei"
 
@@ -67,16 +67,16 @@ msgstr "Sitzung öffnen"
 msgid "Save session"
 msgstr "Sitzung speichern"
 
-#: src/termit.c:234
+#: src/termit.c:235
 msgid "Scrollbar"
 msgstr "Bildlaufleiste"
 
-#: src/termit.c:209
+#: src/termit.c:210
 msgid "Sessions"
 msgstr "Sitzungen"
 
 #. Edit menu
-#: src/termit.c:189 src/termit.c:229
+#: src/termit.c:190 src/termit.c:230
 msgid "Set tab name..."
 msgstr "Tab-Namen setzen..."
 
