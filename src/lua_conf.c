@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
+    it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -223,9 +223,9 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_string(&(p_cfg->default_word_chars), ls, index);
     else if (!strcmp(name, "font"))
         termit_config_get_string(&(p_cfg->style.font_name), ls, index);
-    else if (!strcmp(name, "foregroundColor")) 
+    else if (!strcmp(name, "foregroundColor"))
         termit_config_get_color(&p_cfg->style.foreground_color, ls, index);
-    else if (!strcmp(name, "backgroundColor")) 
+    else if (!strcmp(name, "backgroundColor"))
         termit_config_get_color(&p_cfg->style.background_color, ls, index);
     else if (!strcmp(name, "showScrollbar"))
         termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
