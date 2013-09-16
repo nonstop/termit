@@ -32,11 +32,11 @@ msgstr "새 탭을 만들 수 없습니다"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
-#: src/termit.c:195
+#: src/termit.c:199
 msgid "Edit"
 msgstr "편집"
 
-#: src/termit.c:178
+#: src/termit.c:182
 msgid "File"
 msgstr "파일"
 
@@ -62,16 +62,16 @@ msgstr "세션 열기"
 msgid "Save session"
 msgstr "세션 저장"
 
-#: src/termit.c:235
+#: src/termit.c:239
 msgid "Scrollbar"
 msgstr "스크롤 바"
 
-#: src/termit.c:210
+#: src/termit.c:214
 msgid "Sessions"
 msgstr "세션"
 
 #. Edit menu
-#: src/termit.c:190 src/termit.c:230
+#: src/termit.c:194 src/termit.c:234
 msgid "Set tab name..."
 msgstr "탭 이름 바꾸기"
 

@@ -37,11 +37,11 @@ msgstr "Nie można utworzyć nowej karty"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "Nie można przetworzyć polecenia. Tworzenia karty z powłoki"
 
-#: src/termit.c:195
+#: src/termit.c:199
 msgid "Edit"
 msgstr "Edycja"
 
-#: src/termit.c:178
+#: src/termit.c:182
 msgid "File"
 msgstr "Plik"
 
@@ -67,16 +67,16 @@ msgstr "Otwórz sesje"
 msgid "Save session"
 msgstr "Zapisz sesje "
 
-#: src/termit.c:235
+#: src/termit.c:239
 msgid "Scrollbar"
 msgstr "Pasek przewijania"
 
-#: src/termit.c:210
+#: src/termit.c:214
 msgid "Sessions"
 msgstr "Sesja"
 
 #. Edit menu
-#: src/termit.c:190 src/termit.c:230
+#: src/termit.c:194 src/termit.c:234
 msgid "Set tab name..."
 msgstr "Ustaw nazwe karty..."
 

@@ -32,11 +32,11 @@ msgstr "Impossible de créer un nouvel onglet"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:195
+#: src/termit.c:199
 msgid "Edit"
 msgstr "Éditer"
 
-#: src/termit.c:178
+#: src/termit.c:182
 msgid "File"
 msgstr "Fichier"
 
@@ -62,16 +62,16 @@ msgstr "Ouvrir une session"
 msgid "Save session"
 msgstr "Enregistrer la session"
 
-#: src/termit.c:235
+#: src/termit.c:239
 msgid "Scrollbar"
 msgstr ""
 
-#: src/termit.c:210
+#: src/termit.c:214
 msgid "Sessions"
 msgstr "Sessions"
 
 #. Edit menu
-#: src/termit.c:190 src/termit.c:230
+#: src/termit.c:194 src/termit.c:234
 msgid "Set tab name..."
 msgstr "Définir le nom de l'onglet..."
 
