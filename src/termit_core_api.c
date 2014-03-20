@@ -681,6 +681,21 @@ void termit_next_tab()
     termit_activate_tab(index);
 }
 
+void termit_move_tab_left()
+{
+    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    gint new_index = (index) ? index - 1 : gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1;
+    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), new_index);
+}
+
+void termit_move_tab_right()
+{
+    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    gint new_index = (index == gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1)
+        ? 0 : index + 1;
+    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), new_index);
+}
+
 void termit_quit()
 {
     while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
