@@ -258,6 +258,20 @@ static int termit_lua_prevTab(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_moveTabLeft(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_move_tab_left();
+    return 0;
+}
+
+static int termit_lua_moveTabRight(lua_State* ls)
+{
+    TRACE_MSG(__FUNCTION__);
+    termit_move_tab_right();
+    return 0;
+}
+
 static int termit_lua_copy(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
@@ -681,6 +695,8 @@ struct TermitLuaFunction
     {"forEachRow", termit_lua_forEachRow, 0},
     {"forEachVisibleRow", termit_lua_forEachVisibleRow, 0},
     {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
+    {"moveTabLeft", termit_lua_moveTabLeft, 0},
+    {"moveTabRight", termit_lua_moveTabRight, 0},
     {"nextTab", termit_lua_nextTab, 0},
     {"openTab", termit_lua_openTab, 0},
     {"paste", termit_lua_paste, 0},
