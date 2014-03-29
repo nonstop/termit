@@ -27,8 +27,6 @@ void termit_append_tab_with_details(const struct TabInfo*);
 void termit_activate_tab(gint tab_index);
 void termit_prev_tab();
 void termit_next_tab();
-void termit_move_tab_left();
-void termit_move_tab_right();
 void termit_paste();
 void termit_copy();
 gchar* termit_get_selection();
@@ -62,6 +60,7 @@ void termit_tab_set_background_image(struct TermitTab* pTab, const gchar* image_
 void termit_tab_set_title(struct TermitTab* pTab, const gchar* title);
 void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell);
 void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell);
+void termit_tab_set_pos(struct TermitTab* pTab, int newPos);
 
 int termit_get_current_tab_index();
 gchar* termit_get_pid_dir(pid_t pid);

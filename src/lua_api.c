@@ -258,20 +258,6 @@ static int termit_lua_prevTab(lua_State* ls)
     return 0;
 }
 
-static int termit_lua_moveTabLeft(lua_State* ls)
-{
-    TRACE_MSG(__FUNCTION__);
-    termit_move_tab_left();
-    return 0;
-}
-
-static int termit_lua_moveTabRight(lua_State* ls)
-{
-    TRACE_MSG(__FUNCTION__);
-    termit_move_tab_right();
-    return 0;
-}
-
 static int termit_lua_copy(lua_State* ls)
 {
     TRACE_MSG(__FUNCTION__);
@@ -476,6 +462,22 @@ static int termit_lua_preferencesDialog(lua_State* ls)
 static int termit_lua_setTabTitleDialog(lua_State* ls)
 {
     termit_on_set_tab_name();
+    return 0;
+}
+
+static int termit_lua_setTabPos(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no tabNum defined: skipping");
+        return 0;
+    } else if (!lua_isnumber(ls, 1)) {
+        TRACE_MSG("tabNum is not number: skipping");
+        return 0;
+    }
+    int tab_index =  lua_tointeger(ls, 1);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_tab_set_pos(pTab, tab_index - 1);
     return 0;
 }
 
@@ -695,8 +697,6 @@ struct TermitLuaFunction
     {"forEachRow", termit_lua_forEachRow, 0},
     {"forEachVisibleRow", termit_lua_forEachVisibleRow, 0},
     {"loadSessionDlg", termit_lua_loadSessionDialog, 0},
-    {"moveTabLeft", termit_lua_moveTabLeft, 0},
-    {"moveTabRight", termit_lua_moveTabRight, 0},
     {"nextTab", termit_lua_nextTab, 0},
     {"openTab", termit_lua_openTab, 0},
     {"paste", termit_lua_paste, 0},
@@ -713,6 +713,7 @@ struct TermitLuaFunction
     {"setTabBackgroundColor", termit_lua_setTabBackgroundColor, 0},
     {"setTabFont", termit_lua_setTabFont, 0},
     {"setTabForegroundColor", termit_lua_setTabForegroundColor, 0},
+    {"setTabPos", termit_lua_setTabPos, 0},
     {"setTabTitle", termit_lua_setTabTitle, 0},
     {"setTabTitleDlg", termit_lua_setTabTitleDialog, 0},
     {"setWindowTitle", termit_lua_setWindowTitle, 0},

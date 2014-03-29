@@ -328,6 +328,18 @@ void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell)
     vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), visible_bell);
 }
 
+void termit_tab_set_pos(struct TermitTab* pTab, int newPos)
+{
+    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    gint pagesCnt = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    if (newPos < 0) {
+        newPos = pagesCnt - 1;
+    } else if (newPos >= pagesCnt) {
+        newPos = 0;
+    }
+    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), newPos);
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));
@@ -682,21 +694,6 @@ void termit_next_tab()
     index = (index == gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1)
         ? 0 : index + 1;
     termit_activate_tab(index);
-}
-
-void termit_move_tab_left()
-{
-    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    gint new_index = (index) ? index - 1 : gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1;
-    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), new_index);
-}
-
-void termit_move_tab_right()
-{
-    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    gint new_index = (index == gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) - 1)
-        ? 0 : index + 1;
-    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), new_index);
 }
 
 void termit_quit()
