@@ -27,6 +27,8 @@ void termit_append_tab_with_details(const struct TabInfo*);
 void termit_activate_tab(gint tab_index);
 void termit_prev_tab();
 void termit_next_tab();
+void termit_move_tab_left();
+void termit_move_tab_right();
 void termit_paste();
 void termit_copy();
 gchar* termit_get_selection();
