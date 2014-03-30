@@ -76,7 +76,7 @@ static int termit_lua_setOptions(lua_State* ls)
             struct TabInfo* ti = &g_array_index(configs.default_tabs, struct TabInfo, i);
             termit_append_tab_with_details(ti);
             g_free(ti->name);
-            g_free(ti->command);
+            g_strfreev(ti->argv);
             g_free(ti->encoding);
             g_free(ti->working_dir);
         }
@@ -232,7 +232,10 @@ void termit_lua_tab_loader(const gchar* name, lua_State* ls, int index, void* da
     if (strcmp(name, "title") == 0) {
         termit_config_get_string(&ti->name, ls, index);
     } else if (strcmp(name, "command") == 0) {
-        termit_config_get_string(&ti->command, ls, index);
+        if (ti->argv == NULL) {
+            ti->argv = (gchar**)g_new0(gchar*, 2);
+        }
+        termit_config_get_string(&ti->argv[0], ls, index);
     } else if (strcmp(name, "encoding") == 0) {
         termit_config_get_string(&ti->encoding, ls, index);
     } else if (strcmp(name, "backspaceBinding") == 0) {
@@ -284,7 +287,7 @@ static int termit_lua_openTab(lua_State* ls)
         }
         termit_append_tab_with_details(&ti);
         g_free(ti.name);
-        g_free(ti.command);
+        g_strfreev(ti.argv);
         g_free(ti.encoding);
         g_free(ti.working_dir);
     } else {

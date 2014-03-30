@@ -391,7 +391,9 @@ int termit_lua_fill_tab(int tab_index, lua_State* ls)
     TERMIT_GET_TAB_BY_INDEX2(pTab, tab_index, 0);
     lua_newtable(ls);
     TERMIT_TAB_ADD_STRING("title", pTab->title);
-    TERMIT_TAB_ADD_STRING("command", pTab->command);
+    TERMIT_TAB_ADD_STRING("command", pTab->argv[0]);
+    TERMIT_TAB_ADD_STRING("argv", "");
+    // FIXME: add argv
     TERMIT_TAB_ADD_STRING("encoding", pTab->encoding);
     gchar* working_dir = termit_get_pid_dir(pTab->pid);
     TERMIT_TAB_ADD_STRING("workingDir", working_dir);

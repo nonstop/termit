@@ -120,7 +120,9 @@ void termit_save_session(const gchar* sessionFile)
         g_fprintf(fd, "%s = {}\n", groupName);
         g_fprintf(fd, "%s.title = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
         g_fprintf(fd, "%s.workingDir = \"%s\"\n", groupName, working_dir);
-        g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->command);
+        g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->argv[0]);
+        // FIXME compund commands would not be saved
+        g_fprintf(fd, "%s.argv = {}\n", groupName);
         g_fprintf(fd, "%s.encoding = \"%s\"\n", groupName, pTab->encoding);
         GValue val = {};
         g_value_init(&val, g_type_from_name("VteTerminalEraseBinding"));

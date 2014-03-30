@@ -227,7 +227,7 @@ static void termit_del_tab()
     TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
     g_array_free(pTab->matches, TRUE);
     g_free(pTab->encoding);
-    g_free(pTab->command);
+    g_strfreev(pTab->argv);
     g_free(pTab->title);
     termit_style_free(&pTab->style);
     g_free(pTab);
@@ -375,68 +375,60 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     vte_terminal_search_set_wrap_around(VTE_TERMINAL(pTab->vte), TRUE);
 #endif // TERMIT_ENABLE_SEARCH
 
+    guint l = 0;
+    if (ti->argv == NULL) {
+        l = 1;
+        pTab->argv = (gchar**)g_new0(gchar*, 2);
+        pTab->argv[0] = g_strdup(configs.default_command);
+    } else {
+        while (ti->argv[l] != NULL) {
+            ++l;
+        }
+        pTab->argv = (gchar**)g_new0(gchar*, l + 1);
+        guint i = 0;
+        for (; i < l; ++i) {
+            pTab->argv[i] = g_strdup(ti->argv[i]);
+        }
+    }
+    g_assert(l >= 1);
     /* parse command */
-    gchar **cmd_argv;
     GError *cmd_err = NULL;
+    if (l == 1) { // arguments may be in one compound string
+        gchar **cmd_argv;
+        if (!g_shell_parse_argv(pTab->argv[0], NULL, &cmd_argv, &cmd_err)) {
+            ERROR("%s", _("Cannot parse command. Creating tab with shell"));
+            g_error_free(cmd_err);
+            return;
+        }
+        g_strfreev(pTab->argv);
+        pTab->argv = cmd_argv;
+    }
     gchar *cmd_path = NULL;
-    gchar *cmd_file = NULL;
+    cmd_path = g_find_program_in_path(pTab->argv[0]);
 
-    pTab->command = (ti->command) ? g_strdup(ti->command) : g_strdup(configs.default_command);
-    if (!g_shell_parse_argv(pTab->command, NULL, &cmd_argv, &cmd_err)) {
-        ERROR("%s", _("Cannot parse command. Creating tab with shell"));
+    TRACE("command=%s cmd_path=%s", pTab->argv[0], cmd_path);
+    if (cmd_path != NULL) {
+        g_free(pTab->argv[0]);
+        pTab->argv[0] = g_strdup(cmd_path);
+        g_free(cmd_path);
+    }
+#if VTE_CHECK_VERSION(0, 26, 0) > 0
+    if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
+            VTE_PTY_DEFAULT,
+            ti->working_dir, 
+            pTab->argv, NULL,
+            0,
+            NULL, NULL,
+            &pTab->pid,
+            &cmd_err) != TRUE) {
+        ERROR("failed to open tab: %s", cmd_err->message);
         g_error_free(cmd_err);
-    } else {
-        cmd_path = g_find_program_in_path(cmd_argv[0]);
-        cmd_file = g_path_get_basename(cmd_argv[0]);
+        return;
     }
-
-    TRACE("command=%s cmd_path=%s cmd_file=%s", pTab->command, cmd_path, cmd_file);
-    if (cmd_path && cmd_file) {
-        g_free(cmd_argv[0]);
-        cmd_argv[0] = g_strdup(cmd_path);
-#if VTE_CHECK_VERSION(0, 26, 0) > 0
-        if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
-                VTE_PTY_DEFAULT,
-                ti->working_dir, 
-                cmd_argv, NULL,
-                0,
-                NULL, NULL,
-                &pTab->pid,
-                &cmd_err) != TRUE) {
-            ERROR("failed to open tab: %s", cmd_err->message);
-            g_error_free(cmd_err);
-        }
 #else
-        pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
-                cmd_path, cmd_argv, NULL, ti->working_dir, TRUE, TRUE, TRUE);
+    pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
+            pTab->argv[0], pTab->argv + 1, NULL, ti->working_dir, TRUE, TRUE, TRUE);
 #endif // version >= 0.26
-    } else {
-        g_free(pTab->command);
-        pTab->command = g_strdup(configs.default_command);
-        gchar* argv[] = {pTab->command, NULL};
-        TRACE("defaults: cmd=%s working_dir=%s", pTab->command, ti->working_dir);
-        /* default tab */
-#if VTE_CHECK_VERSION(0, 26, 0) > 0
-        if (vte_terminal_fork_command_full(VTE_TERMINAL(pTab->vte),
-                    VTE_PTY_DEFAULT,
-                    ti->working_dir,
-                    argv, NULL,
-                    G_SPAWN_SEARCH_PATH,
-                    NULL, NULL,
-                    &pTab->pid,
-                    &cmd_err) != TRUE) {
-            ERROR("failed to open tab: %s", cmd_err->message);
-            g_error_free(cmd_err);
-        }
-#else
-        pTab->pid = vte_terminal_fork_command(VTE_TERMINAL(pTab->vte),
-                pTab->command, NULL, NULL, ti->working_dir, TRUE, TRUE, TRUE);
-#endif // version >= 0.26
-    }
-
-    g_strfreev(cmd_argv);
-    g_free(cmd_path);
-    g_free(cmd_file);
 
     g_signal_connect(G_OBJECT(pTab->vte), "beep", G_CALLBACK(termit_on_beep), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);
@@ -501,19 +493,18 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     termit_hide_scrollbars();
 }
 
-void termit_append_tab_with_command(const gchar* command)
+void termit_append_tab_with_command(gchar** argv)
 {
     struct TabInfo ti = {};
     ti.bksp_binding = configs.default_bksp;
     ti.delete_binding = configs.default_delete;
-    ti.command = g_strdup(command);
+    ti.argv = argv;
     termit_append_tab_with_details(&ti);
-    g_free(ti.command);
 }
 
 void termit_append_tab()
 {
-    termit_append_tab_with_command(configs.default_command);
+    termit_append_tab_with_command(NULL);
 }
 
 void termit_set_encoding(const gchar* encoding)
