@@ -311,7 +311,8 @@ enum {
     TERMIT_GETOPT_INIT = 'i',
     TERMIT_GETOPT_NAME = 'n',
     TERMIT_GETOPT_CLASS = 'c',
-    TERMIT_GETOPT_ROLE = 'r'
+    TERMIT_GETOPT_ROLE = 'r',
+    TERMIT_GETOPT_TITLE = 'T'
 };
 
 static void termit_print_usage()
@@ -332,6 +333,7 @@ static void termit_print_usage()
 "  -n, --name=name        - set window name hint\n"
 "  -c, --class=class      - set window class hint\n"
 "  -r, --role=role        - set window role (Gtk hint)\n"
+"  -T, --title=title      - set window title\n"
 "", PACKAGE_VERSION);
 }
 
@@ -339,7 +341,7 @@ int main(int argc, char **argv)
 {
     gchar* initFile = NULL;
     gchar* command = NULL;
-    gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL;
+    gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL, *windowTitle = NULL;
     while (1) {
         static struct option long_options[] = {
             {"help", no_argument, 0, TERMIT_GETOPT_HELP},
@@ -349,12 +351,13 @@ int main(int argc, char **argv)
             {"name", required_argument, 0, TERMIT_GETOPT_NAME},
             {"class", required_argument, 0, TERMIT_GETOPT_CLASS},
             {"role", required_argument, 0, TERMIT_GETOPT_ROLE},
+            {"title", required_argument, 0, TERMIT_GETOPT_TITLE},
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "hvi:e:n:c:r:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvi:e:n:c:r:T:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
@@ -382,6 +385,9 @@ int main(int argc, char **argv)
             break;
         case TERMIT_GETOPT_ROLE:
             windowRole = g_strdup(optarg);
+            break;
+        case TERMIT_GETOPT_TITLE:
+            windowTitle = g_strdup(optarg);
             break;
         case '?':
             break;
@@ -414,7 +420,8 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
 
-    TRACE("windowName=%s windowClass=%s windowRole=%s", windowName, windowClass, windowRole);
+    TRACE("window: came=[%s] class=[%s] role=[%s] title=[%s]",
+            windowName, windowClass, windowRole, windowTitle);
     if (windowName || windowClass) {
         gtk_window_set_wmclass(GTK_WINDOW(termit.main_window), windowName, windowClass);
         g_free(windowName);
@@ -423,6 +430,11 @@ int main(int argc, char **argv)
     if (windowRole) {
         gtk_window_set_role(GTK_WINDOW(termit.main_window), windowRole);
         g_free(windowRole);
+    }
+    if (windowTitle) {
+        configs.allow_changing_title = FALSE;
+        gtk_window_set_title(GTK_WINDOW(termit.main_window), windowTitle);
+        g_free(windowTitle);
     }
 
     /* Show the application window */
