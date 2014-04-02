@@ -54,7 +54,7 @@ IF(LUA_VERSION STREQUAL "")
        pkg_search_module(LUA REQUIRED lua52)
     ELSE(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
        pkg_search_module(LUA REQUIRED lua>=5.0 lua5.2 lua5.1)
-    ENDIF(CMAKE_SYSTEM_NAME)
+    ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ELSE(LUA_VERSION STREQUAL "")
   pkg_search_module(LUA REQUIRED
     lua=${LUA_VERSION} lua5.2=${LUA_VERSION} lua5.1=${LUA_VERSION} lua5.0=${LUA_VERSION})
