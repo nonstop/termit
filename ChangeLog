@@ -1,4 +1,7 @@
+version 2.10.0
+	fixed compilation for OpenBSD
 	prevent building termit with incompatible Gtk and Vte versions
+	"exec" commandline option now works nearly like in xterm
 	new options:
 		showBorder - show notebook's borders
 version 2.9.6
