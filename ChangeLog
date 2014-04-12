@@ -1,3 +1,6 @@
+version 2.9.8
+	Added support for building on OpenBSD
+version 2.9.7	
 	prevent building termit with incompatible Gtk and Vte versions
 	new options:
 		showBorder - show notebook's borders
