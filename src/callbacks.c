@@ -59,14 +59,13 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
         return;
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
-    
+
     if (pTab->custom_tab_name)
         return;
-    
+
     termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
 
-#ifdef TERMIT_ENABLE_SEARCH
 gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
@@ -124,7 +123,6 @@ void termit_on_toggle_search(GtkToggleButton* tb, gpointer user_data)
 {
     termit_toggle_search();
 }
-#endif // TERMIT_ENABLE_SEARCH
 
 void termit_on_toggle_scrollbar()
 {
@@ -145,7 +143,7 @@ void termit_on_child_exited()
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
 
     TRACE("waiting for pid %d", pTab->pid);
-    
+
     int status = 0;
     waitpid(pTab->pid, &status, WNOHANG);
     /* TODO: check wait return */    

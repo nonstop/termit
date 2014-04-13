@@ -47,10 +47,10 @@ _luaFunction_ - callback function
 *findDlg()* - Opens find entry. (Enabled when build with vte version >= 0.26)
 
 
-*findNext()* - Searches the next string matching search regex. (Enabled when build with vte version >= 0.26)
+*findNext()* - Searches the next string matching search regex.
 
 
-*findPrev()* - Searches the previous string matching search regex. (Enabled when build with vte version >= 0.26)
+*findPrev()* - Searches the previous string matching search regex.
 
 
 *forEachRow(_func_)* - For each terminal row in entire scrollback buffer executes function passing row as argument.

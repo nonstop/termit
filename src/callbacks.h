@@ -14,7 +14,6 @@
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
 
-
 gboolean termit_on_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
 void termit_on_destroy(GtkWidget *widget, gpointer data);
 gboolean termit_on_popup(GtkWidget *, GdkEvent *);
@@ -33,11 +32,9 @@ gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer f
 void termit_on_save_session();
 void termit_on_load_session();
 void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data);
-#ifdef TERMIT_ENABLE_SEARCH
 void termit_on_toggle_search(GtkToggleButton*, gpointer);
 void termit_on_find_next(GtkButton*, gpointer);
 void termit_on_find_prev(GtkButton*, gpointer);
 gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
-#endif // TERMIT_ENABLE_SEARCH
-#endif /* CALLBACKS_H */
 
+#endif /* CALLBACKS_H */
