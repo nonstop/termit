@@ -2,24 +2,27 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=2
+
+CMAKE_MIN_VERSION="2.6.1"
+
 inherit cmake-utils
 
-SRC_URI="http://github.com/downloads/nonstop/termit/${P}.tar.bz2"
+SRC_URI="https://github.com/nonstop/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 HOMEPAGE="http://wiki.github.com/nonstop/termit/"
 DESCRIPTION="Simple terminal emulator based on vte library with Lua scripting"
 
 RDEPEND="x11-libs/vte
     >=x11-libs/gtk+-2.10
     >=dev-lang/lua-5.1"
-DEPEND="${RDEPEND}
-        >=dev-util/cmake-2.4"
+DEPEND="${RDEPEND}"
 
 SLOT="0"
 LICENSE="GPL-2"
-KEYWORDS="~x86"
+KEYWORDS="~x86 ~amd64"
 IUSE=""
 
-DOCS="README ChangeLog doc/rc.lua.example doc/lua_api.txt"
+DOCS="INSTALL ChangeLog doc/README doc/rc.lua.example doc/lua_api.txt"
 
 CMAKE_IN_SOURCE_BUILD="yes"
 
@@ -32,4 +35,3 @@ pkg_postinst() {
 	einfo "and modify to fit your needs "
 	einfo
 }
-
