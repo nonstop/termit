@@ -207,7 +207,7 @@ pre. Example: enable Gnome-like tab switching
 * hideMenubar - hide menubar
 * hideTabbar - hide tabbar
 * showBorder - show notebook border
-* hideSingleTab - hide menubar when only 1 tab present
+* hideSingleTab - hide tabbar when only 1 tab present
 * imageFile - path to image to be set on the background
 * matches - table with items of TermitMatch type
 * scrollbackLines - the length of scrollback buffer
