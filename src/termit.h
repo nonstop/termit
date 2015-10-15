@@ -59,7 +59,7 @@ struct TermitTab
     VteTerminalEraseBinding bksp_binding;
     VteTerminalEraseBinding delete_binding;
     gchar *encoding;
-    gchar *command;
+    gchar **argv;
     gchar *title;
     GArray* matches;
     struct TermitStyle style;
@@ -69,7 +69,7 @@ struct TermitTab
 struct TabInfo
 {
     gchar* name;
-    gchar* command;
+    gchar** argv;
     gchar* working_dir;
     gchar* encoding;
     VteTerminalEraseBinding bksp_binding;

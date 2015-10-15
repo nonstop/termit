@@ -21,7 +21,7 @@ void termit_reconfigure();
 void termit_after_show_all();
 
 void termit_append_tab();
-void termit_append_tab_with_command(const gchar* command);
+void termit_append_tab_with_command(gchar** argv);
 void termit_append_tab_with_details(const struct TabInfo*);
 
 void termit_activate_tab(gint tab_index);

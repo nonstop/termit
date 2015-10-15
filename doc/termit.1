@@ -67,8 +67,19 @@ Use
 .I role
 in window role Gtk\(hyhint
 .RE
+.BR \-T,
+.BR \-\-title
+=
+.I title
+.RS
+Use
+.I title
+in window title (Turns off
+.I allowChangingTitle
+option.)
+.RE
 .P
-termit \-\-execute=zsh \-\-init=session.lua \-\-name=TermitName \-\-class=TermitClass \-\-role=TermitRole
+termit \-\-init=session.lua \-\-name=TermitName \-\-class=TermitClass \-\-role=TermitRole \-\-title=TermitTitle \-\-execute=zsh
 .P
 .RE
 .SH FILES

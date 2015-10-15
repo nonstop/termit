@@ -11,12 +11,12 @@
     You should have received a copy of the GNU General Public License
     along with termit. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include <stdlib.h>
+#include <string.h>
+#include <getopt.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
-#include <stdlib.h>
-
-#include <getopt.h>
 
 #include "config.h"
 
@@ -290,7 +290,7 @@ void termit_create_popup_menu()
     gtk_widget_show_all(termit.menu);
 }
 
-static void termit_init(const gchar* initFile, const gchar* command)
+static void termit_init(const gchar* initFile, gchar** argv)
 {
     termit_init_sessions();
     termit_configs_set_defaults();
@@ -308,9 +308,8 @@ static void termit_init(const gchar* initFile, const gchar* command)
 
     gtk_notebook_set_tab_pos(GTK_NOTEBOOK(termit.notebook), configs.tab_pos);
 
-    if (command) {
-        TRACE("using command: %s", command);
-        termit_append_tab_with_command(command);
+    if (argv) {
+        termit_append_tab_with_command(argv);
     }
 
     termit_create_menubar();
@@ -325,11 +324,11 @@ static void termit_init(const gchar* initFile, const gchar* command)
 enum {
     TERMIT_GETOPT_HELP = 'h',
     TERMIT_GETOPT_VERSION = 'v',
-    TERMIT_GETOPT_EXEC = 'e',
     TERMIT_GETOPT_INIT = 'i',
     TERMIT_GETOPT_NAME = 'n',
     TERMIT_GETOPT_CLASS = 'c',
-    TERMIT_GETOPT_ROLE = 'r'
+    TERMIT_GETOPT_ROLE = 'r',
+    TERMIT_GETOPT_TITLE = 'T'
 };
 
 static void termit_print_usage()
@@ -350,29 +349,82 @@ static void termit_print_usage()
 "  -n, --name=name        - set window name hint\n"
 "  -c, --class=class      - set window class hint\n"
 "  -r, --role=role        - set window role (Gtk hint)\n"
+"  -T, --title=title      - set window title\n"
 "", PACKAGE_VERSION);
+}
+/*
+    Support the command-line option "-e <command>", which creates a new
+    terminal window and runs the specified command.  <command> may be
+    multiple arguments, which form the argument list to the executed
+    program.  In other words, the behavior is as though the arguments
+    were passed directly to execvp, bypassing the shell.  (xterm's
+    behavior of falling back on using the shell if -e had a single
+    argument and exec failed is permissible but not required.)
+
+    exec($T, "-e", "bc")              --> runs bc
+    exec($T, "-e", "bc --quiet")      --> fails OR runs bc --quiet [1]
+    exec($T, "-e", "bc", "--quiet")   --> runs bc --quiet
+    exec($T, "-e", "bc *")            --> fails OR runs bc * (wildcard) [1]
+    exec($T, "-e", "bc", "*")         --> runs bc * (literal)
+
+[1] Programs are allowed to pass the entire argument to -e to the shell
+    if and only if there is only one argument and exec fails.
+*/
+
+static GArray* parse_execute_args(int argc, char **argv)
+{
+    GArray* arr = NULL;
+    int i = 0;
+    int foundE = 0;
+    for (; i < argc; ++i) {
+        if (foundE) {
+            gchar* arg = g_strdup(argv[i]);
+            g_array_append_val(arr, arg);
+        } else {
+            TRACE("[%s] %d", argv[i], strncmp(argv[i], "--execute=", 10));
+            if ((strcmp(argv[i], "-e") == 0)
+                    || (strcmp(argv[i], "--execute") == 0)) {
+                foundE = 1;
+                arr = g_array_new(FALSE, TRUE, sizeof(gchar*));
+            } else if (strncmp(argv[i], "--execute=", 10) == 0) {
+                foundE = 1;
+                TRACE("arg=[%s]", argv[i] + 10);
+                arr = g_array_new(FALSE, TRUE, sizeof(gchar*));
+                gchar* arg = g_strdup(argv[i] + 10);
+                g_array_append_val(arr, arg);
+            }
+        }
+    }
+    if (arr == NULL) {
+        return NULL;
+    }
+    if (arr->len > 0) {
+        return arr;
+    }
+    g_array_free(arr, TRUE);
+    return NULL;
 }
 
 int main(int argc, char **argv)
 {
     gchar* initFile = NULL;
-    gchar* command = NULL;
-    gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL;
+    GArray* arrArgv = parse_execute_args(argc, argv);;
+    gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL, *windowTitle = NULL;
     while (1) {
         static struct option long_options[] = {
             {"help", no_argument, 0, TERMIT_GETOPT_HELP},
             {"version", no_argument, 0, TERMIT_GETOPT_VERSION},
-            {"execute", required_argument, 0, TERMIT_GETOPT_EXEC},
             {"init", required_argument, 0, TERMIT_GETOPT_INIT},
             {"name", required_argument, 0, TERMIT_GETOPT_NAME},
             {"class", required_argument, 0, TERMIT_GETOPT_CLASS},
             {"role", required_argument, 0, TERMIT_GETOPT_ROLE},
+            {"title", required_argument, 0, TERMIT_GETOPT_TITLE},
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        int flag = getopt_long(argc, argv, "hvi:e:n:c:r:", long_options, &option_index);
+        int flag = getopt_long(argc, argv, "hvi:n:c:r:T:", long_options, &option_index);
 
         /* Detect the end of the options. */
         if (flag == -1)
@@ -386,9 +438,6 @@ int main(int argc, char **argv)
             g_printf(PACKAGE_VERSION);
             g_printf("\n");
             return 0;
-        case TERMIT_GETOPT_EXEC:
-            command = g_strdup(optarg);
-            break;
         case TERMIT_GETOPT_INIT:
             initFile = g_strdup(optarg);
             break;
@@ -400,6 +449,9 @@ int main(int argc, char **argv)
             break;
         case TERMIT_GETOPT_ROLE:
             windowRole = g_strdup(optarg);
+            break;
+        case TERMIT_GETOPT_TITLE:
+            windowTitle = g_strdup(optarg);
             break;
         case '?':
             break;
@@ -417,8 +469,18 @@ int main(int argc, char **argv)
 #ifdef __linux__
     signal(SIGCHLD, SIG_IGN);
 #endif /* LINUX */
-    termit_init(initFile, command);
-    g_free(command);
+    gchar** cmdArgv = NULL;
+    if (arrArgv != NULL) {
+        cmdArgv = (gchar**)g_new0(gchar*, arrArgv->len + 1);
+        guint i = 0;
+        for (; i < arrArgv->len; ++i) {
+            cmdArgv[i] = g_array_index(arrArgv, gchar*, i);
+            TRACE("    %d=[%s]", i, cmdArgv[i]);
+        }
+        g_array_free(arrArgv, TRUE);
+    }
+    termit_init(initFile, cmdArgv);
+    g_strfreev(cmdArgv);
     g_free(initFile);
 
     /**
@@ -432,7 +494,8 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
 
-    TRACE("windowName=%s windowClass=%s windowRole=%s", windowName, windowClass, windowRole);
+    TRACE("window: came=[%s] class=[%s] role=[%s] title=[%s]",
+            windowName, windowClass, windowRole, windowTitle);
     if (windowName || windowClass) {
         gtk_window_set_wmclass(GTK_WINDOW(termit.main_window), windowName, windowClass);
         g_free(windowName);
@@ -441,6 +504,11 @@ int main(int argc, char **argv)
     if (windowRole) {
         gtk_window_set_role(GTK_WINDOW(termit.main_window), windowRole);
         g_free(windowRole);
+    }
+    if (windowTitle) {
+        configs.allow_changing_title = FALSE;
+        gtk_window_set_title(GTK_WINDOW(termit.main_window), windowTitle);
+        g_free(windowTitle);
     }
 
     /* Show the application window */
