@@ -160,7 +160,6 @@ void termit_toggle_tabbar()
 
 void termit_toggle_search()
 {
-#ifdef TERMIT_ENABLE_SEARCH
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(termit.b_toggle_search))) {
         gtk_widget_show(termit.search_entry);
         gtk_widget_show(termit.b_find_prev);
@@ -174,7 +173,6 @@ void termit_toggle_search()
         TERMIT_GET_TAB_BY_INDEX(pTab, page);
         gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
     }
-#endif // TERMIT_ENABLE_SEARCH
 }
 
 void termit_after_show_all()
@@ -250,7 +248,6 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
     }
 }
 
-#ifdef TERMIT_ENABLE_SEARCH
 void termit_search_find_next()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
@@ -266,7 +263,6 @@ void termit_search_find_prev()
     TRACE("%s tab=%p page=%d", __FUNCTION__, pTab, page);
     vte_terminal_search_find_previous(VTE_TERMINAL(pTab->vte));
 }
-#endif // TERMIT_ENABLE_SEARCH
 
 void termit_tab_set_transparency(struct TermitTab* pTab, gdouble transparency)
 {
@@ -371,9 +367,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
     vte_terminal_set_backspace_binding(VTE_TERMINAL(pTab->vte), pTab->bksp_binding);
     vte_terminal_set_delete_binding(VTE_TERMINAL(pTab->vte), pTab->delete_binding);
-#ifdef TERMIT_ENABLE_SEARCH
     vte_terminal_search_set_wrap_around(VTE_TERMINAL(pTab->vte), TRUE);
-#endif // TERMIT_ENABLE_SEARCH
 
     guint l = 0;
     if (ti->argv == NULL) {

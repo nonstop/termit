@@ -31,12 +31,10 @@ struct TermitData
     GtkWidget *main_window;
     GtkWidget *notebook;
     GtkWidget *statusbar;
-#ifdef TERMIT_ENABLE_SEARCH
     GtkWidget *b_toggle_search;
     GtkWidget *b_find_next;
     GtkWidget *b_find_prev;
     GtkWidget *search_entry;
-#endif // TERMIT_ENABLE_SEARCH
     GtkWidget *cb_bookmarks;
     GtkWidget *menu;
     GtkWidget *mi_show_scrollbar;

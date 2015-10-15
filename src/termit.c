@@ -49,7 +49,6 @@ static GtkWidget* create_statusbar()
 
 static void create_search(struct TermitData* termit)
 {
-#ifdef TERMIT_ENABLE_SEARCH
     termit->b_toggle_search = gtk_toggle_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_toggle_search),
             gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
@@ -67,7 +66,6 @@ static void create_search(struct TermitData* termit)
 
     termit->search_entry = gtk_entry_new();
     g_signal_connect(G_OBJECT(termit->search_entry), "key-press-event", G_CALLBACK(termit_on_search_keypress), NULL);
-#endif // TERMIT_ENABLE_SEARCH
 }
 
 static void pack_widgets()
@@ -79,14 +77,11 @@ static void pack_widgets()
     else
         gtk_box_pack_start(GTK_BOX(vbox), termit.menu_bar, FALSE, 0, 0);
 
-#ifdef TERMIT_ENABLE_SEARCH
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_prev, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_next, FALSE, 0, 0);
-#endif // TERMIT_ENABLE_SEARCH
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.statusbar, TRUE, 1, 0);
-
 
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, 1, 0);
