@@ -518,3 +518,4 @@ int main(int argc, char **argv)
     termit_lua_close();
     return 0;
 }
+
