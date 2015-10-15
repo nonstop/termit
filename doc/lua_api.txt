@@ -47,10 +47,10 @@ _luaFunction_ - callback function
 *findDlg()* - Opens find entry. (Enabled when build with vte version >= 0.26)
 
 
-*findNext()* - Searches the next string matching search regex. (Enabled when build with vte version >= 0.26)
+*findNext()* - Searches the next string matching search regex.
 
 
-*findPrev()* - Searches the previous string matching search regex. (Enabled when build with vte version >= 0.26)
+*findPrev()* - Searches the previous string matching search regex.
 
 
 *forEachRow(_func_)* - For each terminal row in entire scrollback buffer executes function passing row as argument.
@@ -205,9 +205,10 @@ pre. Example: enable Gnome-like tab switching
 * getTabTitle - lua function to generate new tab title
 * getWindowTitle - lua function to generate new window title
 * hideMenubar - hide menubar
+* topMenu - place the menubar at the top of the window
 * hideTabbar - hide tabbar
 * showBorder - show notebook border
-* hideSingleTab - hide menubar when only 1 tab present
+* hideSingleTab - hide tabbar when only 1 tab present
 * imageFile - path to image to be set on the background
 * matches - table with items of TermitMatch type
 * scrollbackLines - the length of scrollback buffer
