@@ -328,6 +328,18 @@ void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell)
     vte_terminal_set_visible_bell(VTE_TERMINAL(pTab->vte), visible_bell);
 }
 
+void termit_tab_set_pos(struct TermitTab* pTab, int newPos)
+{
+    gint index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    gint pagesCnt = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    if (newPos < 0) {
+        newPos = pagesCnt - 1;
+    } else if (newPos >= pagesCnt) {
+        newPos = 0;
+    }
+    gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), newPos);
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));

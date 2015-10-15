@@ -468,6 +468,22 @@ static int termit_lua_setTabTitleDialog(lua_State* ls)
     return 0;
 }
 
+static int termit_lua_setTabPos(lua_State* ls)
+{
+    if (lua_isnil(ls, 1)) {
+        TRACE_MSG("no tabNum defined: skipping");
+        return 0;
+    } else if (!lua_isnumber(ls, 1)) {
+        TRACE_MSG("tabNum is not number: skipping");
+        return 0;
+    }
+    int tab_index =  lua_tointeger(ls, 1);
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    termit_tab_set_pos(pTab, tab_index - 1);
+    return 0;
+}
+
 static int termit_lua_setTabTitle(lua_State* ls)
 {
     if (lua_isnil(ls, 1)) {
@@ -700,6 +716,7 @@ struct TermitLuaFunction
     {"setTabBackgroundColor", termit_lua_setTabBackgroundColor, 0},
     {"setTabFont", termit_lua_setTabFont, 0},
     {"setTabForegroundColor", termit_lua_setTabForegroundColor, 0},
+    {"setTabPos", termit_lua_setTabPos, 0},
     {"setTabTitle", termit_lua_setTabTitle, 0},
     {"setTabTitleDlg", termit_lua_setTabTitleDialog, 0},
     {"setWindowTitle", termit_lua_setWindowTitle, 0},

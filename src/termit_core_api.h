@@ -60,6 +60,7 @@ void termit_tab_set_background_image(struct TermitTab* pTab, const gchar* image_
 void termit_tab_set_title(struct TermitTab* pTab, const gchar* title);
 void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell);
 void termit_tab_set_visible_bell(struct TermitTab* pTab, gboolean visible_bell);
+void termit_tab_set_pos(struct TermitTab* pTab, int newPos);
 
 int termit_get_current_tab_index();
 gchar* termit_get_pid_dir(pid_t pid);
