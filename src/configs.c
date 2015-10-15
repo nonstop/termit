@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2
+    it under the terms of the GNU General Public License version 2 
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -91,7 +91,7 @@ void termit_config_trace()
     TRACE("       transparency          = %f", configs.style.transparency);
     TRACE("       image_file            = %s", configs.style.image_file);
     TRACE_MSG("");
-#endif
+#endif 
 }
 
 void termit_configs_set_defaults()
@@ -185,7 +185,7 @@ void termit_config_deinit()
         g_free(match->pattern);
     }
     g_array_free(configs.matches, TRUE);
-
+    
     termit_lua_unref(&configs.get_window_title_callback);
     termit_lua_unref(&configs.get_tab_title_callback);
     termit_lua_unref(&configs.get_statusbar_callback);

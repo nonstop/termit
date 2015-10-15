@@ -2,7 +2,7 @@
 
     This file is part of termit.
     termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2
+    it under the terms of the GNU General Public License version 2 
     as published by the Free Software Foundation.
     termit is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,8 +31,8 @@ static gboolean confirm_exit()
         return FALSE;
 
     GtkWidget *dlg = gtk_message_dialog_new(
-        GTK_WINDOW(termit.main_window),
-        GTK_DIALOG_MODAL,
+        GTK_WINDOW(termit.main_window), 
+        GTK_DIALOG_MODAL, 
         GTK_MESSAGE_QUESTION,
         GTK_BUTTONS_YES_NO, _("Several tabs are opened.\nClose anyway?"));
     gint response = gtk_dialog_run(GTK_DIALOG(dlg));
@@ -146,7 +146,7 @@ void termit_on_child_exited()
 
     int status = 0;
     waitpid(pTab->pid, &status, WNOHANG);
-    /* TODO: check wait return */
+    /* TODO: check wait return */    
 
     termit_close_tab();
 }
@@ -183,13 +183,13 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
     GdkEventButton *event_button = (GdkEventButton *) event;
     if (event_button->button == 3) {
         GtkMenu *menu = GTK_MENU(termit.menu);
-        gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
+        gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
                           event_button->button, event_button->time);
         return TRUE;
     } else if (event_button->button == 1) {
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
         TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
-
+        
         char* matchedText = NULL;
         int matchTag = termit_cursor_under_match(event_button, &matchedText);
         if (!matchedText)
@@ -257,9 +257,9 @@ gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user
 void termit_on_set_tab_name()
 {
     GtkWidget *dlg = gtk_dialog_new_with_buttons(
-        _("Tab name"),
-        GTK_WINDOW(termit.main_window),
-        GTK_DIALOG_MODAL,
+        _("Tab name"), 
+        GTK_WINDOW(termit.main_window), 
+        GTK_DIALOG_MODAL, 
         GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dlg), GTK_RESPONSE_ACCEPT);
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
@@ -269,23 +269,23 @@ void termit_on_set_tab_name()
     GtkWidget *label = gtk_label_new(_("Tab name"));
     GtkWidget *entry = gtk_entry_new();
     gtk_entry_set_text(
-        GTK_ENTRY(entry),
+        GTK_ENTRY(entry), 
         gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox));
-
+    
     GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, FALSE, 5);
-
+    
     g_signal_connect(G_OBJECT(dlg), "key-press-event", G_CALLBACK(dlg_key_press), dlg);
 
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), hbox, FALSE, FALSE, 10);
     gtk_widget_show_all(dlg);
-
+    
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
         termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
         pTab->custom_tab_name = TRUE;
     }
-
+    
     gtk_widget_destroy(dlg);
 }
 
@@ -341,16 +341,16 @@ static gchar* termit_get_xdg_data_path()
 
 void termit_on_save_session()
 {
-/*  // debug
+/*  // debug   
     termit_save_session("tmpSess");
     return;
 */
     gchar* fullPath = termit_get_xdg_data_path();
-
+    
     GtkWidget* dlg = gtk_file_chooser_dialog_new(
-        _("Save session"),
-        GTK_WINDOW(termit.main_window),
-        GTK_FILE_CHOOSER_ACTION_SAVE,
+        _("Save session"), 
+        GTK_WINDOW(termit.main_window), 
+        GTK_FILE_CHOOSER_ACTION_SAVE, 
         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
         GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
         NULL);
@@ -378,9 +378,9 @@ void termit_on_load_session()
     gchar* fullPath = termit_get_xdg_data_path();
 
     GtkWidget* dlg = gtk_file_chooser_dialog_new(
-        _("Open session"),
-        GTK_WINDOW(termit.main_window),
-        GTK_FILE_CHOOSER_ACTION_OPEN,
+        _("Open session"), 
+        GTK_WINDOW(termit.main_window), 
+        GTK_FILE_CHOOSER_ACTION_OPEN, 
         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
         NULL);
