@@ -16,6 +16,7 @@ defaults.hideSingleTab = false
 defaults.hideTabbar = false
 defaults.showBorder = true
 defaults.hideMenubar = false
+defailts.topMenu = false
 defaults.fillTabbar = true
 defaults.scrollbackLines = 4096
 defaults.geometry = '80x24'
