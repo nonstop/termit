@@ -1,4 +1,6 @@
 	Added topMenu option.
+version 2.10.1
+	Fixed error with conflicting libvte/Gtk versions
 	Fixed ebuild (by Ilya Mochalov).
 	Suppress "invalid option" for -e.
 	Fixed missing link to math library (by Thomas Koch)
