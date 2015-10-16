@@ -27,19 +27,19 @@ msgstr "Fondo"
 msgid "Background image"
 msgstr "Imagen de fondo"
 
-#: src/termit_core_api.c:446
+#: src/termit_core_api.c:444
 msgid "Cannot create a new tab"
 msgstr "No se puede crear una nueva pestaña"
 
-#: src/termit_core_api.c:374
+#: src/termit_core_api.c:393
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "El comando no se entiende. Creando una nueva pestaña con shell"
 
-#: src/termit.c:199
+#: src/termit.c:190
 msgid "Edit"
 msgstr "Editar"
 
-#: src/termit.c:182
+#: src/termit.c:173
 msgid "File"
 msgstr "Archivo"
 
@@ -57,24 +57,24 @@ msgstr "Frente"
 msgid "Image"
 msgstr "Imagen"
 
-#: src/callbacks.c:383
+#: src/callbacks.c:381
 msgid "Open session"
 msgstr "Abrir sesión"
 
-#: src/callbacks.c:353
+#: src/callbacks.c:351
 msgid "Save session"
 msgstr "Guardar sesión"
 
-#: src/termit.c:239
+#: src/termit.c:230
 msgid "Scrollbar"
 msgstr "Barra de desplazamiento"
 
-#: src/termit.c:214
+#: src/termit.c:205
 msgid "Sessions"
 msgstr "Sesiones"
 
 #. Edit menu
-#: src/termit.c:194 src/termit.c:234
+#: src/termit.c:185 src/termit.c:225
 msgid "Set tab name..."
 msgstr "Establece el nombre de la pestaña"
 
@@ -86,7 +86,7 @@ msgstr ""
 "Hay varias pestañas abiertas.\n"
 "¿Cerrarlas todas?"
 
-#: src/callbacks.c:262 src/callbacks.c:271
+#: src/callbacks.c:260 src/callbacks.c:269
 msgid "Tab name"
 msgstr "Nombre de la pestaña"
 

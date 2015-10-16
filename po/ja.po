@@ -25,19 +25,19 @@ msgstr "背景"
 msgid "Background image"
 msgstr "背景画像"
 
-#: src/termit_core_api.c:446
+#: src/termit_core_api.c:444
 msgid "Cannot create a new tab"
 msgstr "新しいタブを作成できません"
 
-#: src/termit_core_api.c:374
+#: src/termit_core_api.c:393
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "コマンドを解析できません。シェル経由でタブを作成します"
 
-#: src/termit.c:199
+#: src/termit.c:190
 msgid "Edit"
 msgstr "編集"
 
-#: src/termit.c:182
+#: src/termit.c:173
 msgid "File"
 msgstr "ファイル"
 
@@ -55,24 +55,24 @@ msgstr "前景"
 msgid "Image"
 msgstr "画像"
 
-#: src/callbacks.c:383
+#: src/callbacks.c:381
 msgid "Open session"
 msgstr "セッションを開く"
 
-#: src/callbacks.c:353
+#: src/callbacks.c:351
 msgid "Save session"
 msgstr "セッションを保存する"
 
-#: src/termit.c:239
+#: src/termit.c:230
 msgid "Scrollbar"
 msgstr "スクロールバー"
 
-#: src/termit.c:214
+#: src/termit.c:205
 msgid "Sessions"
 msgstr "セッション"
 
 #. Edit menu
-#: src/termit.c:194 src/termit.c:234
+#: src/termit.c:185 src/termit.c:225
 msgid "Set tab name..."
 msgstr "タブ名を設定する"
 
@@ -82,7 +82,7 @@ msgid ""
 "Close anyway?"
 msgstr "終了しますか?"
 
-#: src/callbacks.c:262 src/callbacks.c:271
+#: src/callbacks.c:260 src/callbacks.c:269
 msgid "Tab name"
 msgstr "タブ名"
 
