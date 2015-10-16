@@ -389,6 +389,7 @@ static GArray* parse_execute_args(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+    opterr = 0; // suppress "invalid option" error message from getopt
     gchar* initFile = NULL;
     GArray* arrArgv = parse_execute_args(argc, argv);;
     gchar *windowName = NULL, *windowClass = NULL, *windowRole = NULL, *windowTitle = NULL;
