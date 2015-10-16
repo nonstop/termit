@@ -9,6 +9,7 @@ defaults.geometry = '80x24'
 defaults.hideSingleTab = false
 defaults.showScrollbar = true
 defaults.fillTabbar = false
+defaults.topMenu = false
 defaults.hideMenubar = false
 defaults.allowChangingTitle = false
 defaults.visibleBell = false

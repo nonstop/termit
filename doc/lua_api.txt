@@ -205,6 +205,7 @@ pre. Example: enable Gnome-like tab switching
 * getTabTitle - lua function to generate new tab title
 * getWindowTitle - lua function to generate new window title
 * hideMenubar - hide menubar
+* topMenu - place the menubar at the top of the window
 * hideTabbar - hide tabbar
 * showBorder - show notebook border
 * hideSingleTab - hide tabbar when only 1 tab present

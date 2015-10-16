@@ -237,6 +237,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_boolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
         termit_config_get_boolean(&(p_cfg->hide_single_tab), ls, index);
+    else if (!strcmp(name, "topMenu"))
+        termit_config_get_boolean(&(p_cfg->top_menu), ls, index);
     else if (!strcmp(name, "hideMenubar"))
         termit_config_get_boolean(&(p_cfg->hide_menubar), ls, index);
     else if (!strcmp(name, "hideTabbar"))
