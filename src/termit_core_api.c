@@ -498,7 +498,7 @@ void termit_append_tab_with_command(gchar** argv)
 
 void termit_append_tab()
 {
-    termit_append_tab_with_command(configs.default_command);
+    termit_append_tab_with_command(NULL);
 }
 
 void termit_set_encoding(const gchar* encoding)

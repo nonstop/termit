@@ -34,7 +34,7 @@ struct TermitTab* termit_get_tab_by_index(guint index)
 {
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
     if (!tabWidget) {
-        ERROR("tabWidget at %u is NULL", index);
+        ERROR("tabWidget at %zd is NULL", index);
         return NULL;
     }
     struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA);
@@ -51,17 +51,17 @@ static void create_search(struct TermitData* termit)
 {
     termit->b_toggle_search = gtk_toggle_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_toggle_search),
-            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_toggle_search), "toggled", G_CALLBACK(termit_on_toggle_search), NULL);
 
     termit->b_find_next = gtk_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_find_next),
-            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_find_next), "clicked", G_CALLBACK(termit_on_find_next), NULL);
 
     termit->b_find_prev = gtk_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_find_prev),
-            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_MENU )); //GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_find_prev), "clicked", G_CALLBACK(termit_on_find_prev), NULL);
 
     termit->search_entry = gtk_entry_new();
@@ -252,13 +252,10 @@ void termit_create_popup_menu()
     guint j = 0;
     for (; j<configs.user_popup_menus->len; ++j) {
         struct UserMenu* um = &g_array_index(configs.user_popup_menus, struct UserMenu, j);
-        GtkWidget *mi_util = NULL;
-        GtkWidget *utils_menu = NULL;
-        if (um->name && um->name[0]) {
-            mi_util = gtk_menu_item_new_with_label(um->name);
-            utils_menu = gtk_menu_new();
-            gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
-        }
+
+        GtkWidget *mi_util = gtk_menu_item_new_with_label(um->name);
+        GtkWidget *utils_menu = gtk_menu_new();
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
 
         TRACE("%s items->len=%zd", um->name, um->items->len);
         guint i = 0;
@@ -266,21 +263,11 @@ void termit_create_popup_menu()
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
             GtkWidget *mi_tmp = gtk_menu_item_new_with_label(umi->name);
             g_object_set_data(G_OBJECT(mi_tmp), TERMIT_USER_MENU_ITEM_DATA, umi);
-            if (utils_menu) {
-                gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
-            } else {
-                gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_tmp, 6);
-            }
+            gtk_menu_shell_append(GTK_MENU_SHELL(utils_menu), mi_tmp);
             g_signal_connect(G_OBJECT(mi_tmp), "activate",
                 G_CALLBACK(termit_on_menu_item_selected), NULL);
         }
-        if (mi_util) {
-            gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
-        }
-    }
-
-    if (j > 0) {
-        gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), gtk_separator_menu_item_new());
+        gtk_menu_shell_insert(GTK_MENU_SHELL(termit.menu), mi_util, 6);
     }
     gtk_widget_show_all(termit.menu);
 }
