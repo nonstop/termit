@@ -72,7 +72,11 @@ static void pack_widgets()
 {
     GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
     termit.hbox = gtk_hbox_new(FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
+    if( !configs.top_menu )
+        gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
+    else
+        gtk_box_pack_start(GTK_BOX(vbox), termit.menu_bar, FALSE, 0, 0);
+
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_prev, FALSE, 0, 0);

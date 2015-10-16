@@ -40,6 +40,7 @@ struct Configs
     GArray* matches;            // Match
     gboolean hide_single_tab;
     gboolean show_scrollbar;
+    gboolean top_menu;
     gboolean hide_menubar;
     gboolean hide_tabbar;
     gboolean fill_tabbar;
