@@ -34,7 +34,7 @@ struct TermitTab* termit_get_tab_by_index(guint index)
 {
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
     if (!tabWidget) {
-        ERROR("tabWidget at %zd is NULL", index);
+        ERROR("tabWidget at %u is NULL", index);
         return NULL;
     }
     struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA);
