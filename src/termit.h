@@ -39,6 +39,7 @@ struct TermitData
     GtkWidget *menu;
     GtkWidget *mi_show_scrollbar;
     GtkWidget *hbox;
+    GtkWidget *vbox;
     GtkWidget *menu_bar;
     gint tab_max_number;
 };
