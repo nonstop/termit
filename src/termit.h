@@ -53,9 +53,10 @@ struct TermitTab
     gboolean scrollbar_is_shown;
     gboolean custom_tab_name;
     gboolean audible_bell;
-    gboolean visible_bell;
     VteEraseBinding bksp_binding;
     VteEraseBinding delete_binding;
+    VteCursorBlinkMode cursor_blink_mode;
+    VteCursorShape cursor_shape;
     gchar *encoding;
     gchar **argv;
     gchar *title;
@@ -72,6 +73,8 @@ struct TabInfo
     gchar* encoding;
     VteEraseBinding bksp_binding;
     VteEraseBinding delete_binding;
+    VteCursorBlinkMode cursor_blink_mode;
+    VteCursorShape cursor_shape;
 };
 
 struct TermitTab* termit_get_tab_by_index(guint index);
@@ -84,16 +87,15 @@ struct TermitTab* termit_get_tab_by_index(guint index);
     if (!pTab) \
     {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return retCode; }
 
-//#define ERROR(x) g_fprintf(stderr, "%s:%d error: %s\n", __FILE__, __LINE__, x)
-#define ERROR(format, ...) g_fprintf(stderr, "%s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)
-
 #ifdef DEBUG
+#define ERROR(format, ...) g_fprintf(stderr, "ERROR: %s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)
 #define STDFMT "%s:%d "
 #define STD __FILE__, __LINE__
 #define TRACE(format, ...) g_fprintf(stderr, STDFMT format, STD, ## __VA_ARGS__); g_fprintf(stderr, "\n")
 #define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_FUNC g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, __FUNCTION__)
 #else
+#define ERROR(format, ...) g_fprintf(stderr, "%s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)
 #define TRACE(format, ...)
 #define TRACE_MSG(x)
 #define TRACE_FUNC

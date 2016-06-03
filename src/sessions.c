@@ -139,6 +139,12 @@ void termit_save_session(const gchar* sessionFile)
             g_fprintf(fd, "%s.deleteBinding = \"%s\"\n", groupName, termit_erase_binding_to_string(eb));
         }
         g_value_unset(&val);
+        if (pTab->cursor_blink_mode != VTE_CURSOR_BLINK_SYSTEM) {
+            g_fprintf(fd, "%s.cursorBlinkMode = \"%s\"\n", groupName, termit_cursor_blink_mode_to_string(pTab->cursor_blink_mode));
+        }
+        if (pTab->cursor_shape != VTE_CURSOR_SHAPE_BLOCK) {
+            g_fprintf(fd, "%s.cursorShape = \"%s\"\n", groupName, termit_cursor_shape_to_string(pTab->cursor_shape));
+        }
         g_fprintf(fd, "openTab(%s)\n\n", groupName);
         g_free(groupName);
         g_free(working_dir);

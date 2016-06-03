@@ -334,8 +334,20 @@ data
 
 .B "Types:"
 
+.B TermitCursorBlinkMode
+\(hy one of those string values:
+    System              Follow GTK+ settings for cursor blinking
+    BlinkOn             Cursor blinks
+    BlinkOff            Cursor does not blink
+.P
+.B TermitCursorShape
+\(hy one of those string values:
+    Block               Draw a block cursor
+    Ibeam               Draw a vertical bar on the left side of character
+    Underline           Draw a horizontal bar below the character
+.P
 .B TermitEraseBinding
-\(hy one of those string value:
+\(hy one of those string values:
     Auto                VTE_ERASE_AUTO
     AsciiBksp           VTE_ERASE_ASCII_BACKSPACE
     AsciiDel            VTE_ERASE_ASCII_DELETE
@@ -371,6 +383,8 @@ For detailed description look into Vte docs.
     backgroundColor     background color
     backspaceBinding    reaction on backspace key (one of TermitEraseBinding)
     colormap            array with 8 or 16 or 24 colors
+    cursorBlinkMode     cursor blink mode (one of TermitCursorBlinkMode)
+    cursorShape         cursor shape (one of TermitCursorShape)
     deleteBinding       reaction on delete key (one of TermitEraseBinding)
     encoding            default encoding
     fillTabbar          expand tabs' titles to fill whole tabbar

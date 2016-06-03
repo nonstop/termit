@@ -338,17 +338,22 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
     pTab->bksp_binding = ti->bksp_binding;
     pTab->delete_binding = ti->delete_binding;
+    pTab->cursor_blink_mode = ti->cursor_blink_mode;
+    pTab->cursor_shape = ti->cursor_shape;
     pTab->hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     pTab->vte = vte_terminal_new();
+    VteTerminal* vte = VTE_TERMINAL(pTab->vte);
 
-    vte_terminal_set_size(VTE_TERMINAL(pTab->vte), configs.cols, configs.rows);
-    vte_terminal_set_scrollback_lines(VTE_TERMINAL(pTab->vte), configs.scrollback_lines);
+    vte_terminal_set_size(vte, configs.cols, configs.rows);
+    vte_terminal_set_scrollback_lines(vte, configs.scrollback_lines);
     if (configs.default_word_char_exceptions)
-        vte_terminal_set_word_char_exceptions(VTE_TERMINAL(pTab->vte), configs.default_word_char_exceptions);
-    vte_terminal_set_mouse_autohide(VTE_TERMINAL(pTab->vte), TRUE);
-    vte_terminal_set_backspace_binding(VTE_TERMINAL(pTab->vte), pTab->bksp_binding);
-    vte_terminal_set_delete_binding(VTE_TERMINAL(pTab->vte), pTab->delete_binding);
-    vte_terminal_search_set_wrap_around(VTE_TERMINAL(pTab->vte), TRUE);
+        vte_terminal_set_word_char_exceptions(vte, configs.default_word_char_exceptions);
+    vte_terminal_set_mouse_autohide(vte, TRUE);
+    vte_terminal_set_backspace_binding(vte, pTab->bksp_binding);
+    vte_terminal_set_delete_binding(vte, pTab->delete_binding);
+    vte_terminal_set_cursor_blink_mode(vte, pTab->cursor_blink_mode);
+    vte_terminal_set_cursor_shape(vte, pTab->cursor_shape);
+    vte_terminal_search_set_wrap_around(vte, TRUE);
 
     guint l = 0;
     if (ti->argv == NULL) {
@@ -387,7 +392,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         pTab->argv[0] = g_strdup(cmd_path);
         g_free(cmd_path);
     }
-    if (vte_terminal_spawn_sync(VTE_TERMINAL(pTab->vte),
+    if (vte_terminal_spawn_sync(vte,
             VTE_PTY_DEFAULT,
             ti->working_dir,
             pTab->argv, NULL,
@@ -408,7 +413,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 //    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
 
-    if (vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), pTab->encoding, &cmd_err) != TRUE) {
+    if (vte_terminal_set_encoding(vte, pTab->encoding, &cmd_err) != TRUE) {
         ERROR("cannot set encoding (%s): %s", pTab->encoding, cmd_err->message);
         g_error_free(cmd_err);
         return;
@@ -416,7 +421,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     pTab->matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
     termit_tab_add_matches(pTab, configs.matches);
-    vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
+    vte_terminal_set_font(vte, pTab->style.font);
 
     gint index = gtk_notebook_append_page(GTK_NOTEBOOK(termit.notebook), pTab->hbox, pTab->tab_name);
     if (index == -1) {
@@ -466,6 +471,8 @@ void termit_append_tab_with_command(gchar** argv)
     struct TabInfo ti = {};
     ti.bksp_binding = configs.default_bksp;
     ti.delete_binding = configs.default_delete;
+    ti.cursor_blink_mode = configs.default_blink;
+    ti.cursor_shape = configs.default_shape;
     ti.argv = argv;
     termit_append_tab_with_details(&ti);
 }

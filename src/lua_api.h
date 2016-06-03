@@ -49,6 +49,8 @@ void termit_config_get_boolean(gboolean* opt, struct lua_State* ls, int index);
 void termit_config_get_function(int* opt, struct lua_State* ls, int index);
 void termit_config_get_color(GdkRGBA** opt, struct lua_State* ls, int index);
 void termit_config_get_erase_binding(VteEraseBinding* opt, struct lua_State* ls, int index);
+void termit_config_get_cursor_blink_mode(VteCursorBlinkMode* opt, struct lua_State* ls, int index);
+void termit_config_get_cursor_shape(VteCursorShape* opt, struct lua_State* ls, int index);
 
 #define TERMIT_TAB_ADD_NUMBER(name, value) {\
     lua_pushstring(ls, name); \

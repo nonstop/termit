@@ -33,6 +33,8 @@ struct Configs
     guint rows;
     VteEraseBinding default_bksp;
     VteEraseBinding default_delete;
+    VteCursorBlinkMode default_blink;
+    VteCursorShape default_shape;
     GArray* user_menus;         // UserMenu
     GArray* user_popup_menus;   // UserMenu
     GArray* key_bindings;       // KeyBinding
@@ -87,6 +89,12 @@ void termit_keys_trace();
 
 const char* termit_erase_binding_to_string(VteEraseBinding val);
 VteEraseBinding termit_erase_binding_from_string(const char* str);
+
+const char* termit_cursor_blink_mode_to_string(VteCursorBlinkMode val);
+VteCursorBlinkMode termit_cursor_blink_mode_from_string(const char* str);
+
+const char* termit_cursor_shape_to_string(VteCursorShape val);
+VteCursorShape termit_cursor_shape_from_string(const char* str);
 
 #define TERMIT_USER_MENU_ITEM_DATA "termit.umi_data"
 #define TERMIT_TAB_DATA "termit.tab_data"

@@ -242,6 +242,10 @@ void termit_lua_tab_loader(const gchar* name, lua_State* ls, int index, void* da
         termit_config_get_erase_binding(&ti->bksp_binding, ls, index);
     } else if (strcmp(name, "deleteBinding") == 0) {
         termit_config_get_erase_binding(&ti->delete_binding, ls, index);
+    } else if (strcmp(name, "cursorBlinkMode") == 0) {
+        termit_config_get_cursor_blink_mode(&ti->cursor_blink_mode, ls, index);
+    } else if (strcmp(name, "cursorShape") == 0) {
+        termit_config_get_cursor_shape(&ti->cursor_shape, ls, index);
     } else if (strcmp(name, "workingDir") == 0) {
         termit_config_get_string(&ti->working_dir, ls, index);
     }
