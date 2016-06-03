@@ -92,7 +92,7 @@ static void termit_search_prepare_regex(const gchar* searchRegex)
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page);
     if (strlen(searchRegex) == 0) {
-        vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), NULL);
+        vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), NULL, 0);
     } else {
         GRegex* currSearchRegex = vte_terminal_search_get_gregex(VTE_TERMINAL(pTab->vte));
         if (!currSearchRegex || strcmp(searchRegex, g_regex_get_pattern(currSearchRegex)) != 0) {
@@ -102,7 +102,7 @@ static void termit_search_prepare_regex(const gchar* searchRegex)
                 TRACE("failed to compile regex [%s]: skipping", searchRegex);
                 return;
             }
-            vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), regex);
+            vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), regex, G_REGEX_MATCH_NOTEMPTY);
         }
     }
 }
@@ -260,7 +260,9 @@ void termit_on_set_tab_name()
         _("Tab name"), 
         GTK_WINDOW(termit.main_window), 
         GTK_DIALOG_MODAL, 
-        GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+        "_Cancel", GTK_RESPONSE_REJECT,
+        "_OK", GTK_RESPONSE_ACCEPT,
+        NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dlg), GTK_RESPONSE_ACCEPT);
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
 
@@ -272,9 +274,9 @@ void termit_on_set_tab_name()
         GTK_ENTRY(entry), 
         gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox));
     
-    GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
-    gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, FALSE, 5);
+    GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
     
     g_signal_connect(G_OBJECT(dlg), "key-press-event", G_CALLBACK(dlg_key_press), dlg);
 
@@ -341,18 +343,13 @@ static gchar* termit_get_xdg_data_path()
 
 void termit_on_save_session()
 {
-/*  // debug   
-    termit_save_session("tmpSess");
-    return;
-*/
     gchar* fullPath = termit_get_xdg_data_path();
-    
     GtkWidget* dlg = gtk_file_chooser_dialog_new(
-        _("Save session"), 
-        GTK_WINDOW(termit.main_window), 
-        GTK_FILE_CHOOSER_ACTION_SAVE, 
-        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-        GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+        _("Save session"),
+        GTK_WINDOW(termit.main_window),
+        GTK_FILE_CHOOSER_ACTION_SAVE,
+        "_Cancel", GTK_RESPONSE_REJECT,
+        "_Save", GTK_RESPONSE_ACCEPT,
         NULL);
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dlg), TRUE);
 
@@ -381,8 +378,8 @@ void termit_on_load_session()
         _("Open session"), 
         GTK_WINDOW(termit.main_window), 
         GTK_FILE_CHOOSER_ACTION_OPEN, 
-        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+        "_Cancel", GTK_RESPONSE_REJECT,
+        "_OK", GTK_RESPONSE_ACCEPT,
         NULL);
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dlg), TRUE);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dlg), fullPath);

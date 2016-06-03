@@ -82,20 +82,20 @@ void termit_config_get_function(int* opt, lua_State* ls, int index)
         lua_pushnil(ls);
     }
 }
-void termit_config_get_color(GdkColor** opt, lua_State* ls, int index)
+void termit_config_get_color(GdkRGBA** opt, lua_State* ls, int index)
 {
     gchar* color_str = NULL;
     termit_config_get_string(&color_str, ls, index);
     if (color_str) {
-        GdkColor color = {};
-        if (gdk_color_parse(color_str, &color) == TRUE) {
-            *opt = gdk_color_copy(&color);
+        GdkRGBA color = {};
+        if (gdk_rgba_parse(&color, color_str) == TRUE) {
+            *opt = gdk_rgba_copy(&color);
             TRACE("color_str=%s", color_str);
         }
     }
     g_free(color_str);
 }
-void termit_config_get_erase_binding(VteTerminalEraseBinding* opt, lua_State* ls, int index)
+void termit_config_get_erase_binding(VteEraseBinding* opt, lua_State* ls, int index)
 {
     gchar* str = NULL;
     termit_config_get_string(&str, ls, index);
@@ -126,7 +126,7 @@ static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index,
 
 struct ColormapHelper
 {
-    GdkColor* colors;
+    GdkRGBA* colors;
     int idx;
 };
 
@@ -135,7 +135,7 @@ static void colormapLoader(const gchar* name, lua_State* ls, int index, void* da
     struct ColormapHelper* ch = (struct ColormapHelper*)data;
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         const gchar* colorStr = lua_tostring(ls, index);
-        if (!gdk_color_parse(colorStr, &(ch->colors[ch->idx]))) {
+        if (!gdk_rgba_parse(&(ch->colors[ch->idx]), colorStr)) {
             ERROR("failed to parse color: %s %d - %s", name, ch->idx, colorStr);
         }
     } else {
@@ -161,7 +161,7 @@ static void tabsLoader(const gchar* name, lua_State* ls, int index, void* data)
     }
 }
 
-void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong* sz)
+void termit_lua_load_colormap(lua_State* ls, int index, GdkRGBA** colors, glong* sz)
 {
     if (lua_isnil(ls, index) || !lua_istable(ls, index)) {
         ERROR("invalid colormap type");
@@ -177,7 +177,7 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkColor** colors, glong
         return;
     }
     struct ColormapHelper ch = {};
-    ch.colors = g_malloc0(size * sizeof(GdkColor));
+    ch.colors = g_malloc0(size * sizeof(GdkRGBA));
     if (termit_lua_load_table(ls, colormapLoader, index, &ch)
             == TERMIT_LUA_TABLE_LOADER_OK) {
         if (*colors) {
@@ -219,8 +219,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_string(&(p_cfg->default_window_title), ls, index);
     else if (!strcmp(name, "encoding"))
         termit_config_get_string(&(p_cfg->default_encoding), ls, index);
-    else if (!strcmp(name, "wordChars"))
-        termit_config_get_string(&(p_cfg->default_word_chars), ls, index);
+    else if (!strcmp(name, "wordCharExceptions"))
+        termit_config_get_string(&(p_cfg->default_word_char_exceptions), ls, index);
     else if (!strcmp(name, "font"))
         termit_config_get_string(&(p_cfg->style.font_name), ls, index);
     else if (!strcmp(name, "foregroundColor")) 
@@ -229,10 +229,6 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_color(&p_cfg->style.background_color, ls, index);
     else if (!strcmp(name, "showScrollbar"))
         termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
-    else if (!strcmp(name, "transparency"))
-        termit_config_get_double(&(p_cfg->style.transparency), ls, index);
-    else if (!strcmp(name, "imageFile"))
-        termit_config_get_string(&(p_cfg->style.image_file), ls, index);
     else if (!strcmp(name, "fillTabbar"))
         termit_config_get_boolean(&(p_cfg->fill_tabbar), ls, index);
     else if (!strcmp(name, "hideSingleTab"))
@@ -249,8 +245,6 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_boolean(&(p_cfg->allow_changing_title), ls, index);
     else if (!strcmp(name, "audibleBell"))
         termit_config_get_boolean(&(p_cfg->audible_bell), ls, index);
-    else if (!strcmp(name, "visibleBell"))
-        termit_config_get_boolean(&(p_cfg->visible_bell), ls, index);
     else if (!strcmp(name, "urgencyOnBell"))
         termit_config_get_boolean(&(p_cfg->urgency_on_bell), ls, index);
     else if (!strcmp(name, "getWindowTitle"))
@@ -290,7 +284,7 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
             if (!configs.default_tabs) {
                 configs.default_tabs = g_array_new(FALSE, TRUE, sizeof(struct TabInfo));
             }
-            TRACE("tabs at index: %d tabs.size=%zd", index, configs.default_tabs->len);
+            TRACE("tabs at index: %d tabs.size=%d", index, configs.default_tabs->len);
             if (termit_lua_load_table(ls, tabsLoader, index, configs.default_tabs)
                     != TERMIT_LUA_TABLE_LOADER_OK) {
                 ERROR("openTab failed");

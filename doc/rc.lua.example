@@ -1,3 +1,7 @@
+-- Example file with lots of options.
+-- You can test with with this command:
+-- cd ./etc && ../src/termit --init ../doc/rc.lua.example
+
 require("termit.colormaps")
 require("termit.utils")
 
@@ -5,13 +9,11 @@ defaults = {}
 defaults.windowTitle = 'Termit'
 defaults.tabName = 'Terminal'
 defaults.encoding = 'UTF-8'
-defaults.wordChars = '+-AA-Za-z0-9,./?%&#:_~'
+defaults.wordCharExceptions = '- .,_/'
 defaults.font = 'Terminus 12'
 --defaults.foregroundColor = 'gray'
 --defaults.backgroundColor = 'black'
 defaults.showScrollbar = true
-defaults.transparency = 0.7
---defaults.imageFile = '/tmp/img.png'
 defaults.hideSingleTab = false
 defaults.hideTabbar = false
 defaults.showBorder = true
@@ -32,8 +34,8 @@ defaults.setStatusbar = function (tabInd)
 end
 defaults.colormap = termit.colormaps.delicate
 defaults.matches = {['http[^ ]+'] = function (url) print('Matching url: '..url) end}
---defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
-    --{title = 'Test new tab 2'; workingDir = '/tmp'}}
+defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
+    {title = 'Test new tab 2'; workingDir = '/tmp'}}
 setOptions(defaults)
 
 bindKey('Ctrl-Page_Up', prevTab)

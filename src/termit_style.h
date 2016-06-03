@@ -23,12 +23,10 @@ struct TermitStyle
 {
     gchar* font_name;
     PangoFontDescription* font;
-    GdkColor* foreground_color;
-    GdkColor* background_color;
-    gchar *image_file;
-    GdkColor* colors;
+    GdkRGBA* foreground_color;
+    GdkRGBA* background_color;
+    GdkRGBA* colors;
     glong colors_size;
-    gdouble transparency;
 };
 
 void termit_style_init(struct TermitStyle* style);

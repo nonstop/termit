@@ -54,14 +54,14 @@ struct TermitTab
     gboolean custom_tab_name;
     gboolean audible_bell;
     gboolean visible_bell;
-    VteTerminalEraseBinding bksp_binding;
-    VteTerminalEraseBinding delete_binding;
+    VteEraseBinding bksp_binding;
+    VteEraseBinding delete_binding;
     gchar *encoding;
     gchar **argv;
     gchar *title;
     GArray* matches;
     struct TermitStyle style;
-    pid_t pid;
+    GPid pid;
 };
 
 struct TabInfo
@@ -70,8 +70,8 @@ struct TabInfo
     gchar** argv;
     gchar* working_dir;
     gchar* encoding;
-    VteTerminalEraseBinding bksp_binding;
-    VteTerminalEraseBinding delete_binding;
+    VteEraseBinding bksp_binding;
+    VteEraseBinding delete_binding;
 };
 
 struct TermitTab* termit_get_tab_by_index(guint index);
@@ -90,7 +90,7 @@ struct TermitTab* termit_get_tab_by_index(guint index);
 #ifdef DEBUG
 #define STDFMT "%s:%d "
 #define STD __FILE__, __LINE__
-#define TRACE(format, ...) g_fprintf(stderr, STDFMT # format, STD, ## __VA_ARGS__); g_fprintf(stderr, "\n")
+#define TRACE(format, ...) g_fprintf(stderr, STDFMT format, STD, ## __VA_ARGS__); g_fprintf(stderr, "\n")
 #define TRACE_MSG(x) g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, x)
 #define TRACE_FUNC g_fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, __FUNCTION__)
 #else

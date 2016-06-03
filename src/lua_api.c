@@ -515,7 +515,7 @@ static int termit_lua_setWindowTitle(lua_State* ls)
     return 0;
 }
 
-static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const GdkColor*))
+static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const GdkRGBA*))
 {
     if (lua_isnil(ls, 1)) {
         TRACE_MSG("no color defined: skipping");
@@ -525,8 +525,8 @@ static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const 
         return 0;
     }
     const gchar* val = lua_tostring(ls, 1);
-    GdkColor color;
-    if (gdk_color_parse(val, &color) == TRUE)
+    GdkRGBA color;
+    if (gdk_rgba_parse(&color, val) == TRUE)
         callback(-1, &color);
     return 0;
 }

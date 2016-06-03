@@ -51,17 +51,13 @@ static void create_search(struct TermitData* termit)
 {
     termit->b_toggle_search = gtk_toggle_button_new();
     gtk_button_set_image(GTK_BUTTON(termit->b_toggle_search),
-            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
+            gtk_image_new_from_icon_name("edit-find", GTK_ICON_SIZE_BUTTON));
     g_signal_connect(G_OBJECT(termit->b_toggle_search), "toggled", G_CALLBACK(termit_on_toggle_search), NULL);
 
-    termit->b_find_next = gtk_button_new();
-    gtk_button_set_image(GTK_BUTTON(termit->b_find_next),
-            gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON));
+    termit->b_find_next = gtk_button_new_from_icon_name("go-next", GTK_ICON_SIZE_BUTTON);
     g_signal_connect(G_OBJECT(termit->b_find_next), "clicked", G_CALLBACK(termit_on_find_next), NULL);
 
-    termit->b_find_prev = gtk_button_new();
-    gtk_button_set_image(GTK_BUTTON(termit->b_find_prev),
-            gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_BUTTON));
+    termit->b_find_prev = gtk_button_new_from_icon_name("go-previous", GTK_ICON_SIZE_BUTTON);
     g_signal_connect(G_OBJECT(termit->b_find_prev), "clicked", G_CALLBACK(termit_on_find_prev), NULL);
 
     termit->search_entry = gtk_entry_new();
@@ -70,8 +66,7 @@ static void create_search(struct TermitData* termit)
 
 static void pack_widgets()
 {
-    GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
-    termit.hbox = gtk_hbox_new(FALSE, 0);
+    termit.hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
@@ -79,10 +74,10 @@ static void pack_widgets()
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_next, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.statusbar, TRUE, 1, 0);
 
-    gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, 1, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, 1, 0);
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
-
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
         termit_append_tab();
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_on_switch_page), NULL);
@@ -134,18 +129,6 @@ static void termit_create_menus(GtkWidget* menu_bar, GtkAccelGroup* accel, GArra
     }
 }
 
-static GtkWidget* termit_lua_menu_item_from_stock(const gchar* stock_id, const char* luaFunc)
-{
-    GtkWidget *mi = gtk_image_menu_item_new_from_stock(stock_id, NULL);
-    g_signal_connect(G_OBJECT(mi), "activate", G_CALLBACK(termit_on_menu_item_selected), NULL);
-    struct UserMenuItem* umi = (struct UserMenuItem*)malloc(sizeof(struct UserMenuItem));
-    umi->name = g_strdup(gtk_menu_item_get_label(GTK_MENU_ITEM(mi)));
-    umi->accel = NULL;
-    umi->lua_callback = termit_get_lua_func(luaFunc);
-    g_object_set_data(G_OBJECT(mi), TERMIT_USER_MENU_ITEM_DATA, umi);
-    return mi;
-}
-
 static GtkWidget* termit_lua_menu_item_from_string(const gchar* label, const char* luaFunc)
 {
     GtkWidget *mi = gtk_menu_item_new_with_label(label);
@@ -166,9 +149,9 @@ void termit_create_menubar()
     GtkWidget* menu_bar = gtk_menu_bar_new();
 
     // File menu
-    GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
-    GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
-    GtkWidget *mi_exit = termit_lua_menu_item_from_stock(GTK_STOCK_QUIT, "quit");
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("Open"), "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Delete"), "closeTab");
+    GtkWidget *mi_exit = termit_lua_menu_item_from_string(_("Quit"), "quit");
 
     GtkWidget *mi_file = gtk_menu_item_new_with_label(_("File"));
     GtkWidget *file_menu = gtk_menu_new();
@@ -183,9 +166,9 @@ void termit_create_menubar()
 
     // Edit menu
     GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
-    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_stock(GTK_STOCK_PREFERENCES, "preferencesDlg");
-    GtkWidget *mi_copy = termit_lua_menu_item_from_stock(GTK_STOCK_COPY, "copy");
-    GtkWidget *mi_paste = termit_lua_menu_item_from_stock(GTK_STOCK_PASTE, "paste");
+    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_string(_("Preferences"), "preferencesDlg");
+    GtkWidget *mi_copy = termit_lua_menu_item_from_string(_("Copy"), "copy");
+    GtkWidget *mi_paste = termit_lua_menu_item_from_string(_("Paste"), "paste");
 
     GtkWidget *mi_edit = gtk_menu_item_new_with_label(_("Edit"));
     GtkWidget *edit_menu = gtk_menu_new();
@@ -199,8 +182,8 @@ void termit_create_menubar()
     gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mi_edit);
 
     // Sessions menu
-    GtkWidget *mi_load_session = termit_lua_menu_item_from_stock(GTK_STOCK_OPEN, "loadSessionDlg");
-    GtkWidget *mi_save_session = termit_lua_menu_item_from_stock(GTK_STOCK_SAVE, "saveSessionDlg");
+    GtkWidget *mi_load_session = termit_lua_menu_item_from_string(_("Open session"), "loadSessionDlg");
+    GtkWidget *mi_save_session = termit_lua_menu_item_from_string(_("Save session"), "saveSessionDlg");
 
     GtkWidget *mi_sessions = gtk_menu_item_new_with_label(_("Sessions"));
     GtkWidget *sessions_menu = gtk_menu_new();
@@ -220,13 +203,13 @@ void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
 
-    GtkWidget *mi_new_tab = termit_lua_menu_item_from_stock(GTK_STOCK_ADD, "openTab");
-    GtkWidget *mi_close_tab = termit_lua_menu_item_from_stock(GTK_STOCK_DELETE, "closeTab");
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("Open"), "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Delete"), "closeTab");
     GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
-    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_stock(GTK_STOCK_PREFERENCES, "preferencesDlg");
-    GtkWidget *mi_copy = termit_lua_menu_item_from_stock(GTK_STOCK_COPY, "copy");
-    GtkWidget *mi_paste = termit_lua_menu_item_from_stock(GTK_STOCK_PASTE, "paste");
-    GtkWidget *mi_exit = termit_lua_menu_item_from_stock(GTK_STOCK_QUIT, "quit");
+    GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_string(_("Preferences"), "preferencesDlg");
+    GtkWidget *mi_copy = termit_lua_menu_item_from_string(_("Copy"), "copy");
+    GtkWidget *mi_paste = termit_lua_menu_item_from_string(_("Paste"), "paste");
+    GtkWidget *mi_exit = termit_lua_menu_item_from_string(_("Quit"), "quit");
     termit.mi_show_scrollbar = gtk_check_menu_item_new_with_label(_("Scrollbar"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(termit.mi_show_scrollbar), configs.show_scrollbar);
     termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, NULL);
@@ -244,7 +227,7 @@ void termit_create_popup_menu()
     gtk_menu_shell_append(GTK_MENU_SHELL(termit.menu), mi_exit);
 
     // User popup menus
-    TRACE("user_popup_menus->len=%zd", configs.user_popup_menus->len);
+    TRACE("user_popup_menus->len=%d", configs.user_popup_menus->len);
     guint j = 0;
     for (; j<configs.user_popup_menus->len; ++j) {
         struct UserMenu* um = &g_array_index(configs.user_popup_menus, struct UserMenu, j);
@@ -253,7 +236,7 @@ void termit_create_popup_menu()
         GtkWidget *utils_menu = gtk_menu_new();
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi_util), utils_menu);
 
-        TRACE("%s items->len=%zd", um->name, um->items->len);
+        TRACE("%s items->len=%d", um->name, um->items->len);
         guint i = 0;
         for (; i<um->items->len; i++) {
             struct UserMenuItem* umi = &g_array_index(um->items, struct UserMenuItem, i);
@@ -462,13 +445,14 @@ int main(int argc, char **argv)
     g_strfreev(cmdArgv);
     g_free(initFile);
 
+#if 0
     /**
      * dirty hack from gnome-terminal ;-)
      * F10 is used in many console apps, so we change global Gtk setting for termit
      * */
     gtk_settings_set_string_property(gtk_settings_get_default(), "gtk-menu-bar-accel",
         "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10", "termit");
-
+#endif // FIXME
     g_signal_connect(G_OBJECT (termit.main_window), "delete_event", G_CALLBACK (termit_on_delete_event), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);

@@ -208,7 +208,6 @@ pre. Example: enable Gnome-like tab switching
 * hideTabbar - hide tabbar
 * showBorder - show notebook border
 * hideSingleTab - hide tabbar when only 1 tab present
-* imageFile - path to image to be set on the background
 * matches - table with items of TermitMatch type
 * scrollbackLines - the length of scrollback buffer
 * setStatusbar - lua function to generate new statusbar message
@@ -216,10 +215,8 @@ pre. Example: enable Gnome-like tab switching
 * tabName - default tab name
 * tabPos - tabbar position (Top, Bottom, Left, Right)
 * tabs - table with items of TermitTabInfo type
-* transparency - use transparency level [0,1]
-* visibleBell - enables visible bell
 * urgencyOnBell - set WM-hint 'urgent' on termit window when bell
-* wordChars - word characters (double click selects word)
+* wordCharExceptions - additional word characters (double click selects word)
 
 
 *TermitTabInfo* - table with tab settings:

@@ -27,12 +27,12 @@ struct Configs
     gchar* default_tab_name;
     gchar* default_command;
     gchar* default_encoding;
-    gchar* default_word_chars;
+    gchar* default_word_char_exceptions;
     guint scrollback_lines;
     guint cols;
     guint rows;
-    VteTerminalEraseBinding default_bksp;
-    VteTerminalEraseBinding default_delete;
+    VteEraseBinding default_bksp;
+    VteEraseBinding default_delete;
     GArray* user_menus;         // UserMenu
     GArray* user_popup_menus;   // UserMenu
     GArray* key_bindings;       // KeyBinding
@@ -47,7 +47,6 @@ struct Configs
     gboolean urgency_on_bell;
     gboolean allow_changing_title;
     gboolean audible_bell;
-    gboolean visible_bell;
     int get_window_title_callback;
     int get_tab_title_callback;
     int get_statusbar_callback;
@@ -86,8 +85,8 @@ void termit_config_load();
 void termit_config_trace();
 void termit_keys_trace();
 
-const char* termit_erase_binding_to_string(VteTerminalEraseBinding val);
-VteTerminalEraseBinding termit_erase_binding_from_string(const char* str);
+const char* termit_erase_binding_to_string(VteEraseBinding val);
+VteEraseBinding termit_erase_binding_from_string(const char* str);
 
 #define TERMIT_USER_MENU_ITEM_DATA "termit.umi_data"
 #define TERMIT_TAB_DATA "termit.tab_data"

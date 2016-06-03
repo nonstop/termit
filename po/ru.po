@@ -16,66 +16,82 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/termit_preferences.c:299
+#: src/termit_preferences.c:199
 msgid "Audible bell"
 msgstr ""
 
-#: src/termit_preferences.c:260
+#: src/termit_preferences.c:192
 msgid "Background"
 msgstr ""
 
-#: src/termit_preferences.c:276
-msgid "Background image"
-msgstr ""
-
-#: src/termit_core_api.c:444
+#: src/termit_core_api.c:423
 msgid "Cannot create a new tab"
 msgstr "Ошибка открытия новой вкладки"
 
-#: src/termit_core_api.c:393
+#: src/termit_core_api.c:374
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 
-#: src/termit.c:190
+#: src/termit.c:170 src/termit.c:210
+msgid "Copy"
+msgstr ""
+
+#: src/termit.c:153 src/termit.c:207
+msgid "Delete"
+msgstr ""
+
+#: src/termit.c:173
 msgid "Edit"
 msgstr "Правка"
 
-#: src/termit.c:173
+#: src/termit.c:156
 msgid "File"
 msgstr "Файл"
 
-#: src/termit_preferences.c:242
+#: src/termit_preferences.c:176
 msgid "Font"
 msgstr ""
 
-#: src/termit_preferences.c:251
+#: src/termit_preferences.c:184
 msgid "Foreground"
 msgstr ""
 
-#. g_signal_connect(btn_switch_image_file, "toggled", G_CALLBACK(dlg_switch_image_file), btn_image_file);
-#. TERMIT_PREFERENCE_ROW2(btn_switch_image_file, btn_image_file);
-#: src/termit_preferences.c:283
-msgid "Image"
+#. File menu
+#: src/termit.c:152 src/termit.c:206
+msgid "Open"
 msgstr ""
 
-#: src/callbacks.c:381
+#. Sessions menu
+#: src/termit.c:185 src/callbacks.c:378
 msgid "Open session"
 msgstr "Открыть сессию"
 
-#: src/callbacks.c:351
+#: src/termit.c:171 src/termit.c:211
+msgid "Paste"
+msgstr ""
+
+#: src/termit.c:169 src/termit.c:209 src/termit_preferences.c:151
+msgid "Preferences"
+msgstr ""
+
+#: src/termit.c:154 src/termit.c:212
+msgid "Quit"
+msgstr ""
+
+#: src/termit.c:186 src/callbacks.c:348
 msgid "Save session"
 msgstr "Сохранить сессию"
 
-#: src/termit.c:230
+#: src/termit.c:213
 msgid "Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: src/termit.c:205
+#: src/termit.c:188
 msgid "Sessions"
 msgstr "Сессии"
 
 #. Edit menu
-#: src/termit.c:185 src/termit.c:225
+#: src/termit.c:168 src/termit.c:208
 msgid "Set tab name..."
 msgstr "Заголовок вкладки"
 
@@ -87,31 +103,19 @@ msgstr ""
 "Открыто несколько вкладок.\n"
 "Закрыть?"
 
-#: src/callbacks.c:260 src/callbacks.c:269
+#: src/callbacks.c:260 src/callbacks.c:271
 msgid "Tab name"
 msgstr "Заголовок вкладки"
 
-#: src/termit_preferences.c:235
+#: src/termit_preferences.c:170
 #, fuzzy
 msgid "Title"
 msgstr "Файл"
-
-#: src/termit_preferences.c:291
-msgid "Transparency"
-msgstr ""
 
 #: src/sessions.c:90
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Невозможно создать директорию '%s': %s"
-
-#: src/termit_preferences.c:307
-msgid "Visible bell"
-msgstr ""
-
-#: src/termit_preferences.c:267
-msgid "images"
-msgstr ""
 
 #~ msgid "Bookmarks"
 #~ msgstr "Закладки"

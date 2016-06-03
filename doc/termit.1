@@ -382,7 +382,6 @@ For detailed description look into Vte docs.
     hideMenubar         hide menubar
     hideTabbar          hide tabbar
     hideSingleTab       hide tabbar when only 1 tab present
-    imageFile           path to image to be set on the background
     matches             table with items of TermitMatch type
     scrollbackLines     the length of scrollback buffer
     setStatusbar        lua function to generate new statusbar message
@@ -391,10 +390,8 @@ For detailed description look into Vte docs.
     tabName             default tab name
     tabPos              tabbar position (Top, Bottom, Left, Right)
     tabs                table with items of TermitTabInfo type
-    transparency        use transparency level [0,1]
-    visibleBell         enables visible bell
     urgencyOnBell       set WM\(hyhint 'urgent' on termit window when bell
-    wordChars           word characters (double click selects word)
+    wordCharExceptions  additional word characters (double click selects word)
 .P
 .B TermitTabInfo
 \(hy table with tab settings:
