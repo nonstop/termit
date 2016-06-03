@@ -117,6 +117,8 @@ void termit_config_trace()
     TRACE("   fill_tabbar                   = %d", configs.fill_tabbar);
     TRACE("   show_border                   = %d", configs.show_border);
     TRACE("   hide_single_tab               = %d", configs.hide_single_tab);
+    TRACE("   start_maximized               = %d", configs.start_maximized);
+    TRACE("   hide_titlebar_when_maximized  = %d", configs.hide_titlebar_when_maximized);
     TRACE("   scrollback_lines              = %d", configs.scrollback_lines);
     TRACE("   cols x rows                   = %d x %d", configs.cols, configs.rows);
     TRACE("   backspace                     = %s", termit_erase_binding_to_string(configs.default_bksp));
@@ -167,6 +169,8 @@ void termit_configs_set_defaults()
     configs.mouse_bindings = g_array_new(FALSE, TRUE, sizeof(struct MouseBinding));
     configs.matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
 
+    configs.start_maximized = FALSE;
+    configs.hide_titlebar_when_maximized = FALSE;
     configs.hide_single_tab = FALSE;
     configs.show_scrollbar = TRUE;
     configs.fill_tabbar = FALSE;

@@ -40,6 +40,8 @@ struct Configs
     GArray* key_bindings;       // KeyBinding
     GArray* mouse_bindings;     // MouseBinding
     GArray* matches;            // Match
+    gboolean start_maximized;
+    gboolean hide_titlebar_when_maximized;
     gboolean hide_single_tab;
     gboolean show_scrollbar;
     gboolean hide_menubar;

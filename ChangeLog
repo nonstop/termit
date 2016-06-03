@@ -1,5 +1,6 @@
 	new options:
 		cursorBlinkMode, cursorShape
+		startMaximized, hideTitlebarWhenMaximized
 	Require libvte>0.29 and Gtk-3.
 version 2.10.1
 	Fixed error with conflicting libvte/Gtk versions

@@ -220,12 +220,14 @@ pre. Example: enable Gnome-like tab switching
 * getWindowTitle - lua function to generate new window title
 * hideMenubar - hide menubar
 * hideTabbar - hide tabbar
-* showBorder - show notebook border
 * hideSingleTab - hide tabbar when only 1 tab present
+* hideTitlebarWhenMaximized - hide window titlebar when mazimized
 * matches - table with items of TermitMatch type
 * scrollbackLines - the length of scrollback buffer
 * setStatusbar - lua function to generate new statusbar message
+* showBorder - show notebook border
 * showScrollbar - display scrollbar
+* startMaximized - maximize window on start
 * tabName - default tab name
 * tabPos - tabbar position (Top, Bottom, Left, Right)
 * tabs - table with items of TermitTabInfo type

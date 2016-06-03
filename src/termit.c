@@ -277,8 +277,15 @@ static void termit_init(const gchar* initFile, gchar** argv)
     pack_widgets();
     termit_create_popup_menu();
 
-    if (!configs.allow_changing_title)
+    if (!configs.allow_changing_title) {
         termit_set_window_title(configs.default_window_title);
+    }
+    if (configs.hide_titlebar_when_maximized) {
+        gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(termit.main_window), TRUE);
+    }
+    if (configs.start_maximized) {
+        gtk_window_maximize(GTK_WINDOW(termit.main_window));
+    }
     gtk_notebook_set_show_border(GTK_NOTEBOOK(termit.notebook), configs.show_border);
 }
 
@@ -473,7 +480,6 @@ int main(int argc, char **argv)
         gtk_window_set_title(GTK_WINDOW(termit.main_window), windowTitle);
         g_free(windowTitle);
     }
-
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
 

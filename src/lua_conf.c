@@ -260,6 +260,10 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_boolean(&(p_cfg->hide_tabbar), ls, index);
     else if (!strcmp(name, "showBorder"))
         termit_config_get_boolean(&(p_cfg->show_border), ls, index);
+    else if (!strcmp(name, "startMaximized"))
+        termit_config_get_boolean(&(p_cfg->start_maximized), ls, index);
+    else if (!strcmp(name, "hideTitlebarWhenMaximized"))
+        termit_config_get_boolean(&(p_cfg->hide_titlebar_when_maximized), ls, index);
     else if (!strcmp(name, "scrollbackLines"))
         termit_config_getuint(&(p_cfg->scrollback_lines), ls, index);
     else if (!strcmp(name, "allowChangingTitle"))

@@ -7,6 +7,8 @@ require("termit.utils")
 
 defaults = {}
 defaults.windowTitle = 'Termit'
+defaults.startMaximized = true
+defaults.hideTitlebarWhenMaximized = true
 defaults.tabName = 'Terminal'
 defaults.encoding = 'UTF-8'
 defaults.wordCharExceptions = '- .,_/'
