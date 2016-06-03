@@ -2,19 +2,19 @@ Summary: termit (terminal emulator)
 Name: termit
 Version: @TERMIT_PACKAGE_VERSION@
 Release: 1%{?dist}
-License: GPLv2
+License: GPLv3
 URL: http://wiki.github.com/nonstop/termit/
 Group: System Environment/Base
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  gtk2-devel
-BuildRequires:  vte-devel >= 0.17.4
-BuildRequires:  lua-devel >= 5.1
+BuildRequires:  gtk3-devel >= 3.18
+BuildRequires:  vte-devel >= 0.42.5
+BuildRequires:  lua-devel >= 5.2
 BuildRequires:  cmake desktop-file-utils gettext
 
 %description
-Small terminal emulator. The only dependencies are Vte and Gtk2 libs.
+Small terminal emulator. The only dependencies are Vte and Gtk3 libs.
 Termit supports tabs, bookmarks, encoding switching and sessions.
 
 %prep

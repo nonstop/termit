@@ -12,13 +12,13 @@ SRC_URI="https://github.com/nonstop/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 HOMEPAGE="http://wiki.github.com/nonstop/termit/"
 DESCRIPTION="Simple terminal emulator based on vte library with Lua scripting."
 
-RDEPEND="x11-libs/vte
-    >=x11-libs/gtk+-2.24
-    >=dev-lang/lua-5.1"
+RDEPEND=">=x11-libs/vte-0.42.5
+    >=x11-libs/gtk+-3.18
+    >=dev-lang/lua-5.2"
 DEPEND="${RDEPEND}"
 
 SLOT="0"
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 KEYWORDS="~x86 ~amd64"
 IUSE=""
 
