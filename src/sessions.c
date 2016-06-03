@@ -114,7 +114,7 @@ void termit_save_session(const gchar* sessionFile)
 
     guint i = 0;
     for (; i < pages; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
         gchar* working_dir = termit_get_pid_dir(pTab->pid);
         gchar* groupName = g_strdup_printf("tab%d", i);
         g_fprintf(fd, "%s = {}\n", groupName);

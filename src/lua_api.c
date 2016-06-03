@@ -403,7 +403,7 @@ static int termit_lua_addPopupMenu(lua_State* ls)
 static int termit_lua_setColormap(lua_State* ls)
 {
     const gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return 0);
     termit_lua_load_colormap(ls, 1, &pTab->style.colors, &pTab->style.colors_size);
     termit_tab_apply_colors(pTab);
     return 0;
@@ -483,7 +483,7 @@ static int termit_lua_setTabPos(lua_State* ls)
     }
     int tab_index =  lua_tointeger(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return 0);
     termit_tab_set_pos(pTab, tab_index - 1);
     return 0;
 }
@@ -499,7 +499,7 @@ static int termit_lua_setTabTitle(lua_State* ls)
     }
     const gchar* val = lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return 0);
     termit_tab_set_title(pTab, val);
     pTab->custom_tab_name = TRUE;
     return 0;
@@ -615,7 +615,7 @@ static int termit_lua_feed(lua_State* ls)
     }
     const gchar* val = lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return 0);
     termit_tab_feed(pTab, val);
     return 0;
 }
@@ -631,7 +631,7 @@ static int termit_lua_feedChild(lua_State* ls)
     }
     const gchar* val = lua_tostring(ls, 1);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return 0);
     termit_tab_feed_child(pTab, val);
     return 0;
 }

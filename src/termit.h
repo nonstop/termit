@@ -78,14 +78,10 @@ struct TabInfo
 };
 
 struct TermitTab* termit_get_tab_by_index(guint index);
-#define TERMIT_GET_TAB_BY_INDEX(pTab, ind) \
+#define TERMIT_GET_TAB_BY_INDEX(pTab, ind, action) \
     struct TermitTab* pTab = termit_get_tab_by_index(ind); \
     if (!pTab) \
-    {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return; }
-#define TERMIT_GET_TAB_BY_INDEX2(pTab, ind, retCode) \
-    struct TermitTab* pTab = termit_get_tab_by_index(ind); \
-    if (!pTab) \
-    {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); return retCode; }
+    {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); action; }
 
 #ifdef DEBUG
 #define ERROR(format, ...) g_fprintf(stderr, "ERROR: %s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)

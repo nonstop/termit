@@ -58,7 +58,7 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     if (!configs.allow_changing_title)
         return;
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
 
     if (pTab->custom_tab_name)
         return;
@@ -90,7 +90,7 @@ gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpoint
 static void termit_search_prepare_regex(const gchar* searchRegex)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     if (strlen(searchRegex) == 0) {
         vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), NULL, 0);
     } else {
@@ -128,7 +128,7 @@ void termit_on_toggle_scrollbar()
 {
     TRACE_MSG(__FUNCTION__);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
 
     if (pTab->scrollbar_is_shown)
         gtk_widget_hide(GTK_WIDGET(pTab->scrollbar));
@@ -140,7 +140,7 @@ void termit_on_toggle_scrollbar()
 void termit_on_child_exited()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
 
     TRACE("waiting for pid %d", pTab->pid);
 
@@ -154,7 +154,7 @@ void termit_on_child_exited()
 static int termit_cursor_under_match(const GdkEventButton* ev, char** matchedText)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, -1);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return -1);
 
     glong column = ((glong) (ev->x) / vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)));
     glong row = ((glong) (ev->y) / vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)));
@@ -188,8 +188,7 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
         return TRUE;
     } else if (event_button->button == 1) {
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-        TERMIT_GET_TAB_BY_INDEX2(pTab, page, FALSE);
-        
+        TERMIT_GET_TAB_BY_INDEX(pTab, page, return FALSE);
         char* matchedText = NULL;
         int matchTag = termit_cursor_under_match(event_button, &matchedText);
         if (!matchedText)
@@ -267,27 +266,26 @@ void termit_on_set_tab_name()
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
 
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     GtkWidget *label = gtk_label_new(_("Tab name"));
     GtkWidget *entry = gtk_entry_new();
     gtk_entry_set_text(
         GTK_ENTRY(entry), 
         gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox));
-    
+
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
-    
+
     g_signal_connect(G_OBJECT(dlg), "key-press-event", G_CALLBACK(dlg_key_press), dlg);
 
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), hbox, FALSE, FALSE, 10);
     gtk_widget_show_all(dlg);
-    
+
     if (GTK_RESPONSE_ACCEPT == gtk_dialog_run(GTK_DIALOG(dlg))) {
         termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry)));
         pTab->custom_tab_name = TRUE;
     }
-    
     gtk_widget_destroy(dlg);
 }
 
@@ -295,7 +293,7 @@ void termit_preferences_dialog(struct TermitTab *style);
 void termit_on_edit_preferences()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     termit_preferences_dialog(pTab);
 }
 void termit_on_exit()
@@ -306,7 +304,7 @@ void termit_on_exit()
 
 void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpointer user_data)
 {
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s page=%d vte=%p", __FUNCTION__, page, pTab->vte);
     // it seems that set_active eventually calls toggle callback
     /*((GtkCheckMenuItem*)termit.mi_show_scrollbar)->active = pTab->scrollbar_is_shown;*/

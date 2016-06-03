@@ -73,6 +73,16 @@ static gboolean dlg_set_audible_bell(GtkToggleButton *btn, gpointer user_data)
     termit_tab_set_audible_bell(pTab, value);
     return FALSE;
 }
+static gboolean dlg_set_apply_to_all_tabs(GtkToggleButton *btn, gpointer user_data)
+{
+    if (!user_data) {
+        ERROR("user_data is NULL");
+        return FALSE;
+    }
+    gboolean* flag = (gboolean*)user_data;
+    *flag = gtk_toggle_button_get_active(btn);
+    return FALSE;
+}
 
 struct TermitDlgHelper
 {
@@ -87,7 +97,8 @@ struct TermitDlgHelper
     GtkWidget* btn_font;
     GtkWidget* btn_foreground;
     GtkWidget* btn_background;
-    GtkWidget* audible_bell;
+    GtkWidget* btn_audible_bell;
+    GtkWidget* btn_apply_to_all_tabs;
 };
 
 static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
@@ -133,7 +144,7 @@ static void dlg_set_default_values(struct TermitDlgHelper* hlp)
     if (hlp->style.background_color) {
         gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(hlp->btn_background), hlp->style.background_color);
     }
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->audible_bell), hlp->au_bell);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hlp->btn_audible_bell), hlp->au_bell);
 }
 
 static void dlg_restore_defaults(GtkButton *button, gpointer user_data)
@@ -152,7 +163,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             GTK_WINDOW(termit.main_window),
             GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
             "_Cancel", GTK_RESPONSE_REJECT,
-            "_OK", GTK_RESPONSE_ACCEPT,
+            "_Apply", GTK_RESPONSE_ACCEPT,
             NULL);
     g_signal_connect(G_OBJECT(dialog), "key-press-event", G_CALLBACK(dlg_key_press), dialog);
     GtkWidget* grid = gtk_grid_new();
@@ -163,6 +174,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     hlp->widget = widget; \
     row++;
 
+    gboolean apply_to_all_tabs_flag = FALSE;
     GtkWidget* entry_title = gtk_entry_new();
     guint row = 0;
     { // tab title
@@ -170,49 +182,58 @@ void termit_preferences_dialog(struct TermitTab *pTab)
         TERMIT_PREFERENCE_ROW(_("Title"), entry_title);
     }
 
-    { // font selection
-        GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
-        g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
-        TERMIT_PREFERENCE_ROW(_("Font"), btn_font);
-    }
+    // font selection
+    GtkWidget* btn_font = gtk_font_button_new_with_font(pTab->style.font_name);
+    g_signal_connect(btn_font, "font-set", G_CALLBACK(dlg_set_font), pTab);
+    TERMIT_PREFERENCE_ROW(_("Font"), btn_font);
 
-    { // foreground
-        GtkWidget* btn_foreground = (pTab->style.foreground_color)
-            ? gtk_color_button_new_with_rgba(pTab->style.foreground_color)
-            : gtk_color_button_new();
-        g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
-        TERMIT_PREFERENCE_ROW(_("Foreground"), btn_foreground);
-    }
+    // foreground
+    GtkWidget* btn_foreground = (pTab->style.foreground_color)
+        ? gtk_color_button_new_with_rgba(pTab->style.foreground_color)
+        : gtk_color_button_new();
+    g_signal_connect(btn_foreground, "color-set", G_CALLBACK(dlg_set_foreground), pTab);
+    TERMIT_PREFERENCE_ROW(_("Foreground"), btn_foreground);
 
-    { // background
-        GtkWidget* btn_background = (pTab->style.background_color)
-            ? gtk_color_button_new_with_rgba(pTab->style.background_color)
-            : gtk_color_button_new();
-        g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
-        TERMIT_PREFERENCE_ROW(_("Background"), btn_background);
-    }
+    // background
+    GtkWidget* btn_background = (pTab->style.background_color)
+        ? gtk_color_button_new_with_rgba(pTab->style.background_color)
+        : gtk_color_button_new();
+    g_signal_connect(btn_background, "color-set", G_CALLBACK(dlg_set_background), pTab);
+    TERMIT_PREFERENCE_ROW(_("Background"), btn_background);
 
-    { // audible_bell
-        GtkWidget* audible_bell = gtk_check_button_new();
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(audible_bell), pTab->audible_bell);
-        g_signal_connect(audible_bell, "toggled", G_CALLBACK(dlg_set_audible_bell), pTab);
-        TERMIT_PREFERENCE_ROW(_("Audible bell"), audible_bell);
-    }
+    // audible_bell
+    GtkWidget* btn_audible_bell = gtk_check_button_new();
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(btn_audible_bell), pTab->audible_bell);
+    g_signal_connect(btn_audible_bell, "toggled", G_CALLBACK(dlg_set_audible_bell), pTab);
+    TERMIT_PREFERENCE_ROW(_("audible bell"), btn_audible_bell);
 
-    {
-        GtkWidget* btn_restore = gtk_button_new_from_icon_name("document-revert", GTK_ICON_SIZE_BUTTON);
-        g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
-        gtk_grid_attach(GTK_GRID(grid), btn_restore, 0, row, 2, 1);
-    }
+    // apply to al tabs
+    GtkWidget* btn_apply_to_all_tabs = gtk_check_button_new();
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(btn_apply_to_all_tabs), FALSE);
+    g_signal_connect(btn_apply_to_all_tabs, "toggled", G_CALLBACK(dlg_set_apply_to_all_tabs), &apply_to_all_tabs_flag);
+    TERMIT_PREFERENCE_ROW(_("Apply to all tabs"), btn_apply_to_all_tabs);
+
+    GtkWidget* btn_restore = gtk_button_new_from_icon_name("document-revert", GTK_ICON_SIZE_BUTTON);
+    g_signal_connect(G_OBJECT(btn_restore), "clicked", G_CALLBACK(dlg_restore_defaults), hlp);
+    gtk_grid_attach(GTK_GRID(grid), btn_restore, 0, row, 2, 1);
+
     gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), grid);
 
-    // TODO: apply to all tabs
-    // TODO: color palette
-    // TODO: save style - choose from saved (murphy, delek, etc.)
     gtk_widget_show_all(dialog);
     if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_ACCEPT) {
         dlg_set_tab_default_values(pTab, hlp);
     } else {
+        if (apply_to_all_tabs_flag) {
+            gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+            gint i=0;
+            for (; i<page_num; ++i) {
+                TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
+                dlg_set_font(GTK_FONT_BUTTON(btn_font), pTab);
+                dlg_set_foreground(GTK_COLOR_BUTTON(btn_foreground), pTab);
+                dlg_set_background(GTK_COLOR_BUTTON(btn_background), pTab);
+                dlg_set_audible_bell(GTK_TOGGLE_BUTTON(btn_audible_bell), pTab);
+            }
+        }
         // insane title flag
         if (pTab->title ||
                 (!pTab->title &&

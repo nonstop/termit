@@ -1,3 +1,4 @@
+	added 'apply to all tabs' in preferences dialog
 	new options:
 		cursorBlinkMode, cursorShape
 		startMaximized, hideTitlebarWhenMaximized

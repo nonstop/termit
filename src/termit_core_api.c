@@ -30,7 +30,7 @@ static void termit_hide_scrollbars()
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
     for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
         if (!pTab->scrollbar_is_shown)
             gtk_widget_hide(pTab->scrollbar);
     }
@@ -86,7 +86,7 @@ static void termit_set_colors()
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
     for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
         termit_tab_apply_colors(pTab);
     }
 }
@@ -102,7 +102,7 @@ static void termit_set_fonts()
             &padding);
     gint charWidth = 0, charHeight = 0;
     for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
         vte_terminal_set_font(VTE_TERMINAL(pTab->vte), pTab->style.font);
         const gint cw = vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte));
         const gint ch = vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte));
@@ -173,7 +173,7 @@ void termit_toggle_search()
         gtk_widget_hide(termit.b_find_prev);
         gtk_widget_hide(termit.b_find_next);
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-        TERMIT_GET_TAB_BY_INDEX(pTab, page);
+        TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
         gtk_window_set_focus(GTK_WINDOW(termit.main_window), pTab->vte);
     }
 }
@@ -208,7 +208,7 @@ void termit_reconfigure()
 
 void termit_set_statusbar_message(guint page)
 {
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s page=%d get_statusbar_callback=%d", __FUNCTION__, page, configs.get_statusbar_callback);
     if (configs.get_statusbar_callback) {
         gchar* statusbarMessage = termit_lua_getStatusbarCallback(configs.get_statusbar_callback, page);
@@ -224,7 +224,7 @@ static void termit_del_tab()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
 
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
     g_array_free(pTab->matches, TRUE);
     g_free(pTab->encoding);
@@ -254,7 +254,7 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
 void termit_search_find_next()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s tab=%p page=%d", __FUNCTION__, pTab, page);
     vte_terminal_search_find_next(VTE_TERMINAL(pTab->vte));
 }
@@ -262,7 +262,7 @@ void termit_search_find_next()
 void termit_search_find_prev()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s tab=%p page=%d", __FUNCTION__, pTab, page);
     vte_terminal_search_find_previous(VTE_TERMINAL(pTab->vte));
 }
@@ -282,7 +282,7 @@ void termit_for_each_row(int lua_callback)
 {
     TRACE("%s lua_callback=%d", __FUNCTION__, lua_callback);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     GtkAdjustment* adj = gtk_range_get_adjustment(GTK_RANGE(pTab->scrollbar));
     const glong rows_total = gtk_adjustment_get_upper(adj);
     termit_for_each_row_execute(pTab, 0, rows_total, lua_callback);
@@ -292,7 +292,7 @@ void termit_for_each_visible_row(int lua_callback)
 {
     TRACE("%s lua_callback=%d", __FUNCTION__, lua_callback);
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     GtkAdjustment* adj = gtk_range_get_adjustment(GTK_RANGE(pTab->scrollbar));
     const glong row_start = ceil(gtk_adjustment_get_value(adj));
     const glong page_size = vte_terminal_get_row_count(VTE_TERMINAL(pTab->vte));
@@ -485,7 +485,7 @@ void termit_append_tab()
 void termit_set_encoding(const gchar* encoding)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s tab=%p page=%d encoding=%s", __FUNCTION__, pTab, page, encoding);
     if (vte_terminal_set_encoding(VTE_TERMINAL(pTab->vte), encoding, NULL) != TRUE) {
         ERROR("Cannot set encoding %s", encoding);
@@ -521,7 +521,7 @@ void termit_set_default_colors()
     gint page_num = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     gint i=0;
     for (; i<page_num; ++i) {
-        TERMIT_GET_TAB_BY_INDEX(pTab, i);
+        TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
         vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     }
 }
@@ -546,7 +546,7 @@ void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name)
     if (tab_index < 0) {
         tab_index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     }
-    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
+    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index, return);
     termit_tab_set_font(pTab, font_name);
 }
 
@@ -560,7 +560,7 @@ static void termit_set_color__(gint tab_index, const GdkRGBA* p_color, void (*ca
     if (tab_index < 0) {
         tab_index = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     }
-    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index);
+    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index, return);
     callback(pTab, p_color);
 }
 
@@ -577,14 +577,14 @@ void termit_tab_set_color_background_by_index(gint tab_index, const GdkRGBA* p_c
 void termit_paste()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     vte_terminal_paste_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
 void termit_copy()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
 }
 
@@ -599,7 +599,7 @@ static void clipboard_received_text(GtkClipboard *clipboard, const gchar *text, 
 gchar* termit_get_selection()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX2(pTab, page, NULL);
+    TERMIT_GET_TAB_BY_INDEX(pTab, page, return NULL);
     if (vte_terminal_get_has_selection(VTE_TERMINAL(pTab->vte)) == FALSE) {
         return NULL;
     }

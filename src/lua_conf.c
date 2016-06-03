@@ -411,7 +411,7 @@ static void load_init(const gchar* initFile)
 
 int termit_lua_fill_tab(int tab_index, lua_State* ls)
 {
-    TERMIT_GET_TAB_BY_INDEX2(pTab, tab_index, 0);
+    TERMIT_GET_TAB_BY_INDEX(pTab, tab_index, return 0);
     lua_newtable(ls);
     TERMIT_TAB_ADD_STRING("title", pTab->title);
     TERMIT_TAB_ADD_STRING("command", pTab->argv[0]);
