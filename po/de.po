@@ -16,87 +16,87 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/termit_preferences.c:199
-msgid "Audible bell"
-msgstr "Glocke"
+#: src/termit_preferences.c:218
+msgid "Apply to all tabs"
+msgstr ""
 
-#: src/termit_preferences.c:192
+#: src/termit_preferences.c:206
 msgid "Background"
 msgstr "Hintergrund"
 
-#: src/termit_core_api.c:423
+#: src/termit_core_api.c:433
 msgid "Cannot create a new tab"
 msgstr "Konnte keinen neuen Tab erzeugen"
 
-#: src/termit_core_api.c:374
+#: src/termit_core_api.c:384
 msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Konnte Befehl nicht untersuchen. Erstelle einen Tab mit der Kommandozeile"
 
-#: src/termit.c:170 src/termit.c:210
+#: src/termit.c:174 src/termit.c:214
 msgid "Copy"
 msgstr ""
 
-#: src/termit.c:153 src/termit.c:207
+#: src/termit.c:157 src/termit.c:211
 msgid "Delete"
 msgstr ""
 
-#: src/termit.c:173
+#: src/termit.c:177
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: src/termit.c:156
+#: src/termit.c:160
 msgid "File"
 msgstr "Datei"
 
-#: src/termit_preferences.c:176
+#: src/termit_preferences.c:192
 msgid "Font"
 msgstr "Schriftart"
 
-#: src/termit_preferences.c:184
+#: src/termit_preferences.c:199
 msgid "Foreground"
 msgstr "Vordergrund"
 
 #. File menu
-#: src/termit.c:152 src/termit.c:206
+#: src/termit.c:156 src/termit.c:210
 msgid "Open"
 msgstr ""
 
 #. Sessions menu
-#: src/termit.c:185 src/callbacks.c:378
+#: src/termit.c:189 src/callbacks.c:388
 msgid "Open session"
 msgstr "Sitzung öffnen"
 
-#: src/termit.c:171 src/termit.c:211
+#: src/termit.c:175 src/termit.c:215
 msgid "Paste"
 msgstr ""
 
-#: src/termit.c:169 src/termit.c:209 src/termit_preferences.c:151
+#: src/termit.c:173 src/termit.c:213 src/termit_preferences.c:166
 msgid "Preferences"
 msgstr ""
 
-#: src/termit.c:154 src/termit.c:212
+#: src/termit.c:158 src/termit.c:216
 msgid "Quit"
 msgstr ""
 
-#: src/termit.c:186 src/callbacks.c:348
+#: src/termit.c:190 src/callbacks.c:358
 msgid "Save session"
 msgstr "Sitzung speichern"
 
-#: src/termit.c:213
+#: src/termit.c:217
 msgid "Scrollbar"
 msgstr "Bildlaufleiste"
 
-#: src/termit.c:188
+#: src/termit.c:192
 msgid "Sessions"
 msgstr "Sitzungen"
 
 #. Edit menu
-#: src/termit.c:168 src/termit.c:208
+#: src/termit.c:172 src/termit.c:212
 msgid "Set tab name..."
 msgstr "Tab-Namen setzen..."
 
-#: src/callbacks.c:37
+#: src/callbacks.c:41
 msgid ""
 "Several tabs are opened.\n"
 "Close anyway?"
@@ -104,11 +104,11 @@ msgstr ""
 "Mehrere Tabs sind geöffnet.\n"
 "Trotzdem schließen?"
 
-#: src/callbacks.c:260 src/callbacks.c:271
+#: src/callbacks.c:266 src/callbacks.c:277
 msgid "Tab name"
 msgstr "Tab-Name"
 
-#: src/termit_preferences.c:170
+#: src/termit_preferences.c:186
 msgid "Title"
 msgstr "Titel"
 
@@ -116,6 +116,11 @@ msgstr "Titel"
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "Konnte Verzeichnis '%s' nicht erstellen: %s"
+
+#: src/termit_preferences.c:212
+#, fuzzy
+msgid "audible bell"
+msgstr "Glocke"
 
 #~ msgid "Background image"
 #~ msgstr "Hintergrundbild"

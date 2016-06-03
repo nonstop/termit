@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -125,8 +128,9 @@ static void termit_dlg_helper_free(struct TermitDlgHelper* hlp)
 
 static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgHelper* hlp)
 {
-    if (hlp->tab_title)
+    if (hlp->tab_title) {
         termit_tab_set_title(pTab, hlp->tab_title);
+    }
     vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
     termit_tab_set_font(pTab, hlp->style.font_name);
     termit_tab_set_color_foreground(pTab, hlp->style.foreground_color);

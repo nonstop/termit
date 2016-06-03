@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -89,10 +92,11 @@ static gint get_modifier_state(const gchar* token)
     size_t modifier_len;
     size_t step;
 
-    if (!token)
+    if (!token) {
         return GDK_NOTHING;
+    }
     guint i = 0;
-    guint state = 0;
+    gint state = 0;
     while (strlen(token) > 0) {
         step = 0;
         for (; i<TermitModsSz; ++i) {
@@ -103,14 +107,12 @@ static gint get_modifier_state(const gchar* token)
                 break;
             }
         }
-        if (step == 0)
+        if (step == 0) {
             return GDK_NOTHING;
+        }
         token += step;
     }
-    if (state == 0)
-        return GDK_NOTHING;
-    else
-        return state;
+    return (state == 0) ? GDK_NOTHING : state;
 }
 
 static gint get_kb_index(const gchar* name)
@@ -118,8 +120,9 @@ static gint get_kb_index(const gchar* name)
     guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (!strcmp(kb->name, name))
+        if (!strcmp(kb->name, name)) {
             return i;
+        }
     }
     return -1;
 }
@@ -136,12 +139,14 @@ static guint TermitMouseEventsSz = sizeof(termit_mouse_events)/sizeof(struct Ter
 
 gint get_mouse_event_type(const gchar* event_name)
 {
-    if (!event_name)
+    if (!event_name) {
         return GDK_NOTHING;
+    }
     guint i = 0;
     for (; i<TermitMouseEventsSz; ++i) {
-        if (!strcmp(event_name, termit_mouse_events[i].name))
+        if (!strcmp(event_name, termit_mouse_events[i].name)) {
             return termit_mouse_events[i].type;
+        }
     }
     return GDK_NOTHING;
 }
@@ -151,8 +156,9 @@ static gint get_mb_index(GdkEventType type)
     guint i = 0;
     for (; i<configs.mouse_bindings->len; ++i) {
         struct MouseBinding* mb = &g_array_index(configs.mouse_bindings, struct MouseBinding, i);
-        if (type == mb->type)
+        if (type == mb->type) {
             return i;
+        }
     }
     return -1;
 }
@@ -287,11 +293,12 @@ static gboolean termit_key_press_use_keysym(GdkEventKey *event)
     guint i = 0;
     for (; i<configs.key_bindings->len; ++i) {
         struct KeyBinding* kb = &g_array_index(configs.key_bindings, struct KeyBinding, i);
-        if (kb && (event->state & kb->kws.state) == kb->kws.state)
+        if (kb && (event->state & kb->kws.state) == kb->kws.state) {
             if (gdk_keyval_to_lower(event->keyval) == kb->kws.keyval) {
                 termit_lua_dofunction(kb->lua_callback);
                 return TRUE;
             }
+        }
     }
     return FALSE;
 }
@@ -316,9 +323,9 @@ gboolean termit_mouse_event(GdkEventButton* event)
     guint i = 0;
     for (; i<configs.mouse_bindings->len; ++i) {
         struct MouseBinding* kb = &g_array_index(configs.mouse_bindings, struct MouseBinding, i);
-        if (kb && (event->type & kb->type))
+        if (kb && (event->type & kb->type)) {
             termit_lua_dofunction(kb->lua_callback);
+        }
     }
     return FALSE;
 }
-

@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -78,8 +81,9 @@ static void pack_widgets()
     gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
-    if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
+    if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook))) {
         termit_append_tab();
+    }
     g_signal_connect(G_OBJECT(termit.notebook), "switch-page", G_CALLBACK(termit_on_switch_page), NULL);
     g_signal_connect(G_OBJECT(termit.main_window), "button-press-event", G_CALLBACK(termit_on_double_click), NULL);
 }
@@ -394,10 +398,10 @@ int main(int argc, char **argv)
         int option_index = 0;
 
         int flag = getopt_long(argc, argv, "-hvi:n:c:r:T:", long_options, &option_index);
-
         /* Detect the end of the options. */
-        if (flag == -1)
+        if (flag == -1) {
             break;
+        }
 
         switch (flag) {
         case TERMIT_GETOPT_HELP:
@@ -452,14 +456,6 @@ int main(int argc, char **argv)
     g_strfreev(cmdArgv);
     g_free(initFile);
 
-#if 0
-    /**
-     * dirty hack from gnome-terminal ;-)
-     * F10 is used in many console apps, so we change global Gtk setting for termit
-     * */
-    gtk_settings_set_string_property(gtk_settings_get_default(), "gtk-menu-bar-accel",
-        "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10", "termit");
-#endif // FIXME
     g_signal_connect(G_OBJECT (termit.main_window), "delete_event", G_CALLBACK (termit_on_delete_event), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
@@ -491,4 +487,3 @@ int main(int argc, char **argv)
     termit_lua_close();
     return 0;
 }
-

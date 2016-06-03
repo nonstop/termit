@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <string.h>
 #include <X11/Xlib.h> // XParseGeometry
@@ -54,28 +57,32 @@ static void trace_menus(GArray* menus)
 void termit_config_get_string(gchar** opt, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
-        if (*opt)
+        if (*opt) {
             g_free(*opt);
+        }
         *opt = g_strdup(lua_tostring(ls, index));
     }
 }
 
 void termit_config_get_double(double* opt, lua_State* ls, int index)
 {
-    if (!lua_isnil(ls, index) && lua_isnumber(ls, index))
+    if (!lua_isnil(ls, index) && lua_isnumber(ls, index)) {
         *opt = lua_tonumber(ls, index);
+    }
 }
 
 void termit_config_getuint(guint* opt, lua_State* ls, int index)
 {
-    if (!lua_isnil(ls, index) && lua_isnumber(ls, index))
+    if (!lua_isnil(ls, index) && lua_isnumber(ls, index)) {
         *opt = lua_tointeger(ls, index);
+    }
 }
 
 void termit_config_get_boolean(gboolean* opt, lua_State* ls, int index)
 {
-    if (!lua_isnil(ls, index) && lua_isboolean(ls, index))
+    if (!lua_isnil(ls, index) && lua_isboolean(ls, index)) {
         *opt = lua_toboolean(ls, index);
+    }
 }
 
 void termit_config_get_function(int* opt, lua_State* ls, int index)
@@ -188,11 +195,7 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkRGBA** colors, glong*
         ERROR("invalid colormap type");
         return;
     }
-#if LUA_VERSION_NUM > 501
     const int size = lua_rawlen(ls, index);
-#else
-    const int size = lua_objlen(ls, index);
-#endif // LUA_VERSION_NUM
     if ((size != 8) && (size != 16) && (size != 24)) {
         ERROR("bad colormap length: %d", size);
         return;
@@ -234,61 +237,61 @@ static void termit_config_get_position(GtkPositionType* pos, lua_State* ls, int 
 void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void* data)
 {
     struct Configs* p_cfg = (struct Configs*)data;
-    if (!strcmp(name, "tabName"))
+    if (!strcmp(name, "tabName")) {
         termit_config_get_string(&(p_cfg->default_tab_name), ls, index);
-    else if (!strcmp(name, "windowTitle"))
+    } else if (!strcmp(name, "windowTitle")) {
         termit_config_get_string(&(p_cfg->default_window_title), ls, index);
-    else if (!strcmp(name, "encoding"))
+    } else if (!strcmp(name, "encoding")) {
         termit_config_get_string(&(p_cfg->default_encoding), ls, index);
-    else if (!strcmp(name, "wordCharExceptions"))
+    } else if (!strcmp(name, "wordCharExceptions")) {
         termit_config_get_string(&(p_cfg->default_word_char_exceptions), ls, index);
-    else if (!strcmp(name, "font"))
+    } else if (!strcmp(name, "font")) {
         termit_config_get_string(&(p_cfg->style.font_name), ls, index);
-    else if (!strcmp(name, "foregroundColor")) 
+    } else if (!strcmp(name, "foregroundColor")) {
         termit_config_get_color(&p_cfg->style.foreground_color, ls, index);
-    else if (!strcmp(name, "backgroundColor")) 
+    } else if (!strcmp(name, "backgroundColor")) {
         termit_config_get_color(&p_cfg->style.background_color, ls, index);
-    else if (!strcmp(name, "showScrollbar"))
+    } else if (!strcmp(name, "showScrollbar")) {
         termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
-    else if (!strcmp(name, "fillTabbar"))
+    } else if (!strcmp(name, "fillTabbar")) {
         termit_config_get_boolean(&(p_cfg->fill_tabbar), ls, index);
-    else if (!strcmp(name, "hideSingleTab"))
+    } else if (!strcmp(name, "hideSingleTab")) {
         termit_config_get_boolean(&(p_cfg->hide_single_tab), ls, index);
-    else if (!strcmp(name, "hideMenubar"))
+    } else if (!strcmp(name, "hideMenubar")) {
         termit_config_get_boolean(&(p_cfg->hide_menubar), ls, index);
-    else if (!strcmp(name, "hideTabbar"))
+    } else if (!strcmp(name, "hideTabbar")) {
         termit_config_get_boolean(&(p_cfg->hide_tabbar), ls, index);
-    else if (!strcmp(name, "showBorder"))
+    } else if (!strcmp(name, "showBorder")) {
         termit_config_get_boolean(&(p_cfg->show_border), ls, index);
-    else if (!strcmp(name, "startMaximized"))
+    } else if (!strcmp(name, "startMaximized")) {
         termit_config_get_boolean(&(p_cfg->start_maximized), ls, index);
-    else if (!strcmp(name, "hideTitlebarWhenMaximized"))
+    } else if (!strcmp(name, "hideTitlebarWhenMaximized")) {
         termit_config_get_boolean(&(p_cfg->hide_titlebar_when_maximized), ls, index);
-    else if (!strcmp(name, "scrollbackLines"))
+    } else if (!strcmp(name, "scrollbackLines")) {
         termit_config_getuint(&(p_cfg->scrollback_lines), ls, index);
-    else if (!strcmp(name, "allowChangingTitle"))
+    } else if (!strcmp(name, "allowChangingTitle")) {
         termit_config_get_boolean(&(p_cfg->allow_changing_title), ls, index);
-    else if (!strcmp(name, "audibleBell"))
+    } else if (!strcmp(name, "audibleBell")) {
         termit_config_get_boolean(&(p_cfg->audible_bell), ls, index);
-    else if (!strcmp(name, "urgencyOnBell"))
+    } else if (!strcmp(name, "urgencyOnBell")) {
         termit_config_get_boolean(&(p_cfg->urgency_on_bell), ls, index);
-    else if (!strcmp(name, "getWindowTitle"))
+    } else if (!strcmp(name, "getWindowTitle")) {
         termit_config_get_function(&(p_cfg->get_window_title_callback), ls, index);
-    else if (!strcmp(name, "tabPos"))
+    } else if (!strcmp(name, "tabPos")) {
         termit_config_get_position(&(p_cfg->tab_pos), ls, index);
-    else if (!strcmp(name, "getTabTitle"))
+    } else if (!strcmp(name, "getTabTitle")) {
         termit_config_get_function(&(p_cfg->get_tab_title_callback), ls, index);
-    else if (!strcmp(name, "setStatusbar"))
+    } else if (!strcmp(name, "setStatusbar")) {
         termit_config_get_function(&(p_cfg->get_statusbar_callback), ls, index);
-    else if (!strcmp(name, "backspaceBinding"))
+    } else if (!strcmp(name, "backspaceBinding")) {
         termit_config_get_erase_binding(&(p_cfg->default_bksp), ls, index);
-    else if (!strcmp(name, "deleteBinding"))
+    } else if (!strcmp(name, "deleteBinding")) {
         termit_config_get_erase_binding(&(p_cfg->default_delete), ls, index);
-    else if (!strcmp(name, "cursorBlinkMode"))
+    } else if (!strcmp(name, "cursorBlinkMode")) {
         termit_config_get_cursor_blink_mode(&(p_cfg->default_blink), ls, index);
-    else if (!strcmp(name, "cursorShape"))
+    } else if (!strcmp(name, "cursorShape")) {
         termit_config_get_cursor_shape(&(p_cfg->default_shape), ls, index);
-    else if (!strcmp(name, "colormap")) {
+    } else if (!strcmp(name, "colormap")) {
         termit_lua_load_colormap(ls, index, &configs.style.colors, &configs.style.colors_size);
     } else if (!strcmp(name, "matches")) {
         if (termit_lua_load_table(ls, matchesLoader, index, configs.matches)
@@ -349,10 +352,11 @@ static gchar** termit_system_path()
 static gchar* termit_user_path()
 {
     const gchar *configHome = g_getenv("XDG_CONFIG_HOME");
-    if (configHome)
+    if (configHome) {
         return g_strdup(configHome);
-    else
+    } else {
         return g_strdup_printf("%s/.config", g_getenv("HOME"));
+    }
 }
 
 static void load_init(const gchar* initFile)
@@ -476,11 +480,11 @@ void termit_lua_init(const gchar* initFile)
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    if (!termit_init_file)
+    if (!termit_init_file) {
         termit_init_file = g_strdup(initFile);
+    }
     termit_lua_init_tabs();
     termit_lua_init_api();
     termit_keys_set_defaults();
     termit_lua_load_config();
 }
-

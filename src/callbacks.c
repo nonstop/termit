@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <sys/wait.h>
 #include <stdint.h>
@@ -27,20 +30,18 @@
 
 static gboolean confirm_exit()
 {
-    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) <= 1)
+    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) <= 1) {
         return FALSE;
+    }
 
     GtkWidget *dlg = gtk_message_dialog_new(
-        GTK_WINDOW(termit.main_window), 
-        GTK_DIALOG_MODAL, 
+        GTK_WINDOW(termit.main_window),
+        GTK_DIALOG_MODAL,
         GTK_MESSAGE_QUESTION,
         GTK_BUTTONS_YES_NO, _("Several tabs are opened.\nClose anyway?"));
     gint response = gtk_dialog_run(GTK_DIALOG(dlg));
     gtk_widget_destroy(dlg);
-    if (response == GTK_RESPONSE_YES)
-        return FALSE;
-    else
-        return TRUE;
+    return (response == GTK_RESPONSE_YES) ? FALSE : TRUE;
 }
 
 gboolean termit_on_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
@@ -55,13 +56,15 @@ void termit_on_destroy(GtkWidget *widget, gpointer data)
 
 void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
 {
-    if (!configs.allow_changing_title)
+    if (!configs.allow_changing_title) {
         return;
+    }
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
 
-    if (pTab->custom_tab_name)
+    if (pTab->custom_tab_name) {
         return;
+    }
 
     termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
@@ -130,10 +133,11 @@ void termit_on_toggle_scrollbar()
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
 
-    if (pTab->scrollbar_is_shown)
+    if (pTab->scrollbar_is_shown) {
         gtk_widget_hide(GTK_WIDGET(pTab->scrollbar));
-    else
+    } else {
         gtk_widget_show(GTK_WIDGET(pTab->scrollbar));
+    }
     pTab->scrollbar_is_shown = !pTab->scrollbar_is_shown;
 }
 
@@ -146,7 +150,7 @@ void termit_on_child_exited()
 
     int status = 0;
     waitpid(pTab->pid, &status, WNOHANG);
-    /* TODO: check wait return */    
+    /* TODO: check wait return */
 
     termit_close_tab();
 }
@@ -169,21 +173,23 @@ static struct Match* get_match_by_tag(GArray* matches, int tag)
     guint i = 0;
     for (; i<matches->len; ++i) {
         struct Match* match = &g_array_index(matches, struct Match, i);
-        if (match->tag == tag)
+        if (match->tag == tag) {
             return match;
+        }
     }
     return NULL;
 }
 
 gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
 {
-    if (event->type != GDK_BUTTON_PRESS)
+    if (event->type != GDK_BUTTON_PRESS) {
         return FALSE;
+    }
 
     GdkEventButton *event_button = (GdkEventButton *) event;
     if (event_button->button == 3) {
         GtkMenu *menu = GTK_MENU(termit.menu);
-        gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
+        gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
                           event_button->button, event_button->time);
         return TRUE;
     } else if (event_button->button == 1) {
@@ -191,8 +197,9 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
         TERMIT_GET_TAB_BY_INDEX(pTab, page, return FALSE);
         char* matchedText = NULL;
         int matchTag = termit_cursor_under_match(event_button, &matchedText);
-        if (!matchedText)
+        if (!matchedText) {
             return FALSE;
+        }
         struct Match* match = get_match_by_tag(pTab->matches, matchTag);
         if (!match) {
             g_free(matchedText);
@@ -256,9 +263,9 @@ gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user
 void termit_on_set_tab_name()
 {
     GtkWidget *dlg = gtk_dialog_new_with_buttons(
-        _("Tab name"), 
-        GTK_WINDOW(termit.main_window), 
-        GTK_DIALOG_MODAL, 
+        _("Tab name"),
+        GTK_WINDOW(termit.main_window),
+        GTK_DIALOG_MODAL,
         "_Cancel", GTK_RESPONSE_REJECT,
         "_OK", GTK_RESPONSE_ACCEPT,
         NULL);
@@ -270,7 +277,7 @@ void termit_on_set_tab_name()
     GtkWidget *label = gtk_label_new(_("Tab name"));
     GtkWidget *entry = gtk_entry_new();
     gtk_entry_set_text(
-        GTK_ENTRY(entry), 
+        GTK_ENTRY(entry),
         gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(termit.notebook), pTab->hbox));
 
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -290,16 +297,19 @@ void termit_on_set_tab_name()
 }
 
 void termit_preferences_dialog(struct TermitTab *style);
+
 void termit_on_edit_preferences()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     termit_preferences_dialog(pTab);
 }
+
 void termit_on_exit()
 {
-    if (confirm_exit() == FALSE)
+    if (confirm_exit() == FALSE) {
         termit_quit();
+    }
 }
 
 void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpointer user_data)
@@ -316,8 +326,9 @@ void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpoi
     termit_set_show_scrollbar_signal(termit.mi_show_scrollbar, pHandlerId);
 
     termit_set_statusbar_message(page);
-    if (configs.allow_changing_title)
+    if (configs.allow_changing_title) {
         termit_set_window_title(pTab->title);
+    }
 }
 
 gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
@@ -331,10 +342,11 @@ static gchar* termit_get_xdg_data_path()
 {
     gchar* fullPath = NULL;
     const gchar *dataHome = g_getenv("XDG_DATA_HOME");
-    if (dataHome)
+    if (dataHome) {
         fullPath = g_strdup_printf("%s/termit", dataHome);
-    else
+    } else {
         fullPath = g_strdup_printf("%s/.local/share/termit", g_getenv("HOME"));
+    }
     TRACE("XDG_DATA_PATH=%s", fullPath);
     return fullPath;
 }
@@ -373,17 +385,18 @@ void termit_on_load_session()
     gchar* fullPath = termit_get_xdg_data_path();
 
     GtkWidget* dlg = gtk_file_chooser_dialog_new(
-        _("Open session"), 
-        GTK_WINDOW(termit.main_window), 
-        GTK_FILE_CHOOSER_ACTION_OPEN, 
+        _("Open session"),
+        GTK_WINDOW(termit.main_window),
+        GTK_FILE_CHOOSER_ACTION_OPEN,
         "_Cancel", GTK_RESPONSE_REJECT,
         "_OK", GTK_RESPONSE_ACCEPT,
         NULL);
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dlg), TRUE);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dlg), fullPath);
 
-    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT)
+    if (gtk_dialog_run(GTK_DIALOG(dlg)) != GTK_RESPONSE_ACCEPT) {
         goto free_dlg;
+    }
 
     gchar* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg));
     termit_load_session(filename);
@@ -406,4 +419,3 @@ gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer use
 {
     return termit_key_event(event);
 }
-

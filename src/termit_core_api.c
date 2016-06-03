@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <string.h>
 #include <stdlib.h>
@@ -31,8 +34,9 @@ static void termit_hide_scrollbars()
     gint i=0;
     for (; i<page_num; ++i) {
         TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
-        if (!pTab->scrollbar_is_shown)
+        if (!pTab->scrollbar_is_shown) {
             gtk_widget_hide(pTab->scrollbar);
+        }
     }
 }
 
@@ -346,8 +350,9 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     vte_terminal_set_size(vte, configs.cols, configs.rows);
     vte_terminal_set_scrollback_lines(vte, configs.scrollback_lines);
-    if (configs.default_word_char_exceptions)
+    if (configs.default_word_char_exceptions) {
         vte_terminal_set_word_char_exceptions(vte, configs.default_word_char_exceptions);
+    }
     vte_terminal_set_mouse_autohide(vte, TRUE);
     vte_terminal_set_backspace_binding(vte, pTab->bksp_binding);
     vte_terminal_set_delete_binding(vte, pTab->delete_binding);
@@ -509,8 +514,9 @@ void termit_tab_set_title(struct TermitTab* pTab, const gchar* title)
         g_free(tmp_title);
         tmp_title = lua_title;
     }
-    if (pTab->title)
+    if (pTab->title) {
         g_free(pTab->title);
+    }
     pTab->title = tmp_title;
     gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
     termit_set_window_title(title);
@@ -606,27 +612,27 @@ gchar* termit_get_selection()
     GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_PRIMARY);
     gchar* text = NULL;
     gtk_clipboard_request_text(clip, clipboard_received_text, &text);
-    if (!text)
+    if (!text) {
         return NULL;
+    }
     return text;
 }
 
 void termit_close_tab()
 {
     termit_del_tab();
-    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0)
+    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0) {
         termit_quit();
+    }
 }
 
 void termit_activate_tab(gint tab_index)
 {
-    if (tab_index < 0)
-    {
+    if (tab_index < 0) {
         TRACE("tab_index(%d) < 0: skipping", tab_index);
         return;
     }
-    if (tab_index >= gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)))
-    {
+    if (tab_index >= gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook))) {
         TRACE("tab_index(%d) > n_pages: skipping", tab_index);
         return;
     }
@@ -650,9 +656,9 @@ void termit_next_tab()
 
 void termit_quit()
 {
-    while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0)
+    while (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) > 0) {
         termit_del_tab();
-    
+    }
     gtk_main_quit();
 }
 
@@ -668,8 +674,9 @@ void termit_set_kb_policy(enum TermitKbPolicy kbp)
 
 void termit_set_window_title(const gchar* title)
 {
-    if (!title)
+    if (!title) {
         return;
+    }
     if (!configs.get_window_title_callback) {
         gchar* window_title = g_strdup_printf("%s: %s", configs.default_window_title, title);
         gtk_window_set_title(GTK_WINDOW(termit.main_window), window_title);
@@ -695,4 +702,3 @@ void termit_set_show_scrollbar_signal(GtkWidget* menuItem, gpointer pHandlerId)
     memcpy(pHandlerId, &handlerId, sizeof(handlerId));
     g_object_set_data(G_OBJECT(menuItem), "handlerId", pHandlerId);
 }
-

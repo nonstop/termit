@@ -1,15 +1,18 @@
-/*  Copyright (C) 2007-2010, Evgeny Ratnikov
-
-    This file is part of termit.
-    termit is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 
-    as published by the Free Software Foundation.
-    termit is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    You should have received a copy of the GNU General Public License
-    along with termit. If not, see <http://www.gnu.org/licenses/>.*/
+/* Copyright © 2007-2016 Evgeny Ratnikov
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <string.h>
 #include <lua.h>
@@ -59,9 +62,9 @@ void termit_lua_execute(const gchar* cmd)
 
 void termit_lua_report_error(const char* file, int line, int status)
 {
-    if (status == 0)
+    if (status == 0) {
         return;
-    TRACE_MSG("lua error:");
+    }
     g_fprintf(stderr, "%s:%d %s\n", file, line, lua_tostring(L, -1));
     lua_pop(L, 1);
 }
@@ -152,8 +155,9 @@ gchar* termit_lua_getStatusbarCallback(int f, guint page)
             lua_pop(ls, 1);
             return NULL;
         }
-        if (lua_isstring(ls, -1))
+        if (lua_isstring(ls, -1)) {
             return g_strdup(lua_tostring(ls, -1));
+        }
     }
     return NULL;
 }
@@ -169,8 +173,9 @@ gchar* termit_lua_getTitleCallback(int f, const gchar* title)
             lua_pop(ls, 1);
             return NULL;
         }
-        if (lua_isstring(ls, -1))
+        if (lua_isstring(ls, -1)) {
             return g_strdup(lua_tostring(ls, -1));
+        }
     }
     return NULL;
 }
@@ -318,11 +323,11 @@ static int termit_lua_setKbPolicy(lua_State* ls)
     }
     const gchar* val = lua_tostring(ls, 1);
     TRACE("setKbPolicy: %s", val);
-    if (!strcmp(val, "keycode"))
+    if (!strcmp(val, "keycode")) {
         termit_set_kb_policy(TermitKbUseKeycode);
-    else if (!strcmp(val, "keysym"))
+    } else if (!strcmp(val, "keysym")) {
         termit_set_kb_policy(TermitKbUseKeysym);
-    else {
+    } else {
         ERROR("unknown kbPolicy: %s", val);
     }
     return 0;
@@ -530,8 +535,9 @@ static int termit_lua_setTabColor__(lua_State* ls, void (*callback)(gint, const 
     }
     const gchar* val = lua_tostring(ls, 1);
     GdkRGBA color;
-    if (gdk_rgba_parse(&color, val) == TRUE)
+    if (gdk_rgba_parse(&color, val) == TRUE) {
         callback(-1, &color);
+    }
     return 0;
 }
 
@@ -657,8 +663,9 @@ static int termit_lua_findDlg(lua_State* ls)
 static int termit_lua_selection(lua_State* ls)
 {
     gchar* buff = termit_get_selection();
-    if (!buff)
+    if (!buff) {
         return 0;
+    }
     lua_pushstring(ls, buff);
     g_free(buff);
     return 1;
@@ -749,4 +756,3 @@ void termit_lua_init_api()
         TRACE("%s [%d]", functions[i].lua_func_name, functions[i].lua_func);
     }
 }
-
