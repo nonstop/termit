@@ -1,9 +1,13 @@
+version 3.0
 	added AppData file
 	license changed to GPLv3.0+
 	added 'apply to all tabs' in preferences dialog
 	new options:
 		cursorBlinkMode, cursorShape
 		startMaximized, hideTitlebarWhenMaximized
+	wordChars replaced with wordCharExceptions
+	removed options:
+		imageFile, transparency, visibleBell
 	Require libvte>0.29 and Gtk-3.
 version 2.10.1
 	Fixed error with conflicting libvte/Gtk versions
