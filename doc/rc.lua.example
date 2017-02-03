@@ -100,7 +100,7 @@ table.insert(userMenu, mi)
 
 function changeTabFontSize(delta)
     tab = tabs[currentTabIndex()]
-    setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(tab.fontSize + delta))
+    setTabFont(string.sub(tab.font, 1, string.find(tab.font, '[%d.]+$') - 1)..(tostring(tab.fontSize + delta):gsub(',', '.')))
 end
 
 table.insert(userMenu, {name='Increase font size', action=function () changeTabFontSize(1) end})
