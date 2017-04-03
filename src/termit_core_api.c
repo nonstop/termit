@@ -667,6 +667,11 @@ int termit_get_current_tab_index()
     return gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
 }
 
+int termit_get_last_tab_index()
+{
+    return gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+}
+
 void termit_set_kb_policy(enum TermitKbPolicy kbp)
 {
     configs.kb_policy = kbp;

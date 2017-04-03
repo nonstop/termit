@@ -61,6 +61,7 @@ void termit_tab_set_audible_bell(struct TermitTab* pTab, gboolean audible_bell);
 void termit_tab_set_pos(struct TermitTab* pTab, int newPos);
 
 int termit_get_current_tab_index();
+int termit_get_last_tab_index();
 gchar* termit_get_pid_dir(pid_t pid);
 
 /**
