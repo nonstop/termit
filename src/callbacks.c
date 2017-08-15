@@ -155,16 +155,12 @@ void termit_on_child_exited()
     termit_close_tab();
 }
 
-static int termit_cursor_under_match(const GdkEventButton* ev, char** matchedText)
+static int termit_cursor_under_match(const GdkEvent* ev, char** matchedText)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return -1);
-
-    glong column = ((glong) (ev->x) / vte_terminal_get_char_width(VTE_TERMINAL(pTab->vte)));
-    glong row = ((glong) (ev->y) / vte_terminal_get_char_height(VTE_TERMINAL(pTab->vte)));
     int tag = -1;
-    *matchedText = vte_terminal_match_check(VTE_TERMINAL(pTab->vte), column, row, &tag);
-    TRACE("column=%ld row=%ld matchedText=[%s] tag=%d", column, row, *matchedText, tag);
+    *matchedText = vte_terminal_match_check_event(VTE_TERMINAL(pTab->vte), ev, &tag);
     return tag;
 }
 
@@ -196,7 +192,7 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
         TERMIT_GET_TAB_BY_INDEX(pTab, page, return FALSE);
         char* matchedText = NULL;
-        int matchTag = termit_cursor_under_match(event_button, &matchedText);
+        int matchTag = termit_cursor_under_match(event, &matchedText);
         if (!matchedText) {
             return FALSE;
         }
