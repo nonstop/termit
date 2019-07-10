@@ -263,6 +263,7 @@ static void termit_init(const gchar* initFile, gchar** argv)
     termit.tab_max_number = 1;
 
     termit.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_icon_name("utilities-terminal");
     termit.statusbar = create_statusbar();
     create_search(&termit);
     termit.notebook = gtk_notebook_new();
