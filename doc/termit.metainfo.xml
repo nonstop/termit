@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2007-2016 Evgeny Ratnikov (ratnikov dot ev at gmail dot com) -->
+<component xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:its="http://www.w3.org/2005/11/its" xmlns="https://specifications.freedesktop.org/metainfo/1.0">
+  <id type="desktop">termit.desktop</id>
+  <metadata_license>GPL-3.0-or-later</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Termit</name>
+  <summary>Terminal emulator</summary>
+  <description>
+    <p>
+      Small terminal emulator configurable via Lua.
+      Other dependencies are Vte and Gtk3 libs.
+      Termit supports multiple tabs, encoding switching and sessions.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/nonstop/termit/master/doc/termit.png</image>
+      <caption>A terminal window showing a shell session and the termit context menu.</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/nonstop/termit/wiki</url>
+  <project_group>GNOME</project_group>
+  <url type="bugtracker">https://github.com/nonstop/termit/issues</url>
+</component>
