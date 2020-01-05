@@ -51,7 +51,6 @@ void termit_tab_feed(struct TermitTab* pTab, const gchar* data);
 void termit_tab_feed_child(struct TermitTab* pTab, const gchar* data);
 void termit_tab_set_font(struct TermitTab* pTab, const gchar* font_name);
 void termit_tab_set_font_by_index(gint tab_index, const gchar* font_name);
-void termit_tab_set_style(gint tab_index, const struct TermitStyle*);
 void termit_tab_apply_colors(struct TermitTab* pTab);
 void termit_tab_set_color_foreground(struct TermitTab* pTab, const GdkRGBA* p_color);
 void termit_tab_set_color_background(struct TermitTab* pTab, const GdkRGBA* p_color);

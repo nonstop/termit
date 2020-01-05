@@ -131,10 +131,10 @@ static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgH
     if (hlp->tab_title) {
         termit_tab_set_title(pTab, hlp->tab_title);
     }
-    vte_terminal_set_default_colors(VTE_TERMINAL(pTab->vte));
+    termit_style_free(&pTab->style);
+    termit_style_copy(&pTab->style, &hlp->style);
+    termit_tab_apply_colors(pTab);
     termit_tab_set_font(pTab, hlp->style.font_name);
-    termit_tab_set_color_foreground(pTab, hlp->style.foreground_color);
-    termit_tab_set_color_background(pTab, hlp->style.background_color);
     termit_tab_set_audible_bell(pTab, hlp->au_bell);
 }
 
