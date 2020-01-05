@@ -1,3 +1,8 @@
+	fixed tab style reset after cancel preferences dialog
+	refactored several deprecated functions
+	fixed recursive termit_close_tab call
+	appdata -> metainfo
+	default icon name for terminal window
 	irc colormap (by clort81)
 	get rid of deprecated match_check
 version 3.0
