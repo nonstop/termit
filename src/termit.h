@@ -64,6 +64,7 @@ struct TermitTab
     gchar **argv;
     gchar *title;
     GArray* matches;
+    gchar* search_regex;
     struct TermitStyle style;
     GPid pid;
     gulong onChildExitedHandlerId;

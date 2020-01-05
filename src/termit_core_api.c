@@ -229,12 +229,12 @@ void termit_del_tab_n(gint page)
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     TRACE("%s page=%d pid=%d", __FUNCTION__, page, pTab->pid);
     g_signal_handler_disconnect(G_OBJECT(pTab->vte), pTab->onChildExitedHandlerId);
-    /*g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);*/
     g_array_free(pTab->matches, TRUE);
     g_free(pTab->encoding);
     g_strfreev(pTab->argv);
     g_free(pTab->title);
     termit_style_free(&pTab->style);
+    g_free(pTab->search_regex);
     g_free(pTab);
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
 
@@ -255,7 +255,7 @@ static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
         struct Match tabMatch = {};
         tabMatch.lua_callback = match->lua_callback;
         tabMatch.pattern = match->pattern;
-        tabMatch.tag = vte_terminal_match_add_gregex(VTE_TERMINAL(pTab->vte), match->regex, match->flags);
+        tabMatch.tag = vte_terminal_match_add_regex(VTE_TERMINAL(pTab->vte), match->regex, match->flags);
         vte_terminal_match_set_cursor_type(VTE_TERMINAL(pTab->vte), tabMatch.tag, GDK_HAND2);
         g_array_append_val(pTab->matches, tabMatch);
     }
@@ -596,7 +596,7 @@ void termit_copy()
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
-    vte_terminal_copy_clipboard(VTE_TERMINAL(pTab->vte));
+    vte_terminal_copy_clipboard_format(VTE_TERMINAL(pTab->vte), VTE_FORMAT_TEXT);
 }
 
 static void clipboard_received_text(GtkClipboard *clipboard, const gchar *text, gpointer data)

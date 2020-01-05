@@ -49,7 +49,7 @@ struct TermitTab* termit_get_tab_by_vte(VteTerminal* vte, gint* page)
     gint sz = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
     for (gint p = 0; p < sz; ++p) {
         struct TermitTab* pTab = termit_get_tab_by_index(p);
-        if (pTab && pTab->vte == vte) {
+        if (pTab && VTE_TERMINAL(pTab->vte) == vte) {
             *page = p;
             return pTab;
         }

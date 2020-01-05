@@ -56,14 +56,14 @@ static void dlg_set_background(GtkColorButton *widget, gpointer user_data)
 {
     return dlg_set_tab_color__(widget, user_data, termit_tab_set_color_background);
 }
-static void dlg_set_font(GtkFontButton *widget, gpointer user_data)
+static void dlg_set_font(GtkFontChooser *widget, gpointer user_data)
 {
     if (!user_data) {
         ERROR("user_data is NULL");
         return;
     }
     struct TermitTab* pTab = (struct TermitTab*)user_data;
-    termit_tab_set_font(pTab, gtk_font_button_get_font_name(widget));
+    termit_tab_set_font(pTab, gtk_font_chooser_get_font(widget));
 }
 static gboolean dlg_set_audible_bell(GtkToggleButton *btn, gpointer user_data)
 {
@@ -141,7 +141,7 @@ static void dlg_set_tab_default_values(struct TermitTab* pTab, struct TermitDlgH
 static void dlg_set_default_values(struct TermitDlgHelper* hlp)
 {
     gtk_entry_set_text(GTK_ENTRY(hlp->entry_title), hlp->tab_title);
-    gtk_font_button_set_font_name(GTK_FONT_BUTTON(hlp->btn_font), hlp->style.font_name);
+    gtk_font_chooser_set_font(GTK_FONT_CHOOSER(hlp->btn_font), hlp->style.font_name);
     if (hlp->style.foreground_color) {
         gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(hlp->btn_foreground), hlp->style.foreground_color);
     }
@@ -232,7 +232,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
             gint i=0;
             for (; i<page_num; ++i) {
                 TERMIT_GET_TAB_BY_INDEX(pTab, i, continue);
-                dlg_set_font(GTK_FONT_BUTTON(btn_font), pTab);
+                dlg_set_font(GTK_FONT_CHOOSER(btn_font), pTab);
                 dlg_set_foreground(GTK_COLOR_BUTTON(btn_foreground), pTab);
                 dlg_set_background(GTK_COLOR_BUTTON(btn_background), pTab);
                 dlg_set_audible_bell(GTK_TOGGLE_BUTTON(btn_audible_bell), pTab);

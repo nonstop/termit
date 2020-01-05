@@ -95,18 +95,30 @@ static void termit_search_prepare_regex(const gchar* searchRegex)
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
     if (strlen(searchRegex) == 0) {
-        vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), NULL, 0);
-    } else {
-        GRegex* currSearchRegex = vte_terminal_search_get_gregex(VTE_TERMINAL(pTab->vte));
-        if (!currSearchRegex || strcmp(searchRegex, g_regex_get_pattern(currSearchRegex)) != 0) {
-            GError* err = NULL;
-            GRegex* regex = g_regex_new(searchRegex, 0, 0, &err);
-            if (err) {
-                TRACE("failed to compile regex [%s]: skipping", searchRegex);
-                return;
-            }
-            vte_terminal_search_set_gregex(VTE_TERMINAL(pTab->vte), regex, G_REGEX_MATCH_NOTEMPTY);
+        VteRegex* regex = vte_terminal_search_get_regex(VTE_TERMINAL(pTab->vte));
+        if (regex) {
+            vte_regex_unref(regex);
         }
+        vte_terminal_search_set_regex(VTE_TERMINAL(pTab->vte), NULL, 0);
+    } else {
+        VteRegex* currSearchRegex = vte_terminal_search_get_regex(VTE_TERMINAL(pTab->vte));
+        if (currSearchRegex && strcmp(pTab->search_regex, searchRegex) == 0) {
+            return;
+        }
+        if (currSearchRegex) {
+            vte_regex_unref(currSearchRegex);
+        }
+        if (pTab->search_regex) {
+            g_free(pTab->search_regex);
+        }
+        GError* err = NULL;
+        VteRegex* regex = vte_regex_new_for_search(searchRegex, -1, VTE_REGEX_FLAGS_DEFAULT, &err);
+        if (err) {
+            TRACE("failed to compile regex [%s]: skipping", searchRegex);
+            return;
+        }
+        vte_terminal_search_set_regex(VTE_TERMINAL(pTab->vte), regex, 0);
+        pTab->search_regex = g_strdup(searchRegex);
     }
 }
 
@@ -156,7 +168,7 @@ void termit_on_child_exited(VteTerminal* vte, gint status, gpointer user_data)
     }
 }
 
-static int termit_cursor_under_match(const GdkEvent* ev, char** matchedText)
+static int termit_cursor_under_match(GdkEvent* ev, char** matchedText)
 {
     gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return -1);
@@ -186,8 +198,7 @@ gboolean termit_on_popup(GtkWidget *widget, GdkEvent *event)
     GdkEventButton *event_button = (GdkEventButton *) event;
     if (event_button->button == 3) {
         GtkMenu *menu = GTK_MENU(termit.menu);
-        gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
-                          event_button->button, event_button->time);
+        gtk_menu_popup_at_pointer(menu, NULL);
         return TRUE;
     } else if (event_button->button == 1) {
         gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));

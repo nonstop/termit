@@ -66,8 +66,8 @@ struct Configs
 struct Match
 {
     gchar* pattern;
-    GRegex* regex;
-    GRegexMatchFlags flags;
+    VteRegex* regex;
+    guint32 flags;
     int tag;
     int lua_callback;
 };

@@ -141,7 +141,7 @@ static void matchesLoader(const gchar* pattern, struct lua_State* ls, int index,
     GArray* matches = (GArray*)data;
     struct Match match = {};
     GError* err = NULL;
-    match.regex = g_regex_new(pattern, 0, 0, &err);
+    match.regex = vte_regex_new_for_match(pattern, -1, VTE_REGEX_FLAGS_DEFAULT, &err);
     if (err) {
         TRACE("failed to compile regex [%s]: skipping", pattern);
         return;

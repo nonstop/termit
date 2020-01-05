@@ -239,7 +239,7 @@ void termit_config_deinit()
     i = 0;
     for (; i<configs.matches->len; ++i) {
         struct Match* match = &g_array_index(configs.matches, struct Match, i);
-        g_regex_unref(match->regex);
+        vte_regex_unref(match->regex);
         g_free(match->pattern);
     }
     g_array_free(configs.matches, TRUE);
