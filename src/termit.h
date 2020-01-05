@@ -66,6 +66,7 @@ struct TermitTab
     GArray* matches;
     struct TermitStyle style;
     GPid pid;
+    gulong onChildExitedHandlerId;
 };
 
 struct TabInfo
@@ -80,11 +81,12 @@ struct TabInfo
     VteCursorShape cursor_shape;
 };
 
-struct TermitTab* termit_get_tab_by_index(guint index);
+struct TermitTab* termit_get_tab_by_index(guint);
 #define TERMIT_GET_TAB_BY_INDEX(pTab, ind, action) \
     struct TermitTab* pTab = termit_get_tab_by_index(ind); \
     if (!pTab) \
     {   g_fprintf(stderr, "%s:%d error: %s is null\n", __FILE__, __LINE__, #pTab); action; }
+struct TermitTab* termit_get_tab_by_vte(VteTerminal*, gint*);
 
 #ifdef DEBUG
 #define ERROR(format, ...) g_fprintf(stderr, "ERROR: %s:%d " format "\n", __FILE__, __LINE__, ## __VA_ARGS__)

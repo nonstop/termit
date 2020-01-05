@@ -307,8 +307,8 @@ static int termit_lua_openTab(lua_State* ls)
 
 static int termit_lua_closeTab(lua_State* ls)
 {
-    termit_close_tab();
     TRACE_FUNC;
+    termit_close_tab();
     return 0;
 }
 

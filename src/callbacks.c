@@ -141,18 +141,19 @@ void termit_on_toggle_scrollbar()
     pTab->scrollbar_is_shown = !pTab->scrollbar_is_shown;
 }
 
-void termit_on_child_exited()
+void termit_on_child_exited(VteTerminal* vte, gint status, gpointer user_data)
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-    TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
-
-    TRACE("waiting for pid %d", pTab->pid);
-
-    int status = 0;
-    waitpid(pTab->pid, &status, WNOHANG);
-    /* TODO: check wait return */
-
-    termit_close_tab();
+    gint page = -1;
+    struct TermitTab* pTab = termit_get_tab_by_vte(vte, &page);
+    if (!pTab) {
+        return;
+    }
+    TRACE("child process exited with status %d", status);
+    termit_del_tab_n(page);
+    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0) {
+        TRACE("no pages left, exiting");
+        termit_quit();
+    }
 }
 
 static int termit_cursor_under_match(const GdkEvent* ev, char** matchedText)

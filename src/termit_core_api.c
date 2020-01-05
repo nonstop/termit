@@ -224,12 +224,12 @@ void termit_set_statusbar_message(guint page)
     }
 }
 
-static void termit_del_tab()
+void termit_del_tab_n(gint page)
 {
-    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
-
     TERMIT_GET_TAB_BY_INDEX(pTab, page, return);
-    TRACE("%s pid=%d", __FUNCTION__, pTab->pid);
+    TRACE("%s page=%d pid=%d", __FUNCTION__, page, pTab->pid);
+    g_signal_handler_disconnect(G_OBJECT(pTab->vte), pTab->onChildExitedHandlerId);
+    /*g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);*/
     g_array_free(pTab->matches, TRUE);
     g_free(pTab->encoding);
     g_strfreev(pTab->argv);
@@ -239,6 +239,12 @@ static void termit_del_tab()
     gtk_notebook_remove_page(GTK_NOTEBOOK(termit.notebook), page);
 
     termit_check_tabbar();
+}
+
+static void termit_del_tab()
+{
+    gint page = gtk_notebook_get_current_page(GTK_NOTEBOOK(termit.notebook));
+    termit_del_tab_n(page);
 }
 
 static void termit_tab_add_matches(struct TermitTab* pTab, GArray* matches)
@@ -391,7 +397,6 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     gchar *cmd_path = NULL;
     cmd_path = g_find_program_in_path(pTab->argv[0]);
 
-    TRACE("command=%s cmd_path=%s", pTab->argv[0], cmd_path);
     if (cmd_path != NULL) {
         g_free(pTab->argv[0]);
         pTab->argv[0] = g_strdup(cmd_path);
@@ -409,13 +414,13 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         g_error_free(cmd_err);
         return;
     }
+    TRACE("command=%s cmd_path=%s pid=%d", pTab->argv[0], cmd_path, pTab->pid);
 
     g_signal_connect(G_OBJECT(pTab->vte), "bell", G_CALLBACK(termit_on_beep), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
 
-    g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
-//    g_signal_connect(G_OBJECT(pTab->vte), "eof", G_CALLBACK(termit_eof), NULL);
+    pTab->onChildExitedHandlerId = g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), &termit_close_tab);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
 
     if (vte_terminal_set_encoding(vte, pTab->encoding, &cmd_err) != TRUE) {
@@ -622,6 +627,7 @@ void termit_close_tab()
 {
     termit_del_tab();
     if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0) {
+        TRACE("no pages left, exiting");
         termit_quit();
     }
 }

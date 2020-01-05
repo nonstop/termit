@@ -37,6 +37,7 @@ void termit_search_find_next();
 void termit_search_find_prev();
 void termit_for_each_row(int lua_callback);
 void termit_for_each_visible_row(int lua_callback);
+void termit_del_tab_n(gint page);
 void termit_close_tab();
 void termit_toggle_menubar();
 void termit_toggle_tabbar();

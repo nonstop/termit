@@ -37,11 +37,25 @@ struct TermitTab* termit_get_tab_by_index(guint index)
 {
     GtkWidget* tabWidget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index);
     if (!tabWidget) {
-        ERROR("tabWidget at %u is NULL", index);
+        ERROR("tabWidget not found by index=%u", index);
         return NULL;
     }
     struct TermitTab* pTab = (struct TermitTab*)g_object_get_data(G_OBJECT(tabWidget), TERMIT_TAB_DATA);
     return pTab;
+}
+
+struct TermitTab* termit_get_tab_by_vte(VteTerminal* vte, gint* page)
+{
+    gint sz = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    for (gint p = 0; p < sz; ++p) {
+        struct TermitTab* pTab = termit_get_tab_by_index(p);
+        if (pTab && pTab->vte == vte) {
+            *page = p;
+            return pTab;
+        }
+    }
+    ERROR("tabWidget not found by vte=%p", vte);
+    return NULL;
 }
 
 static GtkWidget* create_statusbar()
