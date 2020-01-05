@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2007-2020 Evgeny Ratnikov (ratnikov dot ev at gmail dot com) -->
+<component type="desktop-application">
+  <id>org.gnome.ratnikov.ev.apps.termit</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>Termit</name>
+  <summary>Terminal emulator</summary>
+  <description>
+    <p>
+      Small terminal emulator configurable via Lua.
+      Other dependencies are Vte and Gtk3 libs.
+      Termit supports multiple tabs, encoding switching and sessions.
+    </p>
+  </description>
+  <launchable type="desktop-id">termit.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Terminal main window with shell session</caption>
+      <image>https://raw.githubusercontent.com/nonstop/termit/master/doc/termit.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/nonstop/termit/wiki</url>
+  <project_group>GNOME</project_group>
+  <provides>
+    <binary>termit</binary>
+  </provides>
+  <developer_name>Evgeny Ratnikov</developer_name>
+  <url type="bugtracker">https://github.com/nonstop/termit/issues</url>
+</component>
