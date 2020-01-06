@@ -49,12 +49,6 @@ lua_getglobal(ls, lua_callback_); \
 int func = luaL_ref(ls, LUA_REGISTRYINDEX); \
 termit_keys_bind(keybinding_, func); \
 }
-#define ADD_DEFAULT_MOUSEBINDING(mouse_event_, lua_callback_) \
-{ \
-lua_getglobal(ls, lua_callback_); \
-int func = luaL_ref(ls, LUA_REGISTRYINDEX); \
-termit_mouse_bind(mouse_event_, func); \
-}
 
 void termit_keys_set_defaults()
 {
@@ -68,8 +62,6 @@ void termit_keys_set_defaults()
     ADD_DEFAULT_KEYBINDING("Shift-Insert", "paste");
     // push func to stack, get ref
     termit_keys_trace();
-
-    ADD_DEFAULT_MOUSEBINDING("DoubleClick", "openTab");
 }
 
 struct TermitModifier {

@@ -341,7 +341,6 @@ void termit_on_switch_page(GtkNotebook *notebook, gpointer arg, guint page, gpoi
 
 gint termit_on_double_click(GtkWidget *widget, GdkEventButton *event, gpointer func_data)
 {
-    TRACE_MSG(__FUNCTION__);
     termit_mouse_event(event);
     return FALSE;
 }
