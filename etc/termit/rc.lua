@@ -1,3 +1,6 @@
+colormaps = require('termit.colormaps')
+utils = require('termit.utils')
+
 defaults = {}
 defaults.windowTitle = 'Termit'
 defaults.tabName = 'Terminal'

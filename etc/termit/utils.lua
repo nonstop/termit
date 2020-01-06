@@ -1,9 +1,8 @@
+local M = {}
 local io = io
 local pairs, print = pairs, print
 local table, tostring, type = table, tostring, type
 local setEncoding = setEncoding
-
-module('termit.utils')
 
 function encMenu ()
   encodings = {'UTF-8', 'KOI8-R', 'CP1251', 'CP866'}
@@ -46,3 +45,10 @@ function dumpToFile(func, file)
     func(callback)
     io.close()
 end
+
+M.encMenu = encMenu
+M.pairsByKeys = pairsByKeys
+M.printTable = printTable
+M.dumpToFile = dumpToFile
+
+return M
