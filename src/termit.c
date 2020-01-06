@@ -161,7 +161,6 @@ static GtkWidget* termit_lua_menu_item_from_string(const gchar* label, const cha
 
 void termit_create_menubar()
 {
-
     GtkAccelGroup *accel = gtk_accel_group_new();
     gtk_window_add_accel_group(GTK_WINDOW(termit.main_window), accel);
     GtkWidget* menu_bar = gtk_menu_bar_new();
@@ -213,7 +212,6 @@ void termit_create_menubar()
 
     // User menus
     termit_create_menus(menu_bar, accel, configs.user_menus);
-
     termit.menu_bar = menu_bar;
 }
 
@@ -491,6 +489,8 @@ int main(int argc, char **argv)
         gtk_window_set_title(GTK_WINDOW(termit.main_window), windowTitle);
         g_free(windowTitle);
     }
+    // Disable menubar on F10
+    g_object_set(G_OBJECT(gtk_widget_get_settings(termit.main_window)), "gtk-menu-bar-accel", "", NULL);
     /* Show the application window */
     gtk_widget_show_all(termit.main_window);
 
