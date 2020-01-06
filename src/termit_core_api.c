@@ -356,6 +356,8 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
 
     vte_terminal_set_size(vte, configs.cols, configs.rows);
     vte_terminal_set_scrollback_lines(vte, configs.scrollback_lines);
+    vte_terminal_set_scroll_on_output(vte, configs.scroll_on_output);
+    vte_terminal_set_scroll_on_keystroke(vte, configs.scroll_on_keystroke);
     if (configs.default_word_char_exceptions) {
         vte_terminal_set_word_char_exceptions(vte, configs.default_word_char_exceptions);
     }

@@ -1,3 +1,5 @@
+	new options:
+		scrollOnKeystroke, scrollOnOutput
 	fixed tab style reset after cancel preferences dialog
 	refactored several deprecated functions
 	fixed recursive termit_close_tab call

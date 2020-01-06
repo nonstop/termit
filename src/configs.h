@@ -54,6 +54,8 @@ struct Configs
     gboolean urgency_on_bell;
     gboolean allow_changing_title;
     gboolean audible_bell;
+    gboolean scroll_on_output;
+    gboolean scroll_on_keystroke;
     int get_window_title_callback;
     int get_tab_title_callback;
     int get_statusbar_callback;

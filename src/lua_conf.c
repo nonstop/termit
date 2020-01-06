@@ -273,6 +273,10 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_boolean(&(p_cfg->allow_changing_title), ls, index);
     } else if (!strcmp(name, "audibleBell")) {
         termit_config_get_boolean(&(p_cfg->audible_bell), ls, index);
+    } else if (!strcmp(name, "scrollOnOutput")) {
+        termit_config_get_boolean(&(p_cfg->scroll_on_output), ls, index);
+    } else if (!strcmp(name, "scrollOnKeystroke")) {
+        termit_config_get_boolean(&(p_cfg->scroll_on_keystroke), ls, index);
     } else if (!strcmp(name, "urgencyOnBell")) {
         termit_config_get_boolean(&(p_cfg->urgency_on_bell), ls, index);
     } else if (!strcmp(name, "getWindowTitle")) {

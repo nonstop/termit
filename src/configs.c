@@ -130,6 +130,8 @@ void termit_config_trace()
     TRACE("   shape                         = %s", termit_cursor_shape_to_string(configs.default_shape));
     TRACE("   allow_changing_title          = %d", configs.allow_changing_title);
     TRACE("   audible_bell                  = %d", configs.audible_bell);
+    TRACE("   scroll_on_output              = %d", configs.scroll_on_output);
+    TRACE("   scroll_on_keystroke           = %d", configs.scroll_on_keystroke);
     TRACE("   get_window_title_callback     = %d", configs.get_window_title_callback);
     TRACE("   get_tab_title_callback        = %d", configs.get_tab_title_callback);
     TRACE("   get_statusbar_callback        = %d", configs.get_statusbar_callback);
@@ -188,6 +190,8 @@ void termit_configs_set_defaults()
     configs.get_statusbar_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;
     configs.tab_pos = GTK_POS_TOP;
+    configs.scroll_on_output = FALSE;
+    configs.scroll_on_keystroke = TRUE;
 }
 
 static void free_menu(GArray* menus)

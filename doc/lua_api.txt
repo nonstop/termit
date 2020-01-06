@@ -224,6 +224,8 @@ pre. Example: enable Gnome-like tab switching
 * hideTitlebarWhenMaximized - hide window titlebar when mazimized
 * matches - table with items of TermitMatch type
 * scrollbackLines - the length of scrollback buffer
+* scrollOnKeystroke - enables scroll to the bottom when the user presses a key
+* scrollOnOutput - enables scroll to the bottom when new data is received
 * setStatusbar - lua function to generate new statusbar message
 * showBorder - show notebook border
 * showScrollbar - display scrollbar
