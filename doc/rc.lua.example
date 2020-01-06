@@ -2,8 +2,8 @@
 -- You can test with with this command:
 -- cd ./etc && ../src/termit --init ../doc/rc.lua.example
 
-require("termit.colormaps")
-require("termit.utils")
+colormaps = require("termit.colormaps")
+utils = require("termit.utils")
 
 defaults = {}
 defaults.windowTitle = 'Termit'
@@ -36,7 +36,7 @@ defaults.setStatusbar = function (tabInd)
     end
     return ''
 end
-defaults.colormap = termit.colormaps.delicate
+defaults.colormap = colormaps.delicate
 defaults.matches = {['http[^ ]+'] = function (url) print('Matching url: '..url) end}
 defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
     {title = 'Test new tab 2'; workingDir = '/tmp'}}
@@ -81,10 +81,10 @@ table.insert(userMenu, {name='Reconfigure', action=reconfigure, accel='Ctrl-r'})
 table.insert(userMenu, {name='Selection', action=function () print(selection()) end})
 table.insert(userMenu, {name='dumpAllRows', action=function () forEachRow(print) end})
 table.insert(userMenu, {name='dumpVisibleRowsToFile',
-    action=function () termit.utils.dumpToFile(forEachVisibleRow, '/tmp/termit.dump') end})
+    action=function () utils.dumpToFile(forEachVisibleRow, '/tmp/termit.dump') end})
 table.insert(userMenu, {name='findNext', action=findNext, accel='Alt-n'})
 table.insert(userMenu, {name='findPrev', action=findPrev, accel='Alt-p'})
-table.insert(userMenu, {name='new colormap', action=function () setColormap(termit.colormaps.mikado) end})
+table.insert(userMenu, {name='new colormap', action=function () setColormap(colormaps.mikado) end})
 table.insert(userMenu, {name='toggle menubar', action=function () toggleMenubar() end})
 table.insert(userMenu, {name='toggle tabbar', action=function () toggleTabbar()  end})
 
@@ -93,14 +93,19 @@ mi.name = 'Get tab info'
 mi.action = function ()
     tab = tabs[currentTabIndex()]
     if tab then
-        termit.utils.printTable(tab, '  ')
+        utils.printTable(tab, '  ')
     end
 end
 table.insert(userMenu, mi)
 
+function round(float)
+    return math.floor(float + .5)
+end
+
 function changeTabFontSize(delta)
     tab = tabs[currentTabIndex()]
-    setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(tab.fontSize + delta))
+    fontSize = round(tab.fontSize)
+    setTabFont(string.sub(tab.font, 1, string.find(tab.font, '%d+$') - 1)..(fontSize + delta))
 end
 
 table.insert(userMenu, {name='Increase font size', action=function () changeTabFontSize(1) end})
@@ -114,6 +119,6 @@ table.insert(userMenu, {name='User quit', action=quit})
 addMenu(userMenu, "User menu")
 addPopupMenu(userMenu, "User menu")
 
-addMenu(termit.utils.encMenu(), "Encodings")
-addPopupMenu(termit.utils.encMenu(), "Encodings")
+addMenu(utils.encMenu(), "Encodings")
+addPopupMenu(utils.encMenu(), "Encodings")
 
