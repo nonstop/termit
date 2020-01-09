@@ -473,7 +473,7 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT (termit.main_window), "destroy", G_CALLBACK (termit_on_destroy), NULL);
     g_signal_connect(G_OBJECT (termit.main_window), "key-press-event", G_CALLBACK(termit_on_key_press), NULL);
 
-    TRACE("window: came=[%s] class=[%s] role=[%s] title=[%s]",
+    TRACE("window: name=[%s] class=[%s] role=[%s] title=[%s]",
             windowName, windowClass, windowRole, windowTitle);
     if (windowName || windowClass) {
         gtk_window_set_wmclass(GTK_WINDOW(termit.main_window), windowName, windowClass);

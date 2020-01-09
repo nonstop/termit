@@ -416,7 +416,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
         g_error_free(cmd_err);
         return;
     }
-    TRACE("command=%s cmd_path=%s pid=%d", pTab->argv[0], cmd_path, pTab->pid);
+    TRACE("command=%s pid=%d", pTab->argv[0], pTab->pid);
 
     g_signal_connect(G_OBJECT(pTab->vte), "bell", G_CALLBACK(termit_on_beep), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);

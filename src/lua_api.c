@@ -71,7 +71,6 @@ void termit_lua_report_error(const char* file, int line, int status)
 
 static int termit_lua_setOptions(lua_State* ls)
 {
-    TRACE_MSG(__FUNCTION__);
     termit_lua_load_table(ls, termit_lua_options_loader, 1, &configs);
     if (configs.default_tabs) {
         guint i = 0;
