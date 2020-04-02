@@ -251,6 +251,8 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
         termit_config_get_color(&p_cfg->style.foreground_color, ls, index);
     } else if (!strcmp(name, "backgroundColor")) {
         termit_config_get_color(&p_cfg->style.background_color, ls, index);
+    } else if (!strcmp(name, "topMenu")) {
+        termit_config_get_boolean(&(p_cfg->top_menu), ls, index);
     } else if (!strcmp(name, "showScrollbar")) {
         termit_config_get_boolean(&(p_cfg->show_scrollbar), ls, index);
     } else if (!strcmp(name, "fillTabbar")) {

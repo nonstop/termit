@@ -14,19 +14,19 @@ msgstr "Kan inte skapa ny flik"
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "Kan inte tolka kommando. Skapar interaktiv flik."
 
-#: src/termit.c:187 src/termit.c:226
+#: src/termit.c:189 src/termit.c:228
 msgid "Copy"
 msgstr ""
 
-#: src/termit.c:170 src/termit.c:223
+#: src/termit.c:172 src/termit.c:225
 msgid "Delete"
 msgstr ""
 
-#: src/termit.c:190
+#: src/termit.c:192
 msgid "Edit"
 msgstr "Redigera"
 
-#: src/termit.c:173
+#: src/termit.c:175
 msgid "File"
 msgstr "Arkiv"
 
@@ -39,41 +39,41 @@ msgid "Foreground"
 msgstr "Frgrund"
 
 #. File menu
-#: src/termit.c:169 src/termit.c:222
+#: src/termit.c:171 src/termit.c:224
 msgid "Open"
 msgstr ""
 
 #. Sessions menu
-#: src/termit.c:202 src/callbacks.c:395
+#: src/termit.c:204 src/callbacks.c:395
 msgid "Open session"
 msgstr "ppna arbetspass"
 
-#: src/termit.c:188 src/termit.c:227
+#: src/termit.c:190 src/termit.c:229
 msgid "Paste"
 msgstr ""
 
-#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:166
+#: src/termit.c:188 src/termit.c:227 src/termit_preferences.c:166
 msgid "Preferences"
 msgstr ""
 
-#: src/termit.c:171 src/termit.c:228
+#: src/termit.c:173 src/termit.c:230
 msgid "Quit"
 msgstr ""
 
-#: src/termit.c:203 src/callbacks.c:365
+#: src/termit.c:205 src/callbacks.c:365
 msgid "Save session"
 msgstr "Spara arbetspass"
 
-#: src/termit.c:229
+#: src/termit.c:231
 msgid "Scrollbar"
 msgstr "Rullningslist"
 
-#: src/termit.c:205
+#: src/termit.c:207
 msgid "Sessions"
 msgstr "Arbetspass"
 
 #. Edit menu
-#: src/termit.c:185 src/termit.c:224
+#: src/termit.c:187 src/termit.c:226
 msgid "Set tab name..."
 msgstr "Namnge fliken..."
 

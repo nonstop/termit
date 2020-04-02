@@ -1,3 +1,4 @@
+	Added topMenu option (by Hildigerr Vergaray)
 version 3.1
 	require Lua 5.3
 	disable menubar on F10

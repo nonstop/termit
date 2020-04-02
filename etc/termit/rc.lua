@@ -12,6 +12,7 @@ defaults.hideSingleTab = false
 defaults.showScrollbar = true
 defaults.fillTabbar = false
 defaults.hideMenubar = false
+defaults.topMenu = false
 defaults.allowChangingTitle = false
 defaults.audibleBell = false
 defaults.urgencyOnBell = false
