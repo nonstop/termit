@@ -83,18 +83,20 @@ static void create_search(struct TermitData* termit)
 
 static void pack_widgets()
 {
+    termit.vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     termit.hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_pack_start(GTK_BOX(termit.hbox), termit.menu_bar, FALSE, 0, 0);
+
+    gtk_box_pack_start(GTK_BOX(configs.top_menu?termit.vbox:termit.hbox), termit.menu_bar, FALSE, 0, 0);
+
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_toggle_search, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.search_entry, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_prev, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.b_find_next, FALSE, 0, 0);
     gtk_box_pack_start(GTK_BOX(termit.hbox), termit.statusbar, TRUE, 1, 0);
 
-    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), termit.notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), termit.hbox, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(termit.main_window), vbox);
+    gtk_box_pack_start(GTK_BOX(termit.vbox), termit.notebook, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(termit.vbox), termit.hbox, FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(termit.main_window), termit.vbox);
     if (!gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook))) {
         termit_append_tab();
     }

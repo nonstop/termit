@@ -233,6 +233,7 @@ pre. Example: enable Gnome-like tab switching
 * tabName - default tab name
 * tabPos - tabbar position (Top, Bottom, Left, Right)
 * tabs - table with items of TermitTabInfo type
+* topMenu - place the menubar at the top of the window
 * urgencyOnBell - set WM-hint 'urgent' on termit window when bell
 * wordCharExceptions - additional word characters (double click selects word)
 

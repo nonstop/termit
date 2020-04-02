@@ -115,6 +115,7 @@ void termit_config_trace()
     TRACE("   default_encoding              = %s", configs.default_encoding);
     TRACE("   default_word_char_exceptions  = %s", configs.default_word_char_exceptions);
     TRACE("   show_scrollbar                = %d", configs.show_scrollbar);
+    TRACE("   top_menu                      = %d", configs.top_menu);
     TRACE("   hide_menubar                  = %d", configs.hide_menubar);
     TRACE("   hide_tabbar                   = %d", configs.hide_tabbar);
     TRACE("   fill_tabbar                   = %d", configs.fill_tabbar);
@@ -179,6 +180,7 @@ void termit_configs_set_defaults()
     configs.hide_single_tab = FALSE;
     configs.show_scrollbar = TRUE;
     configs.fill_tabbar = FALSE;
+    configs.top_menu = FALSE;
     configs.hide_menubar = FALSE;
     configs.hide_tabbar = FALSE;
     configs.show_border = TRUE;

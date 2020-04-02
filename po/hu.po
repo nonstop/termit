@@ -33,19 +33,19 @@ msgid "Cannot parse command. Creating tab with shell"
 msgstr ""
 "Nem lehetséges a parancs értelmezése. Fül létrehozása shell segítségével"
 
-#: src/termit.c:187 src/termit.c:226
+#: src/termit.c:189 src/termit.c:228
 msgid "Copy"
 msgstr ""
 
-#: src/termit.c:170 src/termit.c:223
+#: src/termit.c:172 src/termit.c:225
 msgid "Delete"
 msgstr ""
 
-#: src/termit.c:190
+#: src/termit.c:192
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: src/termit.c:173
+#: src/termit.c:175
 msgid "File"
 msgstr "Fájl"
 
@@ -58,41 +58,41 @@ msgid "Foreground"
 msgstr "Előtér"
 
 #. File menu
-#: src/termit.c:169 src/termit.c:222
+#: src/termit.c:171 src/termit.c:224
 msgid "Open"
 msgstr ""
 
 #. Sessions menu
-#: src/termit.c:202 src/callbacks.c:395
+#: src/termit.c:204 src/callbacks.c:395
 msgid "Open session"
 msgstr "Megnyitás"
 
-#: src/termit.c:188 src/termit.c:227
+#: src/termit.c:190 src/termit.c:229
 msgid "Paste"
 msgstr ""
 
-#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:166
+#: src/termit.c:188 src/termit.c:227 src/termit_preferences.c:166
 msgid "Preferences"
 msgstr ""
 
-#: src/termit.c:171 src/termit.c:228
+#: src/termit.c:173 src/termit.c:230
 msgid "Quit"
 msgstr ""
 
-#: src/termit.c:203 src/callbacks.c:365
+#: src/termit.c:205 src/callbacks.c:365
 msgid "Save session"
 msgstr "Mentés"
 
-#: src/termit.c:229
+#: src/termit.c:231
 msgid "Scrollbar"
 msgstr "Gördítősáv"
 
-#: src/termit.c:205
+#: src/termit.c:207
 msgid "Sessions"
 msgstr "Munkamenetek"
 
 #. Edit menu
-#: src/termit.c:185 src/termit.c:224
+#: src/termit.c:187 src/termit.c:226
 msgid "Set tab name..."
 msgstr "Fül átnevezése..."
 
