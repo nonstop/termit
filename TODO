@@ -3,3 +3,22 @@
 -- store in TermitTab only flags: SET_NAME, SET_FG_FONT, SET_BG_FONT, etc
 values are already stored in VteTerminal, so we can simply read VteTerminal properties on demand
 thus we can achieve smaller memory usage
+
+
+For signals:
+-- decide if an actual binding function like termit_mouse_bind is needed. --> extra file.c, .h
+-- decide how a lua function should know which tab emitted the signal --> Userdata should be set appropriately
+-- decide how the signal handler should know which lua function to execute --> g_array in config
+
+[configs.c        ] include in init, deinit, trace, defaults
+[configs.h        ] specify g_array
+[events.c         ] write functions like termit_mouse_bind, unbind
+[events.c         ] write signal handler C function similar to termit_mouse_event
+[events.h         ] create header from c file
+[configs.c        ] include this "events.h" in configs.h
+[callbacks.c      ] write signal callback C functions similar to termit_on_double_click
+[callbacks.h      ] include function sigs in header
+[termit_core_api.c] connect to signal for every VTE.
+[lua_api.c        ] write a lua registering function like termit_lua_bindMouse
+[lua_api.c        ] export function to lua
+-- Done!
