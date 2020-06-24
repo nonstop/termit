@@ -120,11 +120,6 @@ static void termit_set_fonts()
     const gint width = (newWidth > oldWidth) ? newWidth : oldWidth;
     const gint height = (newHeight > oldHeight) ? newHeight : oldHeight;
     gtk_window_resize(GTK_WINDOW(termit.main_window), width, height);
-
-    GdkGeometry geom;
-    geom.min_width = width;
-    geom.min_height = height;
-    gtk_window_set_geometry_hints(GTK_WINDOW(termit.main_window), termit.main_window, &geom, GDK_HINT_MIN_SIZE);
 }
 
 gchar* termit_get_pid_dir(pid_t pid)
