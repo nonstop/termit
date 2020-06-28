@@ -38,5 +38,6 @@ void termit_on_toggle_search(GtkToggleButton*, gpointer);
 void termit_on_find_next(GtkButton*, gpointer);
 void termit_on_find_prev(GtkButton*, gpointer);
 gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
+void termit_on_contents_changed(VteTerminal *vteterminal, gpointer userdata);
 
 #endif /* TERMIT_CALLBACKS_H */

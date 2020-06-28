@@ -421,6 +421,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_signal_connect(G_OBJECT(pTab->vte), "bell", G_CALLBACK(termit_on_beep), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
+    g_signal_connect(G_OBJECT(pTab->vte), "contents-changed", G_CALLBACK(termit_on_contents_changed), NULL);
 
     pTab->onChildExitedHandlerId = g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), &termit_close_tab);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);

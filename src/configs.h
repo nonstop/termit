@@ -63,6 +63,7 @@ struct Configs
     GtkPositionType tab_pos;
     struct TermitStyle style;
     GArray* default_tabs;       // TabInfo
+    GArray* event_bindings;     // Event Handlers
 };
 
 struct Match

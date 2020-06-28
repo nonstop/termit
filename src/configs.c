@@ -19,6 +19,7 @@
 
 #include "termit.h"
 #include "keybindings.h"
+#include "eventbindings.h"
 #include "configs.h"
 #include "lua_api.h"
 
@@ -173,6 +174,7 @@ void termit_configs_set_defaults()
     configs.key_bindings = g_array_new(FALSE, TRUE, sizeof(struct KeyBinding));
     configs.mouse_bindings = g_array_new(FALSE, TRUE, sizeof(struct MouseBinding));
     configs.matches = g_array_new(FALSE, TRUE, sizeof(struct Match));
+    configs.event_bindings = g_array_new(FALSE, TRUE, sizeof(struct EventBinding));
 
     configs.start_maximized = FALSE;
     configs.hide_titlebar_when_maximized = FALSE;
@@ -247,6 +249,13 @@ void termit_config_deinit()
         g_free(match->pattern);
     }
     g_array_free(configs.matches, TRUE);
+
+    i = 0;
+    for(; i<configs.event_bindings->len; ++i) {
+        struct EventBinding* eb = &g_array_index(configs.key_bindings, struct EventBinding, i);
+        termit_lua_unref(&eb->lua_callback);
+    }
+    g_array_free(configs.event_bindings, TRUE);
 
     termit_lua_unref(&configs.get_window_title_callback);
     termit_lua_unref(&configs.get_tab_title_callback);
