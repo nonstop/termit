@@ -137,6 +137,7 @@ void termit_config_trace()
     TRACE("   get_statusbar_callback        = %d", configs.get_statusbar_callback);
     TRACE("   kb_policy                     = %d", configs.kb_policy);
     TRACE("   tab_pos                       = %d", configs.tab_pos);
+    TRACE("   tab_close_button              = %d", configs.tab_close_button);
     TRACE("   style:");
     TRACE("     font_name                   = %s", configs.style.font_name);
     if (configs.style.foreground_color) {
@@ -190,6 +191,7 @@ void termit_configs_set_defaults()
     configs.get_statusbar_callback = 0;
     configs.kb_policy = TermitKbUseKeysym;
     configs.tab_pos = GTK_POS_TOP;
+    configs.tab_close_button = FALSE;
     configs.scroll_on_output = FALSE;
     configs.scroll_on_keystroke = TRUE;
 }

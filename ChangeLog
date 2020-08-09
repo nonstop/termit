@@ -1,3 +1,5 @@
+	new option:
+		tabCloseButton
 	removed geometry hints
 version 3.1
 	require Lua 5.3

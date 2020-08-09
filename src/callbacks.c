@@ -69,6 +69,27 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
     termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
 }
 
+void termit_on_tab_close_clicked(GtkButton* btn, gpointer user_data)
+{
+    struct TermitTab* pTab = (struct TermitTab*)user_data;
+    TRACE("termit_close_tab %p", pTab);
+    if (pTab == NULL) {
+        TRACE("pTab is empty");
+        return;
+    }
+    gint sz = gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook));
+    for (gint p = 0; p < sz; ++p) {
+        struct TermitTab* tt = termit_get_tab_by_index(p);
+        if (tt == pTab) {
+            termit_del_tab_n(p);
+            break;
+        }
+    }
+    if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(termit.notebook)) == 0) {
+        termit_quit();
+    }
+}
+
 gboolean termit_on_search_keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     switch (event->keyval) {
@@ -246,8 +267,9 @@ void termit_on_beep(VteTerminal *vte, gpointer user_data)
     if (!gtk_window_has_toplevel_focus(GTK_WINDOW(termit.main_window))) {
         if (configs.urgency_on_bell) {
             gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), TRUE);
-            gchar* marked_title = g_strdup_printf("<b>%s</b>", gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-            gtk_label_set_markup(GTK_LABEL(pTab->tab_name), marked_title);
+            GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
+            gchar* marked_title = g_strdup_printf("<b>%s</b>", gtk_label_get_text(GTK_LABEL(label)));
+            gtk_label_set_markup(GTK_LABEL(label), marked_title);
             g_free(marked_title);
         }
     }
@@ -262,8 +284,9 @@ gboolean termit_on_focus(GtkWidget *widget, GtkDirectionType arg1, gpointer user
     }
     if (gtk_window_get_urgency_hint(GTK_WINDOW(termit.main_window))) {
         gtk_window_set_urgency_hint(GTK_WINDOW(termit.main_window), FALSE);
-        gtk_label_set_markup(GTK_LABEL(pTab->tab_name), gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
-        gtk_label_set_use_markup(GTK_LABEL(pTab->tab_name), FALSE);
+        GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
+        gtk_label_set_markup(GTK_LABEL(label), gtk_label_get_text(GTK_LABEL(label)));
+        gtk_label_set_use_markup(GTK_LABEL(label), FALSE);
     }
     return FALSE;
 }

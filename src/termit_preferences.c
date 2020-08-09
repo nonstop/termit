@@ -112,7 +112,8 @@ static struct TermitDlgHelper* termit_dlg_helper_new(struct TermitTab* pTab)
         hlp->handmade_tab_title = TRUE;
         hlp->tab_title = g_strdup(pTab->title);
     } else {
-        hlp->tab_title = g_strdup(gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
+        hlp->tab_title = g_strdup(gtk_label_get_text(GTK_LABEL(label)));
     }
     termit_style_copy(&hlp->style, &pTab->style);
     hlp->au_bell = pTab->audible_bell;
@@ -238,10 +239,11 @@ void termit_preferences_dialog(struct TermitTab *pTab)
                 dlg_set_audible_bell(GTK_TOGGLE_BUTTON(btn_audible_bell), pTab);
             }
         }
+        GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
         // insane title flag
         if (pTab->title ||
                 (!pTab->title &&
-                 strcmp(gtk_label_get_text(GTK_LABEL(pTab->tab_name)),
+                 strcmp(gtk_label_get_text(GTK_LABEL(label)),
                      gtk_entry_get_text(GTK_ENTRY(entry_title))) != 0)) {
             termit_tab_set_title(pTab, gtk_entry_get_text(GTK_ENTRY(entry_title)));
         }

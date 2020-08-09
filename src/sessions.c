@@ -119,7 +119,8 @@ void termit_save_session(const gchar* sessionFile)
         gchar* working_dir = termit_get_pid_dir(pTab->pid);
         gchar* groupName = g_strdup_printf("tab%d", i);
         g_fprintf(fd, "%s = {}\n", groupName);
-        g_fprintf(fd, "%s.title = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(pTab->tab_name)));
+        GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
+        g_fprintf(fd, "%s.title = \"%s\"\n", groupName, gtk_label_get_text(GTK_LABEL(label)));
         g_fprintf(fd, "%s.workingDir = \"%s\"\n", groupName, working_dir);
         g_fprintf(fd, "%s.command = \"%s\"\n", groupName, pTab->argv[0]);
         // FIXME compund commands would not be saved

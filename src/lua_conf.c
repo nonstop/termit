@@ -216,7 +216,7 @@ void termit_lua_load_colormap(lua_State* ls, int index, GdkRGBA** colors, glong*
     TRACE("colormap loaded: size=%ld", *sz);
 }
 
-static void termit_config_get_position(GtkPositionType* pos, lua_State* ls, int index)
+static void termit_config_get_tabbar_position(GtkPositionType* pos, lua_State* ls, int index)
 {
     if (!lua_isnil(ls, index) && lua_isstring(ls, index)) {
         const char* str = lua_tostring(ls, index);
@@ -282,7 +282,9 @@ void termit_lua_options_loader(const gchar* name, lua_State* ls, int index, void
     } else if (!strcmp(name, "getWindowTitle")) {
         termit_config_get_function(&(p_cfg->get_window_title_callback), ls, index);
     } else if (!strcmp(name, "tabPos")) {
-        termit_config_get_position(&(p_cfg->tab_pos), ls, index);
+        termit_config_get_tabbar_position(&(p_cfg->tab_pos), ls, index);
+    } else if (!strcmp(name, "tabCloseButton")) {
+        termit_config_get_boolean(&(p_cfg->tab_close_button), ls, index);
     } else if (!strcmp(name, "getTabTitle")) {
         termit_config_get_function(&(p_cfg->get_tab_title_callback), ls, index);
     } else if (!strcmp(name, "setStatusbar")) {

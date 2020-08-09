@@ -322,24 +322,53 @@ void termit_tab_set_pos(struct TermitTab* pTab, int newPos)
     gtk_notebook_reorder_child(GTK_NOTEBOOK(termit.notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(termit.notebook), index), newPos);
 }
 
+GtkWidget* termit_close_button(struct TermitTab* pTab)
+{
+    GtkWidget* button = (GtkWidget*)g_object_new(GTK_TYPE_BUTTON,
+            "relief", GTK_RELIEF_NONE, "focus-on-click", FALSE, NULL);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(termit_on_tab_close_clicked), pTab);
+    GIcon* icon = g_themed_icon_new_with_default_fallbacks("window-close-symbolic");
+    GtkWidget* image = gtk_image_new_from_gicon(icon, GTK_ICON_SIZE_MENU);
+    gtk_widget_show(image);
+    gtk_container_add(GTK_CONTAINER(button), image);
+    return button;
+}
+
 void termit_append_tab_with_details(const struct TabInfo* ti)
 {
     struct TermitTab* pTab = g_malloc0(sizeof(struct TermitTab));
     termit_style_copy(&pTab->style, &configs.style);
+    GtkWidget* label = NULL;
     if (ti->name) {
-        pTab->tab_name = gtk_label_new(ti->name);
+        label = gtk_label_new(ti->name);
         pTab->custom_tab_name = TRUE;
     } else {
         gchar* label_text = g_strdup_printf("%s %d", configs.default_tab_name, termit.tab_max_number++);
-        pTab->tab_name = gtk_label_new(label_text);
+        label = gtk_label_new(label_text);
         g_free(label_text);
         pTab->custom_tab_name = FALSE;
     }
     if (configs.tab_pos == GTK_POS_RIGHT) {
-        gtk_label_set_angle(GTK_LABEL(pTab->tab_name), 270);
+        gtk_label_set_angle(GTK_LABEL(label), 270);
     } else if (configs.tab_pos == GTK_POS_LEFT) {
-        gtk_label_set_angle(GTK_LABEL(pTab->tab_name), 90);
+        gtk_label_set_angle(GTK_LABEL(label), 90);
     }
+    GtkWidget* box = (configs.tab_pos == GTK_POS_RIGHT || configs.tab_pos == GTK_POS_LEFT)
+        ? gtk_box_new(GTK_ORIENTATION_VERTICAL, 0)
+        : gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_center_widget(GTK_BOX(box), label);
+
+    if (configs.tab_close_button) {
+        GtkWidget* close_button = termit_close_button(pTab);
+        if (configs.tab_pos == GTK_POS_LEFT) {
+            gtk_box_pack_start(GTK_BOX(box), close_button, FALSE, FALSE, 0);
+        } else {
+            gtk_box_pack_end(GTK_BOX(box), close_button, FALSE, FALSE, 0);
+        }
+    }
+    gtk_widget_show_all(box);
+    pTab->tab_name = box;
+
     pTab->encoding = (ti->encoding) ? g_strdup(ti->encoding) : g_strdup(configs.default_encoding);
     pTab->bksp_binding = ti->bksp_binding;
     pTab->delete_binding = ti->delete_binding;
@@ -417,7 +446,7 @@ void termit_append_tab_with_details(const struct TabInfo* ti)
     g_signal_connect(G_OBJECT(pTab->vte), "focus-in-event", G_CALLBACK(termit_on_focus), pTab);
     g_signal_connect(G_OBJECT(pTab->vte), "window-title-changed", G_CALLBACK(termit_on_tab_title_changed), NULL);
 
-    pTab->onChildExitedHandlerId = g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), &termit_close_tab);
+    pTab->onChildExitedHandlerId = g_signal_connect(G_OBJECT(pTab->vte), "child-exited", G_CALLBACK(termit_on_child_exited), NULL);
     g_signal_connect_swapped(G_OBJECT(pTab->vte), "button-press-event", G_CALLBACK(termit_on_popup), NULL);
 
     if (vte_terminal_set_encoding(vte, pTab->encoding, &cmd_err) != TRUE) {
@@ -520,7 +549,8 @@ void termit_tab_set_title(struct TermitTab* pTab, const gchar* title)
         g_free(pTab->title);
     }
     pTab->title = tmp_title;
-    gtk_label_set_text(GTK_LABEL(pTab->tab_name), pTab->title);
+    GtkWidget* label = gtk_box_get_center_widget(GTK_BOX(pTab->tab_name));
+    gtk_label_set_text(GTK_LABEL(label), pTab->title);
     termit_set_window_title(title);
 }
 

@@ -61,6 +61,7 @@ struct Configs
     int get_statusbar_callback;
     enum TermitKbPolicy kb_policy;
     GtkPositionType tab_pos;
+    gboolean tab_close_button;
     struct TermitStyle style;
     GArray* default_tabs;       // TabInfo
 };
