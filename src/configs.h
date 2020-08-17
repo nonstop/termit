@@ -64,6 +64,7 @@ struct Configs
     gboolean tab_close_button;
     struct TermitStyle style;
     GArray* default_tabs;       // TabInfo
+    GArray* event_bindings;     // Event Handlers
 };
 
 struct Match

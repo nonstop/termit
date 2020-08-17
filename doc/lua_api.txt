@@ -25,6 +25,9 @@ pre. Example: don't close tab with Ctrl-w, use CtrlShift-w
 _event_ - string with one of those values: DoubleClick
 _luaFunction_ - callback function
 
+*bindEvent(_event_, _luaFunction_)* - Sets new event handler. If luaFunction is nil removes event-handling.
+_event_ - string with one of the values: contents-changed
+_luaFunction_ - callback function
 
 *closeTab()* - Closes active tab.
 

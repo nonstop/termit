@@ -140,6 +140,18 @@ removes mouse\(hybinding.
     event \(hy string with one of those values: DoubleClick
     luaFunction \(hy callback function
 .P
+.B bindEvent
+(
+.I event
+,
+.I luaFunction
+)
+	Sets new event\(ybinding. If luaFunction is
+.I nil
+removes event\(binding.
+	event \(hy string with one of those values: contents-changed
+	luaFunction \(hy callback function, receives no arguments
+.P
 .B closeTab
 ()
     Closes active tab.

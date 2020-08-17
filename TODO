@@ -3,3 +3,5 @@
 -- store in TermitTab only flags: SET_NAME, SET_FG_FONT, SET_BG_FONT, etc
 values are already stored in VteTerminal, so we can simply read VteTerminal properties on demand
 thus we can achieve smaller memory usage
+
+

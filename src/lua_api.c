@@ -22,6 +22,7 @@
 #include "termit.h"
 #include "termit_core_api.h"
 #include "keybindings.h"
+#include "eventbindings.h"
 #include "configs.h"
 #include "callbacks.h"
 #include "lua_api.h"
@@ -214,6 +215,27 @@ static int termit_lua_bindMouse(lua_State* ls)
         int func = luaL_ref(ls, LUA_REGISTRYINDEX);
         termit_mouse_bind(mousebinding, func);
         TRACE("bindMouse: %s - %d", mousebinding, func);
+    }
+    return 0;
+}
+
+static int termit_lua_bindEvent(lua_State* ls)
+{
+    if( lua_isnil(ls, 1)) {
+        TRACE("NIL skipping.");
+        return 0;
+    } else if (!lua_isstring(ls, 1)){
+        TRACE("1st arg no string, skipping");
+        return 0;
+    }
+    const char* signal_name = lua_tostring(ls, 1);
+    if (lua_isnil(ls, 2)) {
+        TRACE("unbindEvent: %s", signal_name);
+        termit_event_unbind(signal_name);
+    } else if (lua_isfunction(ls, 2)){
+        int func = luaL_ref(ls, LUA_REGISTRYINDEX);
+        TRACE("bind event: %s - %d", signal_name, func);
+        termit_event_bind(signal_name, func);
     }
     return 0;
 }
@@ -694,6 +716,7 @@ struct TermitLuaFunction
     {"addPopupMenu", termit_lua_addPopupMenu, 0},
     {"bindKey", termit_lua_bindKey, 0},
     {"bindMouse", termit_lua_bindMouse, 0},
+    {"bindEvent", termit_lua_bindEvent, 0},
     {"closeTab", termit_lua_closeTab, 0},
     {"copy", termit_lua_copy, 0},
     {"currentTab", termit_lua_currentTab, 0},
