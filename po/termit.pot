@@ -19,7 +19,7 @@ msgid "Copy"
 msgstr ""
 
 #: src/termit.c:170 src/termit.c:223
-msgid "Delete"
+msgid "Close tab"
 msgstr ""
 
 #: src/termit.c:190
@@ -40,7 +40,7 @@ msgstr ""
 
 #. File menu
 #: src/termit.c:169 src/termit.c:222
-msgid "Open"
+msgid "New tab"
 msgstr ""
 
 #. Sessions menu
