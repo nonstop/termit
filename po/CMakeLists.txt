@@ -1,10 +1,12 @@
 SET(PO_FILES
+  da.po
   de.po
   es.po
   fr.po
   hu.po
   ja.po
   ko.po
+  nl.po
   pl.po
   ru.po
   sv.po
