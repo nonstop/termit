@@ -33,7 +33,7 @@ msgid "Copy"
 msgstr "Kopiëren"
 
 #: src/termit.c:170 src/termit.c:223
-msgid "Delete"
+msgid "Close tab"
 msgstr "Verwijderen"
 
 #: src/termit.c:190
@@ -54,7 +54,7 @@ msgstr "Voorgrond"
 
 #. File menu
 #: src/termit.c:169 src/termit.c:222
-msgid "Open"
+msgid "New tab"
 msgstr "Openen"
 
 #. Sessions menu
@@ -113,5 +113,5 @@ msgid "Unable to create directory '%s': %s"
 msgstr "De map ‘%s’ kan niet worden aangemaakt: %s"
 
 #: src/termit_preferences.c:212
-msgid "audible bell"
+msgid "Audible bell"
 msgstr "Luide bel"

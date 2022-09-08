@@ -34,7 +34,7 @@ msgid "Copy"
 msgstr ""
 
 #: src/termit.c:170 src/termit.c:223
-msgid "Delete"
+msgid "Close tab"
 msgstr ""
 
 #: src/termit.c:190
@@ -55,7 +55,7 @@ msgstr ""
 
 #. File menu
 #: src/termit.c:169 src/termit.c:222
-msgid "Open"
+msgid "New tab"
 msgstr ""
 
 #. Sessions menu
@@ -113,7 +113,7 @@ msgid "Unable to create directory '%s': %s"
 msgstr "無法建立目錄 '%s': %s"
 
 #: src/termit_preferences.c:212
-msgid "audible bell"
+msgid "Audible bell"
 msgstr ""
 
 #~ msgid "Bookmarks"

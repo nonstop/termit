@@ -34,7 +34,7 @@ msgid "Copy"
 msgstr ""
 
 #: src/termit.c:170 src/termit.c:223
-msgid "Delete"
+msgid "Close tab"
 msgstr ""
 
 #: src/termit.c:190
@@ -55,7 +55,7 @@ msgstr "前景"
 
 #. File menu
 #: src/termit.c:169 src/termit.c:222
-msgid "Open"
+msgid "New tab"
 msgstr ""
 
 #. Sessions menu
@@ -113,7 +113,7 @@ msgstr "ディレクトリ '%s' が生成できません: %s"
 
 #: src/termit_preferences.c:212
 #, fuzzy
-msgid "audible bell"
+msgid "Audible bell"
 msgstr "可聴ベル"
 
 #~ msgid "Background image"
