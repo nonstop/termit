@@ -12,28 +12,32 @@ msgstr ""
 "X-Poedit-Language: Korean\n"
 "X-Poedit-Country: KOREA, REPUBLIC OF\n"
 
-#: src/termit_preferences.c:218
+#: src/termit_preferences.c:219
 msgid "Apply to all tabs"
 msgstr ""
 
-#: src/termit_preferences.c:206
+#: src/termit_preferences.c:213
+msgid "Audible bell"
+msgstr ""
+
+#: src/termit_preferences.c:207
 msgid "Background"
 msgstr ""
 
-#: src/termit_core_api.c:440
+#: src/termit_core_api.c:464
 msgid "Cannot create a new tab"
 msgstr "새 탭을 만들 수 없습니다"
 
-#: src/termit_core_api.c:392
+#: src/termit_core_api.c:416
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "명령을 해석할 수 없습니다. 쉘을 이용한 새 탭을 만듭니다"
 
-#: src/termit.c:187 src/termit.c:226
-msgid "Copy"
-msgstr ""
-
 #: src/termit.c:170 src/termit.c:223
 msgid "Close tab"
+msgstr ""
+
+#: src/termit.c:187 src/termit.c:226
+msgid "Copy"
 msgstr ""
 
 #: src/termit.c:190
@@ -44,11 +48,11 @@ msgstr "편집"
 msgid "File"
 msgstr "파일"
 
-#: src/termit_preferences.c:192
+#: src/termit_preferences.c:193
 msgid "Font"
 msgstr ""
 
-#: src/termit_preferences.c:199
+#: src/termit_preferences.c:200
 msgid "Foreground"
 msgstr ""
 
@@ -58,7 +62,7 @@ msgid "New tab"
 msgstr ""
 
 #. Sessions menu
-#: src/termit.c:202 src/callbacks.c:395
+#: src/termit.c:202 src/callbacks.c:418
 msgid "Open session"
 msgstr "세션 열기"
 
@@ -66,7 +70,7 @@ msgstr "세션 열기"
 msgid "Paste"
 msgstr ""
 
-#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:166
+#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:167
 msgid "Preferences"
 msgstr ""
 
@@ -74,7 +78,7 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: src/termit.c:203 src/callbacks.c:365
+#: src/termit.c:203 src/callbacks.c:388
 msgid "Save session"
 msgstr "세션 저장"
 
@@ -99,11 +103,11 @@ msgstr ""
 "다른 탭들이 아직 열려 있습니다.\n"
 "전부 닫고 종료할까요 ?"
 
-#: src/callbacks.c:274 src/callbacks.c:285
+#: src/callbacks.c:297 src/callbacks.c:308
 msgid "Tab name"
 msgstr "탭 이름"
 
-#: src/termit_preferences.c:186
+#: src/termit_preferences.c:187
 #, fuzzy
 msgid "Title"
 msgstr "파일"
@@ -112,10 +116,6 @@ msgstr "파일"
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "디렉토리를 만들 수 없습니다 '%s': %s"
-
-#: src/termit_preferences.c:212
-msgid "Audible bell"
-msgstr ""
 
 #~ msgid "Bookmarks"
 #~ msgstr "책갈피"
