@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Martintxo <martintxo@sindominio.net>\n"
+"PO-Revision-Date: 2022-09-08 22:22+0100\n"
+"Last-Translator: SwissalpS <Luke@SwissalpS.ws>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: src/termit_preferences.c:219
 msgid "Apply to all tabs"
-msgstr ""
+msgstr "Aplicar a todas las pestañas"
 
 #: src/termit_preferences.c:213
 #, fuzzy
@@ -38,11 +38,11 @@ msgstr "El comando no se entiende. Creando una nueva pestaña con shell"
 
 #: src/termit.c:170 src/termit.c:223
 msgid "Close tab"
-msgstr ""
+msgstr "Cerrar pestaña"
 
 #: src/termit.c:187 src/termit.c:226
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: src/termit.c:190
 msgid "Edit"
@@ -63,7 +63,7 @@ msgstr "Frente"
 #. File menu
 #: src/termit.c:169 src/termit.c:222
 msgid "New tab"
-msgstr ""
+msgstr "Tab nuevo"
 
 #. Sessions menu
 #: src/termit.c:202 src/callbacks.c:418
@@ -72,15 +72,15 @@ msgstr "Abrir sesión"
 
 #: src/termit.c:188 src/termit.c:227
 msgid "Paste"
-msgstr ""
+msgstr "Pegar"
 
 #: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:167
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencias"
 
 #: src/termit.c:171 src/termit.c:228
 msgid "Quit"
-msgstr ""
+msgstr "Salir"
 
 #: src/termit.c:203 src/callbacks.c:388
 msgid "Save session"
@@ -105,7 +105,7 @@ msgid ""
 "Close anyway?"
 msgstr ""
 "Hay varias pestañas abiertas.\n"
-"¿Cerrarlas todas?"
+"¿Cerrarlas todas igual?"
 
 #: src/callbacks.c:297 src/callbacks.c:308
 msgid "Tab name"
