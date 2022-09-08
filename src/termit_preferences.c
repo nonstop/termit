@@ -210,7 +210,7 @@ void termit_preferences_dialog(struct TermitTab *pTab)
     GtkWidget* btn_audible_bell = gtk_check_button_new();
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(btn_audible_bell), pTab->audible_bell);
     g_signal_connect(btn_audible_bell, "toggled", G_CALLBACK(dlg_set_audible_bell), pTab);
-    TERMIT_PREFERENCE_ROW(_("audible bell"), btn_audible_bell);
+    TERMIT_PREFERENCE_ROW(_("Audible bell"), btn_audible_bell);
 
     // apply to al tabs
     GtkWidget* btn_apply_to_all_tabs = gtk_check_button_new();
