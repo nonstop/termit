@@ -166,8 +166,8 @@ void termit_create_menubar()
     GtkWidget* menu_bar = gtk_menu_bar_new();
 
     // File menu
-    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("Open"), "openTab");
-    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Delete"), "closeTab");
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("New tab"), "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Close tab"), "closeTab");
     GtkWidget *mi_exit = termit_lua_menu_item_from_string(_("Quit"), "quit");
 
     GtkWidget *mi_file = gtk_menu_item_new_with_label(_("File"));
@@ -219,8 +219,8 @@ void termit_create_popup_menu()
 {
     termit.menu = gtk_menu_new();
 
-    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("Open"), "openTab");
-    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Delete"), "closeTab");
+    GtkWidget *mi_new_tab = termit_lua_menu_item_from_string(_("New tab"), "openTab");
+    GtkWidget *mi_close_tab = termit_lua_menu_item_from_string(_("Close tab"), "closeTab");
     GtkWidget *mi_set_tab_name = termit_lua_menu_item_from_string(_("Set tab name..."), "setTabTitleDlg");
     GtkWidget *mi_edit_preferences = termit_lua_menu_item_from_string(_("Preferences"), "preferencesDlg");
     GtkWidget *mi_copy = termit_lua_menu_item_from_string(_("Copy"), "copy");

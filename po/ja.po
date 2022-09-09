@@ -13,28 +13,33 @@ msgstr ""
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-Country: JAPAN\n"
 
-#: src/termit_preferences.c:218
+#: src/termit_preferences.c:219
 msgid "Apply to all tabs"
 msgstr ""
 
-#: src/termit_preferences.c:206
+#: src/termit_preferences.c:213
+#, fuzzy
+msgid "Audible bell"
+msgstr "可聴ベル"
+
+#: src/termit_preferences.c:207
 msgid "Background"
 msgstr "背景"
 
-#: src/termit_core_api.c:440
+#: src/termit_core_api.c:464
 msgid "Cannot create a new tab"
 msgstr "新しいタブを作成できません"
 
-#: src/termit_core_api.c:392
+#: src/termit_core_api.c:416
 msgid "Cannot parse command. Creating tab with shell"
 msgstr "コマンドを解析できません。シェル経由でタブを作成します"
 
-#: src/termit.c:187 src/termit.c:226
-msgid "Copy"
+#: src/termit.c:170 src/termit.c:223
+msgid "Close tab"
 msgstr ""
 
-#: src/termit.c:170 src/termit.c:223
-msgid "Delete"
+#: src/termit.c:187 src/termit.c:226
+msgid "Copy"
 msgstr ""
 
 #: src/termit.c:190
@@ -45,21 +50,21 @@ msgstr "編集"
 msgid "File"
 msgstr "ファイル"
 
-#: src/termit_preferences.c:192
+#: src/termit_preferences.c:193
 msgid "Font"
 msgstr "フォント"
 
-#: src/termit_preferences.c:199
+#: src/termit_preferences.c:200
 msgid "Foreground"
 msgstr "前景"
 
 #. File menu
 #: src/termit.c:169 src/termit.c:222
-msgid "Open"
+msgid "New tab"
 msgstr ""
 
 #. Sessions menu
-#: src/termit.c:202 src/callbacks.c:395
+#: src/termit.c:202 src/callbacks.c:418
 msgid "Open session"
 msgstr "セッションを開く"
 
@@ -67,7 +72,7 @@ msgstr "セッションを開く"
 msgid "Paste"
 msgstr ""
 
-#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:166
+#: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:167
 msgid "Preferences"
 msgstr ""
 
@@ -75,7 +80,7 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: src/termit.c:203 src/callbacks.c:365
+#: src/termit.c:203 src/callbacks.c:388
 msgid "Save session"
 msgstr "セッションを保存する"
 
@@ -98,11 +103,11 @@ msgid ""
 "Close anyway?"
 msgstr "終了しますか?"
 
-#: src/callbacks.c:274 src/callbacks.c:285
+#: src/callbacks.c:297 src/callbacks.c:308
 msgid "Tab name"
 msgstr "タブ名"
 
-#: src/termit_preferences.c:186
+#: src/termit_preferences.c:187
 msgid "Title"
 msgstr "タイトル"
 
@@ -110,11 +115,6 @@ msgstr "タイトル"
 #, c-format
 msgid "Unable to create directory '%s': %s"
 msgstr "ディレクトリ '%s' が生成できません: %s"
-
-#: src/termit_preferences.c:212
-#, fuzzy
-msgid "audible bell"
-msgstr "可聴ベル"
 
 #~ msgid "Background image"
 #~ msgstr "背景画像"
