@@ -63,7 +63,7 @@ msgstr "Frente"
 #. File menu
 #: src/termit.c:169 src/termit.c:222
 msgid "New tab"
-msgstr "Tab nuevo"
+msgstr "Nueva pestaña"
 
 #. Sessions menu
 #: src/termit.c:202 src/callbacks.c:418
