@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-12-19 21:23+0100\n"
-"Last-Translator: Dennis Ploeger <develop@dieploegers.de>\n"
+"PO-Revision-Date: 2022-09-08 22:22+0100\n"
+"Last-Translator: SwissalpS <Luke@SwissalpS.ws>\n"
 "Language-Team: de\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: src/termit_preferences.c:219
 msgid "Apply to all tabs"
-msgstr ""
+msgstr "Auf alle Tabs anwenden"
 
 #: src/termit_preferences.c:213
 #, fuzzy
@@ -40,11 +40,11 @@ msgstr ""
 
 #: src/termit.c:170 src/termit.c:223
 msgid "Close tab"
-msgstr ""
+msgstr "Tab schliessen"
 
 #: src/termit.c:187 src/termit.c:226
 msgid "Copy"
-msgstr ""
+msgstr "Kopieren"
 
 #: src/termit.c:190
 msgid "Edit"
@@ -65,7 +65,7 @@ msgstr "Vordergrund"
 #. File menu
 #: src/termit.c:169 src/termit.c:222
 msgid "New tab"
-msgstr ""
+msgstr "Neuen Tab"
 
 #. Sessions menu
 #: src/termit.c:202 src/callbacks.c:418
@@ -74,15 +74,15 @@ msgstr "Sitzung öffnen"
 
 #: src/termit.c:188 src/termit.c:227
 msgid "Paste"
-msgstr ""
+msgstr "Einfügen"
 
 #: src/termit.c:186 src/termit.c:225 src/termit_preferences.c:167
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: src/termit.c:171 src/termit.c:228
 msgid "Quit"
-msgstr ""
+msgstr "Beenden"
 
 #: src/termit.c:203 src/callbacks.c:388
 msgid "Save session"
