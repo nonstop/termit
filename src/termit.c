@@ -19,7 +19,7 @@
 #include <getopt.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <vte/vte.h>
+#include <vte-2.91/vte/vte.h>
 
 #include "config.h"
 

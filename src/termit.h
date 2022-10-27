@@ -21,7 +21,7 @@
 #include <config.h>
 
 #include <gtk/gtk.h>
-#include <vte/vte.h>
+#include <vte-2.91/vte/vte.h>
 #include <glib/gprintf.h>
 
 #include <libintl.h>
