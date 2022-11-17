@@ -26,6 +26,7 @@
 #include "termit_style.h"
 #include "lua_api.h"
 #include "keybindings.h"
+#include "eventbindings.h"
 #include "callbacks.h"
 
 static gboolean confirm_exit()
@@ -448,4 +449,9 @@ void termit_on_menu_item_selected(GtkWidget *widget, void *data)
 gboolean termit_on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     return termit_key_event(event);
+}
+
+void termit_on_contents_changed(VteTerminal *vteterminal, gpointer userdata)
+{
+    termit_event("contents-changed");
 }
