@@ -63,7 +63,7 @@ void termit_style_copy(struct TermitStyle* dest, const struct TermitStyle* src)
         dest->foreground_color = NULL;
     }
     if (src->colors_size) {
-        dest->colors = g_memdup(src->colors, src->colors_size * sizeof(GdkRGBA));
+        dest->colors = g_memdup2(src->colors, src->colors_size * sizeof(GdkRGBA));
         dest->colors_size = src->colors_size;
     } else {
         dest->colors = NULL;
