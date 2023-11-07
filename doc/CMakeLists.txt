@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(TERMIT_DOCS ../COPYING README lua_api.txt rc.lua.example)
+SET(TERMIT_DOCS ../COPYING README lua_api.md rc.lua.example)
 
 INSTALL(FILES ${TERMIT_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/${TERMIT_PACKAGE})
 INSTALL(FILES termit.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
