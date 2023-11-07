@@ -13,9 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+cmake_minimum_required(VERSION 3.6.0 FATAL_ERROR)
 PROJECT(TERMIT C)
 
-cmake_minimum_required(VERSION 2.6.1 FATAL_ERROR)
 SET(CMAKE_VERSION "${CMAKE_CACHE_MAJOR_VERSION}.${CMAKE_CACHE_MINOR_VERSION}.${CMAKE_CACHE_RELEASE_VERSION}")
 
 INCLUDE(UsePkgConfig)
