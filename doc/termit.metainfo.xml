@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2007-2020 Evgeny Ratnikov (ratnikov dot ev at gmail dot com) -->
+<!-- Copyright 2007-2023 Evgeny Ratnikov (ratnikov dot ev at gmail dot com) -->
 <component type="desktop-application">
   <id>org.gnome.ratnikov.ev.apps.termit</id>
   <metadata_license>FSFAP</metadata_license>
