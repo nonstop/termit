@@ -1,4 +1,5 @@
 SET(PO_FILES
+  ca.po
   da.po
   de.po
   es.po
@@ -62,3 +63,4 @@ ELSE(NOT ENABLE_NLS)
 
   SET(TERMIT_DISTR_FILES "${POT_FILE} ${PO_FILES} CMakeLists.txt")
 ENDIF(NOT ENABLE_NLS)
+
