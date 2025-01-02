@@ -66,7 +66,10 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
         return;
     }
 
-    termit_tab_set_title(pTab, vte_terminal_get_window_title(VTE_TERMINAL(pTab->vte)));
+    const char* title = vte_terminal_get_termprop_string(vte, VTE_TERMPROP_XTERM_TITLE, NULL);
+    if (title) {
+        termit_tab_set_title(pTab, title);
+    }
 }
 
 void termit_on_tab_close_clicked(GtkButton* btn, gpointer user_data)

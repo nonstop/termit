@@ -37,7 +37,7 @@ defaults.setStatusbar = function (tabInd)
     return ''
 end
 defaults.colormap = colormaps.delicate
-defaults.matches = {['http[^ ]+'] = function (url) print('Matching url: '..url) end}
+defaults.matches = {['http[-:/.\\w]+'] = function (url) print('Matching url: '..url) end}
 defaults.tabs = {{title = 'Test new tab 1'; workingDir = '/tmp'};
     {title = 'Test new tab 2'; workingDir = '/tmp'}}
 setOptions(defaults)

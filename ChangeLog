@@ -1,3 +1,4 @@
+	refactored several deprecated functions
 	rename lua_api.txt to md because it is markdown
 	cmake_minimum_required changed to 3.6.0
 	require Lua 5.4
