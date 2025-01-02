@@ -1,3 +1,20 @@
+# Termit translation file.
+# Copyright (C) 2025
+# This file is distributed under the same license as the termit package.
+# Evgeny Ratnikov ratnikov.ev@gmail.com 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-01-02 10:50+0100\n"
+"Last-Translator: SwissalpS <Luke@SwissalpS.ws>\n"
+"Language-Team: \n"
+"Language: Danish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 #: src/termit_preferences.c:299
 msgid "Audible bell"
 msgstr "Hørbar klokke"
@@ -93,3 +110,4 @@ msgstr "Synlige klokke"
 #: src/termit_preferences.c:267
 msgid "images"
 msgstr "billeder"
+
