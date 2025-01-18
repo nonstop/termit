@@ -66,7 +66,7 @@ void termit_on_tab_title_changed(VteTerminal *vte, gpointer user_data)
         return;
     }
 
-    const char* title = vte_terminal_get_termprop_string(vte, VTE_TERMPROP_XTERM_TITLE, NULL);
+    const char* title = vte_terminal_get_window_title(vte);
     if (title) {
         termit_tab_set_title(pTab, title);
     }
