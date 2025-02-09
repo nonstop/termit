@@ -284,7 +284,11 @@ static void termit_for_each_row_execute(struct TermitTab* pTab, glong row_start,
 {
     glong i = row_start;
     for (; i < row_end; ++i) {
+#if VTE_MAJOR_VERSION==0 && VTE_MINOR_VERSION<72
+        char* str = vte_terminal_get_text_range(VTE_TERMINAL(pTab->vte), i, 0, i, 500, NULL, &lua_callback, NULL);
+#else
         char* str = vte_terminal_get_text_range_format(VTE_TERMINAL(pTab->vte), VTE_FORMAT_TEXT, i, 0, i, 500, NULL);
+#endif
         str[strlen(str) - 1] = '\0';
         termit_lua_dofunction2(lua_callback, str);
         free(str);
