@@ -1,0 +1,109 @@
+name: Build termit
+
+on: [push, pull_request]
+
+jobs:
+  ubuntu_24
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Prepare build environment.
+      run: |
+        apt-get update
+        apt-get -y install apt-utils
+        apt-get -y full-upgrade
+        apt-get install -y gcc cmake lua5.4-dev libgtk-3-dev libvte-2.91 gettext
+    - name: Configure
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Release .
+    - name: Build
+      run: |
+        make
+    - name: Install
+      run: |
+        make install
+    - name: Test version
+      run: |
+        termit --version
+
+  ubuntu_22:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Prepare build environment.
+      run: |
+        apt-get update
+        apt-get -y install apt-utils
+        apt-get -y full-upgrade
+        apt-get install -y gcc cmake lua5.4-dev libgtk-3-dev libvte-2.91 gettext
+    - name: Configure
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Release .
+    - name: Build
+      run: |
+        make
+    - name: Install
+      run: |
+        make install
+    - name: Test version
+      run: |
+        termit --version
+
+  ubuntu_20:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Prepare build environment.
+      run: |
+        apt-get update
+        apt-get -y install apt-utils
+        apt-get -y full-upgrade
+        apt-get install -y gcc cmake lua5.4-dev libgtk-3-dev libvte-2.91 gettext
+    - name: Configure
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Release .
+    - name: Build
+      run: |
+        make
+    - name: Install
+      run: |
+        make install
+    - name: Test version
+      run: |
+        termit --version
+
+  fedora_latest_build:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1000
+    - name: Prepare build environment.
+      run: |
+        dnf -y upgrade
+        dnf -y install cmake gcc gtk+ vte291 vte291-devel lua lua-devel
+    - name: Configure
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Release .
+    - name: Build
+      run: |
+        make
+    - name: Install
+      run: |
+        make install
+    - name: Test version
+      run: |
+        termit --version
+
