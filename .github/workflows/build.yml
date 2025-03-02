@@ -3,7 +3,7 @@ name: Build termit
 on: [push, pull_request]
 
 jobs:
-  ubuntu_24
+  ubuntu_24:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:24.04
