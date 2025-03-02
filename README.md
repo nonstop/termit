@@ -37,6 +37,6 @@ Defaults are:
     Ctrl-Insert  -  copy
     Shift-Insert -  paste
 
-Lua API is described in doc/lua_api.md or in man page.
+Lua API is described in doc/lua_api.md and in man page.
 
 Download termit from [here](https://github.com/nonstop/termit/releases).
